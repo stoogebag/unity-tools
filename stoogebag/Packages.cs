@@ -1,5 +1,7 @@
 ﻿using System;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace stoogebag
 {
@@ -7,7 +9,11 @@ namespace stoogebag
     {
         internal static void InstallUnityPackage(string packageName)
         {
+#if UNITY_EDITOR
+      
             UnityEditor.PackageManager.Client.Add($"com.unity.{packageName}");
+      
+#endif
         }
     }
 }
