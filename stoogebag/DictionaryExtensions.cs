@@ -28,12 +28,12 @@ namespace stoogebag
 
     public static class EnumerableExtensions
     {
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> me)
-        {
-            var hs = new HashSet<T>();
-            hs.AddRange(me);
-            return hs;
-        }
+        //public static HashSet<T> ToHashSet<T>(this IEnumerable<T> me)
+        //{
+        //    var hs = new HashSet<T>();
+        //    hs.AddRange(me);
+        //    return hs;
+        //}
 
         public static void AddRange<T>(this HashSet<T> me, IEnumerable<T> e)
         {
