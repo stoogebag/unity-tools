@@ -15,7 +15,6 @@ public class FollowMouseLocationInWorld : MonoBehaviour
     void Start()
     {
         _mainCamera = Camera.main;
-
         distanceToCam = _mainCamera.transform.position.y - y;
     }
 

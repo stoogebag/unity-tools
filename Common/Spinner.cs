@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Spinner : MonoBehaviour {
 
-	public float SpinSpeed = 50;
+	public float SpinSpeedX = 0; //degrees per second
+	public float SpinSpeedY = 50; //degrees per second
+	public float SpinSpeedZ = 0; //degrees per second
 
 
 	// Use this for initialization
@@ -14,6 +16,6 @@ public class Spinner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate (new Vector3 (0,Time.deltaTime * SpinSpeed,0));
+		transform.Rotate (new Vector3 (Time.deltaTime * SpinSpeedX,Time.deltaTime * SpinSpeedY,Time.deltaTime * SpinSpeedZ));
 	}
 }
