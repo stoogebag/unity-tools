@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -24,6 +25,7 @@ public class PortalCamera : MonoBehaviour
     private void Awake()
     {
         mainCamera = GetComponent<Camera>();
+        portals = FindObjectsOfType<PortalPair>().ToList();
 
     }
 
@@ -56,8 +58,10 @@ public class PortalCamera : MonoBehaviour
                 if (pair.Portals[j].Renderer.isVisible)
                 {
                     portalCamera.targetTexture = pair.tempTextures[j];
+                    //portalCamera.targetTexture.activeTextureColorSpace;
                     for (int i = iterations - 1; i >= 0; --i)
                     {
+                        //print($"{j}, {i}");
                         RenderCamera(pair.Portals[j], pair.Portals[(j+1) % pair.Portals.Length], i, SRC);
                     }
                 }
@@ -93,7 +97,7 @@ public class PortalCamera : MonoBehaviour
                 inTransform.lossyScale.y / outTransform.lossyScale.y,
                 inTransform.lossyScale.z / outTransform.lossyScale.z);
 
-            cameraTransform.localScale = relativeScale; //todo: account for localscale if it matter
+            //cameraTransform.localScale = relativeScale; //todo: account for localscale if it matter
             //portalCamera.worldToCameraMatrix.y = 2;
         }
 
@@ -105,16 +109,16 @@ public class PortalCamera : MonoBehaviour
 
         var newMatrix = mainCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
 
-        newMatrix[0, 0] = newMatrix[0, 0] * nm00scale;
-        newMatrix[1, 1] = newMatrix[1, 1] * nm11scale;
-        newMatrix[2, 2] = newMatrix[2, 2] * nm22scale;
+        // newMatrix[0, 0] = newMatrix[0, 0] * nm00scale;
+        // newMatrix[1, 1] = newMatrix[1, 1] * nm11scale;
+        // newMatrix[2, 2] = newMatrix[2, 2] * nm22scale;
         portalCamera.projectionMatrix = newMatrix;
 
         // Render the camera to its render target.
         UniversalRenderPipeline.RenderSingleCamera(SRC, portalCamera);
     }
 
-    public float nm00scale = 1;
-    public float nm11scale = 1;
-    public float nm22scale = 1;
+    // public float nm00scale = 1;
+    // public float nm11scale = 1;
+    // public float nm22scale = 1;
 }
