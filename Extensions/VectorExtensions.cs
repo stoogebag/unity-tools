@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -52,6 +53,23 @@ namespace stoogebag
             return new Vector3(v.x, v.y, z);
         }
 
+        public static Vector2 Rounded(this Vector2 v)
+        {
+            return new Vector2((float)Math.Round(v.x), (float)Math.Round(v.y));
+        }
+        public static Vector3 Rounded(this Vector3 v)
+        {
+            return new Vector3((float)Math.Round(v.x), (float)Math.Round(v.y),(float)Math.Round(v.z));
+        }
+
+        public static float Dot(this Vector3 v, Vector3 u)
+        {
+            return Vector3.Dot(v,u);
+        }
+        public static float Dot(this Vector2 v, Vector2 u)
+        {
+            return Vector2.Dot(v,u);
+        }
 
     }
 }
