@@ -70,6 +70,16 @@ namespace stoogebag
         {
             return Vector2.Dot(v,u);
         }
+        public static bool EqualsApprox(this Vector2 v, Vector2 u, float eps = 0.001f)
+        {
+            return v.DistanceTo(u) <= eps;
+        }
+        public static bool EqualsApprox(this Vector3 v, Vector3 u, float eps = 0.001f)
+        {
+            return v.DistanceTo(u) <= eps;
+        }
 
+        
+        
     }
 }
