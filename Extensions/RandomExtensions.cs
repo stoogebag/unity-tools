@@ -30,8 +30,17 @@ namespace stoogebag
     }
     public class SimpleProbabilityDist<T> :IProbabilityDistribution<T>
     {
-        public List<T> Values;
-        
+        private List<T> _values;
+
+        public List<T> Values
+        {
+            get
+            {
+                if(_values == null) _values = Weights.Select(t => t.Item1).ToList();
+                return _values;
+            }
+        }
+
         IEnumerable<(T, float)> IProbabilityDistribution<T>.Weights => Weights;
         public List<(T, float)> Weights;
 

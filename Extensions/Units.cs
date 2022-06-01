@@ -1,4 +1,6 @@
-﻿namespace stoogebag
+﻿using System;
+
+namespace stoogebag
 {
     public static class Units {
 
@@ -10,7 +12,15 @@
         {
             return speed * 3.6f;
         }
+        public static float ToRadians(this float angleInDegrees)
+        {
+            return angleInDegrees * PiOver180;
+        }
+        public static float ToDegrees(this float angleInRads)
+        {
+            return angleInRads / PiOver180;
+        }
 
-
+        private const float PiOver180 = (float)Math.PI/180;
     }
 }
