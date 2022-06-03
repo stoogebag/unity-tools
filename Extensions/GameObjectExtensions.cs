@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace stoogebag
 {
@@ -7,7 +8,14 @@ namespace stoogebag
         //{
         //    var gc = me.GetComponent<GuidComponent>();
         //}
-    
+        public static void DestroyAllAndClear(this List<GameObject> me)
+        {
+            foreach (var go in me)
+            {
+                UnityEngine.GameObject.Destroy(go);
+            }
+            me.Clear();
+        }
     
     }
 }
