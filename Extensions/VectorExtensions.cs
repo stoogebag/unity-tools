@@ -53,13 +53,16 @@ namespace stoogebag
             return new Vector3(v.x, v.y, z);
         }
 
-        public static Vector2 Rounded(this Vector2 v)
+        public static Vector2 Rounded(this Vector2 v, int decimalPlaces = 0)
         {
-            return new Vector2((float)Math.Round(v.x), (float)Math.Round(v.y));
+            var pow = (float)Math.Pow(10, decimalPlaces);
+            return new Vector2((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow);
         }
-        public static Vector3 Rounded(this Vector3 v)
+        public static Vector3 Rounded(this Vector3 v, int decimalPlaces = 0)
         {
-            return new Vector3((float)Math.Round(v.x), (float)Math.Round(v.y),(float)Math.Round(v.z));
+            var pow = (float)Math.Pow(10, decimalPlaces);
+            
+            return new Vector3((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow,(float)Math.Round(v.z*pow)/pow);
         }
 
         public static float Dot(this Vector3 v, Vector3 u)
