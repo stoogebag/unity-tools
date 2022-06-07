@@ -7,8 +7,8 @@ public class StartVelocity : MonoBehaviour
 {
 	private Rigidbody rb;
 	// Use this for initialization
-	Vector3 startDirection = Vector3.zero;
-	float startSpeed = 1;
+	public Vector3 startDirection = Vector3.zero;
+	public float startSpeed = 1;
 	
 	private void Awake()
 	{
