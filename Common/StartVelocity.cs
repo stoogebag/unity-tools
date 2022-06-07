@@ -17,7 +17,7 @@ public class StartVelocity : MonoBehaviour
 
 	void Start ()
 	{
-		var dir = startDirection;
+		var dir = transform.TransformDirection(startDirection);
 		if (dir == Vector3.zero) dir = transform.forward;
 		rb.velocity = dir * startSpeed;
 	}
