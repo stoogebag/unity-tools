@@ -30,7 +30,22 @@ namespace stoogebag
             if (includeChildren) go.ForAllChildrenRecursive(t => t.layer = layer);
             else go.layer = layer;
         }
-    
+
+        public static Transform FirstOrDefault(this Transform transform, string name)
+        {
+            return transform.FirstOrDefault(t => t.name == name);
+        }
+
+        public static T FirstOrDefault<T>(this GameObject go, string name) // 
+        {
+            return go.transform.FirstOrDefault(t =>
+            {
+                if(t.name != name) return false;
+                if (t.gameObject.GetComponent<T>() != null) return true;
+                return false;
+            }).GetComponent<T>();
+        }
+
         public static Transform FirstOrDefault(this Transform transform, Func<Transform, bool> query)
         {
             if (query(transform)) {

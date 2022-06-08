@@ -19,7 +19,7 @@ public class StartVelocity : MonoBehaviour
 	{
 		var dir = transform.TransformDirection(startDirection);
 		if (dir == Vector3.zero) dir = transform.forward;
-		rb.velocity = dir * startSpeed;
+		rb.velocity += dir * startSpeed;
 	}
 	
 	// Update is called once per frame
