@@ -11,10 +11,14 @@ public class DebugWindow : MonoBehaviour
     private Canvas debugCanvas;
     private TextMeshProUGUI text;
 
+    //public static string prefabPath;
+
     private void Start()
     {
         text = GetComponentInChildren<TextMeshProUGUI>(true);
         debugCanvas = GetComponentInChildren<Canvas>(true);
+        
+        DontDestroyOnLoad(gameObject);
     }
 
     void Update()
