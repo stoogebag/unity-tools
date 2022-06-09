@@ -36,7 +36,7 @@ namespace stoogebag
             return transform.FirstOrDefault(t => t.name == name);
         }
 
-        public static T FirstOrDefault<T>(this GameObject go, string name) // 
+        public static T FirstOrDefault<T>(this GameObject go, string name = null) // 
         {
             return go.transform.FirstOrDefault(t =>
             {
