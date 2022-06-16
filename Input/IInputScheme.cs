@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿
+#if INCONTROL_EXISTS
+using UnityEngine;
 using UniRx;
 using System;
 
@@ -19,3 +21,4 @@ public abstract class InputScheme : MonoBehaviour{
 
 
 }
+#endif

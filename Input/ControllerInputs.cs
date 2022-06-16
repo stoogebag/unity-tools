@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿
+#if INCONTROL_EXISTS
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -142,3 +144,4 @@ public class ControllerInputs : InputScheme
         controller = input;
     }
 }
+#endif

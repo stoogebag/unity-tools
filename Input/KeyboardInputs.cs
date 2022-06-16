@@ -1,3 +1,5 @@
+
+#if INCONTROL_EXISTS
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,3 +71,4 @@ public class KeyboardInputs : InputScheme
         return loc;
     }
 }
+#endif
