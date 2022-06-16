@@ -41,7 +41,7 @@ namespace stoogebag
             return go.transform.FirstOrDefault(t =>
             {
                 if(t.name != name) return false;
-                if (t.gameObject.GetComponent<T>() != null) return true;
+                if (t.gameObject.TryGetComponent<T>(out var x)) return true;
                 return false;
             }).GetComponent<T>();
         }
@@ -63,5 +63,6 @@ namespace stoogebag
 
             return null;
         }
+        
     }
 }
