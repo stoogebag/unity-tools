@@ -147,5 +147,12 @@ public class PlayerBase
     public bool IsLocal { get; set; }
     
 }
+public static class InputNames
+{
+    public static readonly InputControlType aButton = InputControlType.Action1;
+    public static readonly InputControlType bButton = InputControlType.Action2;
+    public static readonly InputControlType xButton = InputControlType.Action3;
+    public static readonly InputControlType yButton = InputControlType.Action4;
+}
 
 #endif
