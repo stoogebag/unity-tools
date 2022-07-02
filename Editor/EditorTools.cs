@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿#if UNITY_EDITOR
+using System.Linq;
 using UnityEditor;
 using static UnityEditor.AssetDatabase;
 
@@ -33,3 +34,5 @@ namespace stoogebag
         
     }
 }
+
+#endif

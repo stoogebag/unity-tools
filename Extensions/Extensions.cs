@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 
@@ -11,3 +13,5 @@ public static class Extensions
     
     
 }
+
+#endif

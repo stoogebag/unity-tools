@@ -46,6 +46,16 @@ namespace stoogebag
             }).GetComponent<T>();
         }
 
+        public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition = null) // 
+        {
+            return go.transform.FirstOrDefault(t =>
+            {
+                if(!nameCondition(t.name)) return false;
+                if (t.gameObject.TryGetComponent<T>(out var x)) return true;
+                return false;
+            }).GetComponent<T>();
+        }
+        
         public static Transform FirstOrDefault(this Transform transform, Func<Transform, bool> query)
         {
             if (query(transform)) {
