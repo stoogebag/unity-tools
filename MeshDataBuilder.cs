@@ -27,7 +27,7 @@ public class MeshDataBuilder : MonoBehaviour
     /// This will increase the number of vertices, so less optimized.
     /// </summary>
     /// <param name="mesh"></param>
-    void SplitMesh(Mesh mesh)
+    public static void SplitMesh(Mesh mesh)
     {
         int[] triangles = mesh.triangles;
         Vector3[] verts = mesh.vertices;

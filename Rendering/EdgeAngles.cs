@@ -18,57 +18,102 @@ public class EdgeAngles :MonoBehaviour
     void GenerateMeshData()
     {
         Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
-
+        MeshDataBuilder.SplitMesh(mesh);
+        
         var info = new MeshInfo(mesh);
         info.InitialiseDictionaries();
         
-        SetVertexColors(mesh, info);
+        SetVertexColors(mesh, info, edge =>
+        {
+            var tris = info.edgeToTrianglesDic[edge];
+            if (tris.Count == 1) return true;
+
+            return false;
+        });
             
         
         
     }
 
-    private void SetVertexColors(Mesh mesh, MeshInfo meshInfo)
+    private void SetVertexColors(Mesh mesh, MeshInfo meshInfo, Func<Edge<Vector3>, bool> edgeIncludeFunc )
     {
-        
         Color[] colorCoords = new[]
         {
             new Color(1, 0, 0),
             new Color(0, 1, 0),
             new Color(0, 0, 1),
+            new Color(1, 0, 0,0),
+            new Color(0, 1, 0,0),
+            new Color(0, 0, 1,0),
         };
 
-        
         Color32[] vertexColors = new Color32[mesh.vertices.Length];
 
         for (int i = 0; i < vertexColors.Length; i += 1)
         {
-            var vert = mesh.vertices[i];
-
-            var edges = meshInfo.vertexToEdgesDic[vert];
-            var values = new float[3];
-            for (var i1 = 0; i1 < edges.Count; i1++)
+            var u = mesh.vertices[i];
+            //var v = mesh.vertices[i+1];
+            //var w = mesh.vertices[i+2];
+            
+            var edgesOnU = meshInfo.vertexToEdgesDic[u];
+            if (edgesOnU.All(t => edgeIncludeFunc(t)))
             {
-                var edge = edges[i1];
-                
-                var tris = meshInfo.edgeToTrianglesDic[edge];
-                if (tris.Count == 1) //boundary
-                {
-                    values[i1] = 1;
-                    break;
-                }
-
-                var n1 = tris[0].GetNormal();
-                var n2 = tris[1].GetNormal();
-
-                var dot = n1.Dot(n2);
-                values[i1] = (float)Math.Max(values[i1], 1-dot);
+                vertexColors[i] = colorCoords[i%3];
             }
+            else
+            {
+                vertexColors[i] = colorCoords[i%3 + 3];
+            }
+            
+            
+            
+            
+            // vertexColors[i] = colorCoords[0];
+            // vertexColors[i + 1] = colorCoords[1];
+            // vertexColors[i + 2] = colorCoords[5];
 
-            vertexColors[i] = new Color(values[0], values[1],values[2]);
         }
 
         mesh.colors32 = vertexColors;
+        return;
+        // Color[] colorCoords = new[]
+        // {
+        //     new Color(1, 0, 0),
+        //     new Color(0, 1, 0),
+        //     new Color(0, 0, 1),
+        // };
+        //
+        //
+        // Color32[] vertexColors = new Color32[mesh.vertices.Length];
+        //
+        // for (int i = 0; i < vertexColors.Length; i += 1)
+        // {
+        //     var vert = mesh.vertices[i];
+        //
+        //     var edges = meshInfo.vertexToEdgesDic[vert];
+        //     var values = new float[3];
+        //     for (var i1 = 0; i1 < edges.Count; i1++)
+        //     {
+        //         var edge = edges[i1];
+        //         
+        //         var tris = meshInfo.edgeToTrianglesDic[edge];
+        //         if (tris.Count == 1) //boundary
+        //         {
+        //             values[i1] = 1;
+        //             break;
+        //         }
+        //
+        //         var n1 = tris[0].GetNormal();
+        //         var n2 = tris[1].GetNormal();
+        //
+        //         var dot = n1.Dot(n2);
+        //         values[i1] = (float)Math.Max(values[i1], 1-dot);
+        //     }
+        //
+        //     vertexColors[i] = new Color(values[0], values[1],values[2]);
+        // }
+        //
+        // mesh.colors32 = vertexColors;
     }
 }
 
@@ -162,7 +207,7 @@ public class Edge<T>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(U, V) +HashCode.Combine(V,U) ;
+        return U.GetHashCode() ^ V.GetHashCode();
     }
 
     public T U;
