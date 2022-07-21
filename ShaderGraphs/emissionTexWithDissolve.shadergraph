@@ -543,7 +543,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "Dissolve Amount",
     "m_DefaultReferenceName": "_Dissolve_Amount",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "_dissolveAmount",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",

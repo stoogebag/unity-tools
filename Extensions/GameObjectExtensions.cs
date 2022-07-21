@@ -78,6 +78,31 @@ namespace stoogebag
 
             return null;
         }
+
+        public static Vector3 PositionOffset(this GameObject me, GameObject other)
+        {
+            return other.transform.position - me.transform.position;
+        }
+        public static float DistanceTo(this GameObject me, GameObject other)
+        {
+            return me.PositionOffset(other).magnitude;
+        }
+
+        public static void SetLocalScaleX(this Transform me, float val)
+        {
+            me.localScale = new Vector3(val, me.localScale.y, me.localScale.z);
+        }
         
+        
+        public static void SetLocalScaleY(this Transform me, float val)
+        {
+            me.localScale = new Vector3(me.localScale.x, val, me.localScale.z);
+        }
+        public static void SetLocalScaleZ(this Transform me, float val)
+        {
+            me.localScale = new Vector3(me.localScale.x, me.localScale.y, val);
+        }
+        
+
     }
 }
