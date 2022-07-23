@@ -12,7 +12,11 @@ namespace stoogebag
         {
             return new Vector2(v.x, v.y);
         }
-
+        
+        public static Vector2 ToVector2XZ(this Vector3 v)
+        {
+            return new Vector2(v.x, v.z);
+        }
         public static float DistanceToSquared(this Vector3 v, Vector3 w)
         {
             return (w - v).sqrMagnitude;
