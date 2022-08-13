@@ -8,7 +8,7 @@ using UniRx;
 using InControl;
 using System.Linq;
 
-public class ControllerInputs : InputScheme
+public class ControllerInputs : InputSchemeBase
 {
     InputDevice controller;
 

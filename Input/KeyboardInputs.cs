@@ -1,12 +1,11 @@
 
-#if INCONTROL_EXISTS
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using stoogebag;
 using UniRx;
 
-public class KeyboardInputs : InputScheme
+public class KeyboardInputs : InputSchemeBase
 {
     public KeyCode KeyLeft = KeyCode.A;
     public KeyCode KeyRight = KeyCode.D;
@@ -71,4 +70,3 @@ public class KeyboardInputs : InputScheme
         return loc;
     }
 }
-#endif

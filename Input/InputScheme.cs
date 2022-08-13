@@ -1,16 +1,12 @@
-﻿
-#if INCONTROL_EXISTS
-using UnityEngine;
+﻿using UnityEngine;
 using UniRx;
 using System;
 
-public abstract class InputScheme : MonoBehaviour{
+public abstract class InputSchemeBase : MonoBehaviour{
     public abstract float GetHorizontal();
     public abstract float GetVertical();
 
     public abstract Vector3 GetLookTarget();
-
-    //public abstract void Bind();
 
     public ReactiveProperty<bool> PingButtonValue;
     public ReactiveProperty<bool> ShootButtonValue;
@@ -21,4 +17,3 @@ public abstract class InputScheme : MonoBehaviour{
 
 
 }
-#endif
