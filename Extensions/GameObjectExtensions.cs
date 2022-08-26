@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace stoogebag
@@ -51,6 +52,11 @@ namespace stoogebag
             return go.transform.FirstOrDefault(name).gameObject;
         }
 
+        public static T GetChild<T>(this MonoBehaviour component, string name) where T: MonoBehaviour
+        {
+            return component.gameObject.FirstOrDefault<T>(name);
+        }
+
         public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition = null) // 
         {
             return go.transform.FirstOrDefault(t =>
@@ -78,6 +84,8 @@ namespace stoogebag
 
             return null;
         }
+        
+        
 
         public static Vector3 PositionOffset(this GameObject me, GameObject other)
         {
@@ -102,7 +110,14 @@ namespace stoogebag
         {
             me.localScale = new Vector3(me.localScale.x, me.localScale.y, val);
         }
-        
 
+        //
+        // public static List<T> FindAllPrefabs<T>() where T: MonoBehaviour
+        // {
+        //     var all = Resources.FindObjectsOfTypeAll<T>();
+        //     all.Where(go=>
+        //     EditorUtility.IsPersistent(go.transform.root.gameObject) && !(go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)))
+        // }
+        //
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace stoogebag
 {
-
     public static class DictionaryExtensions
     {
         public static TValue TryGetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dic, TKey key, Func<TValue> addNew)
