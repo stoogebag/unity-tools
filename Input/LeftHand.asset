@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720cedf4bb2a4e93a6e913a39c2cec39, type: 3}
+  m_Name: LeftHand
+  m_EditorClassIdentifier: 
+  AxisMoveLeft: 3
+  AxisMoveRight: 4
+  AxisMoveUp: 1
+  AxisMoveDown: 2
+  AxisLookLeft: 0
+  AxisLookRight: 0
+  AxisLookUp: 0
+  AxisLookDown: 0
+  AxisSprint: 15
+  ButtonPing: 11000000f8010000
+  ButtonShoot: 10000000fb010000
+  ButtonItem: 16000000
+  ButtonSprint: 0f000000

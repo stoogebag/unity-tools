@@ -1,25 +1,22 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using stoogebag;
 using UniRx;
 
 public class KeyboardInputs : InputSchemeBase
 {
-    public KeyCode KeyLeft = KeyCode.A;
-    public KeyCode KeyRight = KeyCode.D;
-    public KeyCode KeyUp = KeyCode.W;
-    public KeyCode KeyDown = KeyCode.S;
-
-    public KeyCode KeyPing = KeyCode.Space;
-    public KeyCode KeySprint = KeyCode.LeftShift;
-    public KeyCode KeyAbility = KeyCode.E;
-
 
     private Camera _mainCamera;
     private float distanceToCam = 10f;
+    
+    [ItemCanBeNull] public List<KeyBindings> Bindings = new(){DefaultBindings};
 
+    public static KeyBindings DefaultBindings = new();
+    
     [SerializeField]
     private float y = 0f;
 
@@ -38,8 +35,8 @@ public class KeyboardInputs : InputSchemeBase
     public override float GetHorizontal()
     {
         var val = 0;
-        val += Input.GetKey(KeyLeft) ? -1 : 0;
-        val += Input.GetKey(KeyRight) ? +1 : 0;
+        val += Bindings.Any(t=> Input.GetKey(t.KeyLeft)) ? -1 : 0;
+        val += Bindings.Any(t=> Input.GetKey(t.KeyRight)) ? 1 : 0;
 
         return val;
     }
@@ -47,8 +44,8 @@ public class KeyboardInputs : InputSchemeBase
     public override float GetVertical()
     {
         var val = 0;
-        val += Input.GetKey(KeyDown) ? -1 : 0;
-        val += Input.GetKey(KeyUp) ? +1 : 0;
+        val += Bindings.Any(t=> Input.GetKey(t.KeyDown)) ? -1 : 0;
+        val += Bindings.Any(t=> Input.GetKey(t.KeyUp)) ? 1 : 0;
 
         return val;
     }
@@ -57,10 +54,10 @@ public class KeyboardInputs : InputSchemeBase
     // Update is called once per frame
     void FixedUpdate()
     {
-        PingButtonValue.Value = Input.GetKey(KeyPing);
-        SprintButtonValue.Value = Input.GetKey(KeySprint);
-        AbilityButtonValue.Value = Input.GetKey(KeyAbility);
-        ShootButtonValue.Value = Input.GetMouseButton(0);
+        PingButtonValue.Value =    Bindings.Any(t=>Input.GetKey(t.KeyAction));
+        SprintButtonValue.Value =  Bindings.Any(t=>Input.GetKey(t.KeySprint));
+        AbilityButtonValue.Value = Bindings.Any(t=>Input.GetKey(t.KeyAbility));
+        ShootButtonValue.Value =   Input.GetMouseButton(0);
     }
 
     public override Vector3 GetLookTarget()
