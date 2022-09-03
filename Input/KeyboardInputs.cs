@@ -15,7 +15,12 @@ public class KeyboardInputs : InputSchemeBase
     
     [ItemCanBeNull] public List<KeyBindings> Bindings = new(){DefaultBindings};
 
-    public static KeyBindings DefaultBindings = new();
+    public KeyboardInputs(KeyBindings binding)
+    {
+        Bindings = new() { binding };
+    }
+
+    public static KeyBindings DefaultBindings = ScriptableObject.CreateInstance<KeyBindings>();
     
     [SerializeField]
     private float y = 0f;
@@ -65,5 +70,10 @@ public class KeyboardInputs : InputSchemeBase
         //use mouse location.
         var loc = _mainCamera.ScreenToWorldPoint(Input.mousePosition.WithZ(distanceToCam));
         return loc;
+    }
+
+    public override string GetID()
+    {
+        return "Keyboard"; //todo, make this more unique!
     }
 }

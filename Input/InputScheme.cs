@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using UniRx;
 using System;
+using System.Xml.Serialization;
+using FishNet.Serializing;
 
-public abstract class InputSchemeBase : MonoBehaviour{
+public abstract class InputSchemeBase 
+{
     public abstract float GetHorizontal();
     public abstract float GetVertical();
 
@@ -15,5 +18,10 @@ public abstract class InputSchemeBase : MonoBehaviour{
     public ReactiveProperty<bool> SprintButtonValue;
     public ReactiveProperty<bool> AbilityButtonValue;
 
+    /// <summary>
+    /// this should be unique to the controller i think
+    /// </summary>
+    /// <returns></returns>
+    public abstract string GetID();
 
 }

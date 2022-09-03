@@ -9,10 +9,16 @@ using System.Linq;
 
 public class ControllerInputs : InputSchemeBase
 {
-    InputDevice controller;
+    public InputDevice controller;
     public ControllerBindings Bindings = DefaultBindings; 
 
     public static ControllerBindings DefaultBindings = new();
+
+    public ControllerInputs(InputDevice controller, ControllerBindings bindings)
+    {
+        this.controller = controller;
+        this.Bindings = bindings;
+    }
 
     private void Start()
     {
@@ -50,8 +56,6 @@ public class ControllerInputs : InputSchemeBase
 
     public override Vector3 GetLookTarget()
     {
-        if (controller == null) return transform.position;
-
         var vert = 0f;
         vert -= controller.GetControl(Bindings.AxisLookDown).Value;
         vert += controller.GetControl(Bindings.AxisLookUp).Value;
@@ -60,7 +64,12 @@ public class ControllerInputs : InputSchemeBase
         hori -= controller.GetControl(Bindings.AxisLookLeft).Value;
         hori += controller.GetControl(Bindings.AxisLookRight).Value;
         
-        return transform.position + new Vector3(hori, 0, vert);
+        return new Vector3(hori, 0, vert);
+    }
+
+    public override string GetID()
+    {
+        return "Controller-" + controller.GUID.ToString();
     }
 
     // Update is called once per frame

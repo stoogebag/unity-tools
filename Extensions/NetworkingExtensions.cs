@@ -1,4 +1,7 @@
-﻿using FishNet.Object;
+﻿using System;
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using UniRx;
 
 namespace stoogebag
 {
@@ -17,6 +20,8 @@ namespace stoogebag
 
             throw new System.Exception("No network adapters with an IPv4 address in the system!");
         }
+
+
     }
     public abstract class NetworkSingleton<T> : NetworkBehaviour where T : NetworkBehaviour {
 

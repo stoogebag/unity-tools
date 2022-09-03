@@ -43,5 +43,16 @@ public class ControllerBindings : ScriptableObject
         InputControlType.LeftTrigger,
         //InputControlType.Button4
     };
+    
+    public List<InputControlType> ButtonStart = new()
+    {
+        InputControlType.Button4,
+    };
+    public List<InputControlType> ButtonCancel = new()
+    {
+        InputControlType.Button6, //todo this
+    };
+
+    
 }
 #endif

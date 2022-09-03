@@ -3,150 +3,198 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FishNet;
 using InControl;
 using stoogebag;
 using UniRx;
 using UnityEngine;
 
-public abstract class PlayerJoinManager : MonoBehaviour
+public class PlayerJoinManager : Singleton<PlayerJoinManager>
 {
-    private List<PlayerBase> _connectedPlayers = new List<PlayerBase>();
+    private List<PlayerInfo> _connectedPlayers = new List<PlayerInfo>();
 
     public int MaxPlayers = 4;
 
-    public event Action<PlayerBase> PlayerConnected;
+    public event Action<PlayerInfo> PlayerConnected;
 
-    public IObservable<PlayerBase> PlayerConnectedObservable =>
-        Observable.FromEvent<PlayerBase>(h => PlayerConnected += h, h => PlayerConnected -= h);
+    public IObservable<PlayerInfo> PlayerConnectedObservable =>
+        Observable.FromEvent<PlayerInfo>(h => PlayerConnected += h, h => PlayerConnected -= h);
 
-    public event Action<PlayerBase> PlayerDisconnected;
+    public event Action<PlayerInfo> PlayerDisconnected;
 
-    public IObservable<PlayerBase> PlayerDisconnectedObservable =>
-        Observable.FromEvent<PlayerBase>(h => PlayerDisconnected += h, h => PlayerDisconnected -= h);
+    public IObservable<PlayerInfo> PlayerDisconnectedObservable =>
+        Observable.FromEvent<PlayerInfo>(h => PlayerDisconnected += h, h => PlayerDisconnected -= h);
 
     void Update()
     {
-        var controllers = InputManager.Devices.Where(t => t.DeviceClass == InputDeviceClass.Controller);
+        if (!Application.isFocused) return;
+        
+        var controllers = InputManager.Devices?.Where(t => t.DeviceClass == InputDeviceClass.Controller);
 
-        foreach (var controller in controllers)
+        if (controllers != null)
         {
-            CheckForControllerInput(controller);
+            foreach (var controller in controllers)
+            {
+                CheckForControllerInput(controller);
+            }
         }
 
         CheckKeyboard();
     }
 
+    public List<KeyBindings> AvailableKeyboardBindings; 
+    public List<ControllerBindings> AvailableControllerBindings; 
+    
     private void CheckKeyboard()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        foreach (var bindings in AvailableKeyboardBindings)
         {
-            TryConnect(null, true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TryDisconnectKeyboard();
+            if (Input.GetKeyDown(bindings.StartKey))
+            {
+                TryConnect(bindings);
+            }
+            if (Input.GetKeyDown(bindings.CancelKey))
+            {
+                var playerInfo = GetPlayer(bindings);
+                TryDisconnect(playerInfo);
+            }
         }
     }
+
 
     void CheckForControllerInput(InputDevice controller)
     {
         var a = controller.GetControl(InputNames.aButton);
-        if (a.WasPressed)
+
+        foreach (var bindings in AvailableControllerBindings)
         {
-            TryConnect(controller, false);
-        }
+            foreach (var type in bindings.ButtonStart)
+            {
+                var ctrl = controller.GetControl(type);
+                if (ctrl.WasPressed)
+                {
+                    TryConnect(controller,bindings);
+                }
+            }
+            foreach (var type in bindings.ButtonCancel)
+            {
+                var ctrl = controller.GetControl(type);
+                if (ctrl.WasPressed)
+                {
+                    var player = GetPlayer(controller, bindings);
+                    
+                    TryDisconnect(player);
+                }
+            }
 
-        var b = controller.GetControl(InputNames.bButton);
-        if (b.WasPressed)
+        }
+    }
+
+
+    private PlayerInfo GetPlayer(InputDevice controller, ControllerBindings bindings)
+    {
+        return _connectedPlayers.FirstOrDefault(t =>
         {
-            TryDisconnect(controller);
-        }
+            var input = t.Input as ControllerInputs;
+            if (input == null) return false;
+            return input.Bindings == bindings && input.controller == controller;
+        });
+    }
+    
+    private PlayerInfo GetPlayer(KeyBindings bindings)
+    {
+        return _connectedPlayers.FirstOrDefault(t => (t.Input as KeyboardInputs)?.Bindings?.Contains(bindings) == true);
     }
 
-    private void TryDisconnectKeyboard()
+    private void TryDisconnect(PlayerInfo p)
     {
-        var index = _connectedPlayers.IndexOfFirst(t => t?.IsKeyboard == true);
-        if (index == -1) return;
-
-        DisconnectPlayer(_connectedPlayers[index]);
+        if(_connectedPlayers.Contains(p)) DisconnectPlayer(p);
     }
 
-    private void TryDisconnect(InputDevice controller)
+    
+    
+    private void TryConnect(InputDevice controller, ControllerBindings bindings)
     {
-        var index = _connectedPlayers.IndexOfFirst(t => t?.Controller?.GUID == controller.GUID);
-        if (index == -1) return;
-        DisconnectPlayer(_connectedPlayers[index]);
-    }
+        if (GetPlayer(controller, bindings) != null) return;
 
-
-    private void TryConnect(InputDevice controller, bool isKeyboard)
-    {
-        if (controller != null && isKeyboard) throw new Exception("you can't be both");
+        var input = new ControllerInputs(controller, bindings);
         
-        if (_connectedPlayers.Count() == MaxPlayers) return; //game full.
-        if (_connectedPlayers.Any(t => t.IsKeyboard)) return; //we exist already
+        var player = new PlayerInfo
+        {
+            Input =  input,
+            connectionID = GetConnectionID(),
+        };
+        ConnectPlayer(player);
+    }
+    private void TryConnect(KeyBindings bindings)
+    {
+        if (GetPlayer(bindings) != null) return;
 
-        var player = new PlayerBase();
-        player.Controller = controller;
-        player.IsKeyboard = isKeyboard;
-
-        player.PlayerName = GetNewPlayerName();
-        player.Color = GetNewPlayerColor();
-        player.PlayerNumber = GetNewPlayerNumber();
-        player.IsLocal = true;
+        var input = new KeyboardInputs(bindings);
+        
+        var player = new PlayerInfo
+        {
+            Input =  input,
+            connectionID = GetConnectionID(),
+        };
         ConnectPlayer(player);
     }
 
-    private void ConnectPlayer(PlayerBase player)
+    
+
+
+    public int GetConnectionID()
     {
+        return InstanceFinder.ClientManager.Connection.ClientId;
+    }
+
+    private void ConnectPlayer(PlayerInfo player)
+    {
+        player.ComputeID();
         _connectedPlayers.Add(player);
         PlayerConnected?.Invoke(player);
     }
 
-    private void DisconnectPlayer(PlayerBase player)
+    private void DisconnectPlayer(PlayerInfo player)
     {
         _connectedPlayers.Remove(player);
         PlayerDisconnected?.Invoke(player);
     }
 
-    public abstract string GetNewPlayerName();
-    public abstract Color GetNewPlayerColor();
+    // public virtual string GetNewPlayerName()
+    // {
+    //     
+    // }
+    //
+    // public virtual Color GetNewPlayerColor()
+    // {
+    //     
+    // }
+    //
+    // public int GetNewPlayerNumber()
+    // {
+    //     for (int i = 1;true; i++)
+    //     {
+    //         if (_connectedPlayers.Any(t => t.PlayerNumber == i)) continue;
+    //         else return i;
+    //     }
+    // }
 
-    public int GetNewPlayerNumber()
-    {
-        for (int i = 1;true; i++)
-        {
-            if (_connectedPlayers.Any(t => t.PlayerNumber == i)) continue;
-            else return i;
-        }
-    }
-
-    public PlayerBase[] GetConnectedPlayers()
-    {
-        var max = _connectedPlayers.Max(t => t.PlayerNumber) - 1;
-        var array = new PlayerBase[max];
-        
-        foreach (var p in _connectedPlayers)
-        {
-            array[p.PlayerNumber - 1] = p;
-        }
-        return array;
-        
-    }
+    // public PlayerInfo[] GetConnectedPlayers()
+    // {
+    //     var max = _connectedPlayers.Max(t => t.PlayerNumber) - 1;
+    //     var array = new PlayerInfo[max];
+    //     
+    //     foreach (var p in _connectedPlayers)
+    //     {
+    //         array[p.PlayerNumber - 1] = p;
+    //     }
+    //     return array;
+    //     
+    // }
 
 }
 
-public class PlayerBase
-{
-    public string PlayerName { get; set; }
-    public int PlayerNumber { get; set; }
-    public bool IsKeyboard { get; set; }
-    public InputDevice Controller { get; set; }
-    public Color Color { get; set; }
-    public bool IsLocal { get; set; }
-    
-}
 public static class InputNames
 {
     public static readonly InputControlType aButton = InputControlType.Action1;

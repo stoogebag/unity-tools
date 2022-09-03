@@ -14,5 +14,7 @@ public class KeyBindings : ScriptableObject
     public KeyCode KeySprint = KeyCode.LeftShift;
     public KeyCode KeyAbility = KeyCode.E;
 
-    
+    public KeyCode StartKey = KeyCode.Space;
+    public KeyCode CancelKey = KeyCode.Escape;
+
 }
