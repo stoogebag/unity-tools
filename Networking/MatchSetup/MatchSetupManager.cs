@@ -1,3 +1,4 @@
+#if FISHNET
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ public class PlayerInfo
     //public bool isLocal;
     public int connectionID;
     
-    [System.NonSerialized]
+    [NonSerialized]
     public InputSchemeBase Input; //this may be lost across network operations, so we keep the controller guid in case we need to get it back at some point...
     
     public Color Color = Color.blue; //unsure should we do this.
@@ -97,3 +98,4 @@ public abstract class MatchInfoBase : NetworkBehaviour
 
     public abstract void InitialiseDefaults();
 }
+#endif

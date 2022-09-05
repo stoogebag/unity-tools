@@ -2,7 +2,6 @@
 using UniRx;
 using System;
 using System.Xml.Serialization;
-using FishNet.Serializing;
 
 public abstract class InputSchemeBase 
 {

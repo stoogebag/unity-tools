@@ -1,3 +1,4 @@
+#if FISHNET
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,3 +47,5 @@ public class ConnectionUI : MonoBehaviour
         
     }
 }
+
+#endif

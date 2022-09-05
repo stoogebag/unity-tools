@@ -7,7 +7,9 @@ using UnityEngine.UI;
 
 public class MenuButton : MonoBehaviour
 {
+    #if FISHNET
     public PlayerInfo Owner { get; private set; }
+    #endif
 
     private Button button;
     private Vector3 originalScale;

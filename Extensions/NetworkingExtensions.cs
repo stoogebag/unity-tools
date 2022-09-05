@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if FISHNET
+using System;
+using System.Net;
+using System.Net.Sockets;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UniRx;
@@ -9,16 +12,16 @@ namespace stoogebag
     {
         public static string GetLocalIPAddress()
         {
-            var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
+            var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
             {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
                     return ip.ToString();
                 }
             }
 
-            throw new System.Exception("No network adapters with an IPv4 address in the system!");
+            throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
 
@@ -54,3 +57,4 @@ namespace stoogebag
     // }
 
 }
+#endif
