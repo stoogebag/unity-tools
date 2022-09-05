@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class PlayerJoinManager : Singleton<PlayerJoinManager>
 {
-    private List<PlayerInfo> _connectedPlayers = new List<PlayerInfo>();
+    private Dictionary<string,PlayerInfo> _connectedPlayers = new Dictionary<string,PlayerInfo>();
 
     public int MaxPlayers = 4;
 
@@ -93,7 +93,7 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
 
     private PlayerInfo GetPlayer(InputDevice controller, ControllerBindings bindings)
     {
-        return _connectedPlayers.FirstOrDefault(t =>
+        return _connectedPlayers.Values.FirstOrDefault(t =>
         {
             var input = t.Input as ControllerInputs;
             if (input == null) return false;
@@ -103,12 +103,12 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     
     private PlayerInfo GetPlayer(KeyBindings bindings)
     {
-        return _connectedPlayers.FirstOrDefault(t => (t.Input as KeyboardInputs)?.Bindings?.Contains(bindings) == true);
+        return _connectedPlayers.Values.FirstOrDefault(t => (t.Input as KeyboardInputs)?.Bindings?.Contains(bindings) == true);
     }
 
     private void TryDisconnect(PlayerInfo p)
     {
-        if(_connectedPlayers.Contains(p)) DisconnectPlayer(p);
+        if(_connectedPlayers.Keys.Contains(p.ID)) DisconnectPlayer(p);
     }
 
     
@@ -151,13 +151,13 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     private void ConnectPlayer(PlayerInfo player)
     {
         player.ComputeID();
-        _connectedPlayers.Add(player);
+        _connectedPlayers.Add(player.ID, player);
         PlayerConnected?.Invoke(player);
     }
 
     private void DisconnectPlayer(PlayerInfo player)
     {
-        _connectedPlayers.Remove(player);
+        _connectedPlayers.Remove(player.ID);
         PlayerDisconnected?.Invoke(player);
     }
 
