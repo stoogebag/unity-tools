@@ -1,13 +1,17 @@
+#if FISHNET
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using stoogebag;
+
 using FishNet;
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Multipass;
 using FishNet.Transporting.Yak;
-using UnityEngine;
-using stoogebag;
+
 
 public class NetworkConnectManager : PersistentSingleton<NetworkConnectManager>
 {
@@ -54,3 +58,4 @@ public class NetworkConnectManager : PersistentSingleton<NetworkConnectManager>
     }
     
 }
+#endif

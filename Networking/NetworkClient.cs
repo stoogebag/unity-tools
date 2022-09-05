@@ -1,3 +1,4 @@
+#if FISHNET
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,3 +18,5 @@ public class NetworkClient : NetworkSingleton<NetworkClient>
     //networkclient holds the initial match info sends it to matchmanager in case it's needed 
     public MatchInfoBase InitialMatchInfo { get; set; }
 }
+
+#endif

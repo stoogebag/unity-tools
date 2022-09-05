@@ -1,3 +1,6 @@
+#if INCONTROL_EXISTS
+
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -118,3 +121,5 @@ public class UICursor : MonoBehaviour
         _player = null;
     }
 }
+
+#endif
