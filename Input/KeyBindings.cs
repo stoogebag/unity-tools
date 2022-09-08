@@ -3,8 +3,6 @@
 [CreateAssetMenu()]
 public class KeyBindings : ScriptableObject
 {
-    
-    
     public KeyCode KeyLeft = KeyCode.A;
     public KeyCode KeyRight = KeyCode.D;
     public KeyCode KeyUp = KeyCode.W;

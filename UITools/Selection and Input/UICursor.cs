@@ -11,14 +11,13 @@ using stoogebag;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UICursor : MonoBehaviour
+public class UICursor :  UIInteractorBase
 {
-    public InputSchemeBase input => _player?.Input;
-
-    public InputDevice controller => (input as ControllerInputs)?.controller;
-    public bool isMouse => (input is KeyboardInputs);
-    
     private PlayerInfo _player;
+    public InputSchemeBase input;
+
+    public InputDevice controller ;
+    public bool isMouse;
 
     private Image im;
     public float cursorSpeed = 300f;
@@ -46,40 +45,42 @@ public class UICursor : MonoBehaviour
         List<RaycastResult> results = new List<RaycastResult>(); //todo: should i get rid of this? probably not important.
         EventSystem.current.RaycastAll(pointerData, results);
         
-//        print(results.Count);
-        
-        var but = results.Select(t => t.gameObject.GetComponent<MenuButton>()).WhereNotNull().FirstOrDefault();
+        var but = results.Select(t => t.gameObject.GetComponent<SelectableUIElement>()).WhereNotNull().FirstOrDefault();
         if (but != null)
         {
-            if (but.Owner == null || but.Owner == _player)
+            if (but.CanInteract(this))
             {
-
-                if (buttonDown) Click(but);
-                else Hover(but);
+                Select(but);
             }
-            else Hover(null);
+            // if (but.Owner == null || but.Owner == _player)
+            // {
+            //
+            //     if (buttonDown) Click(but);
+            //     else Hover(but);
+            // }
+            // else Hover(null);
         }
         else
         {
-            Hover(null);
+            Select(null);
         }
     }
 
-    private void Click(MenuButton but)
-    {
-        but.Click();
-    }
-
-    private void Hover(MenuButton but)
-    {
-        if (hovered == but) return;
-
-        hovered?.UnHover();
-        hovered = but;
-        hovered?.Hover();
-
-
-    }
+    // private void Click(MenuButton but)
+    // {
+    //     but.Click();
+    // }
+    //
+    // private void Hover(MenuButton but)
+    // {
+    //     if (hovered == but) return;
+    //
+    //     hovered?.UnHover();
+    //     hovered = but;
+    //     hovered?.Hover();
+    //
+    //
+    // }
 
     void LateUpdate()
     {
@@ -99,8 +100,7 @@ public class UICursor : MonoBehaviour
             var valY = 0f;
             valX += input.GetHorizontal();
             valY += input.GetVertical();
-            
-            
+
             var vec = new Vector3(valX * Time.deltaTime * cursorSpeed,
                 valY * Time.deltaTime * cursorSpeed,
                 0);
@@ -112,14 +112,18 @@ public class UICursor : MonoBehaviour
     public void Bind(PlayerInfo player)
     {
         _player = player;
-
+        input = player?.Input;
+        controller = (input as ControllerInputs)?.controller;
+        isMouse = (input is KeyboardInputs);
         im.color = player.Color;
     }
 
     public void Unbind()
     {
         _player = null;
+        
     }
 }
+
 
 #endif

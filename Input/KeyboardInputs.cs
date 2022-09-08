@@ -13,25 +13,27 @@ public class KeyboardInputs : InputSchemeBase
     private Camera _mainCamera;
     private float distanceToCam = 10f;
     
-    [ItemCanBeNull] public List<KeyBindings> Bindings = new(){DefaultBindings};
+    [ItemCanBeNull] public List<KeyBindings> Bindings;// = new(){DefaultBindings};
 
-    public KeyboardInputs(KeyBindings binding)
+    public void Bind(KeyBindings binding)
     {
         Bindings = new() { binding };
     }
 
-    public static KeyBindings DefaultBindings = ScriptableObject.CreateInstance<KeyBindings>();
+    //public static KeyBindings DefaultBindings = ScriptableObject.CreateInstance<KeyBindings>();
     
     [SerializeField]
     private float y = 0f;
 
+    public static float ButtonPressThreshold = .5f;
+
     private void Start()
     {
-        PingButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        ShootButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        SprintButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        AbilityButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        ItemButtonValue = new UniRx.ReactiveProperty<bool>(false);
+        // ActionButtonValue = new UniRx.ReactiveProperty<bool>(false);
+        // ShootButtonValue = new UniRx.ReactiveProperty<bool>(false);
+        // SprintButtonValue = new UniRx.ReactiveProperty<bool>(false);
+        // AbilityButtonValue = new UniRx.ReactiveProperty<bool>(false);
+        // ItemButtonValue = new UniRx.ReactiveProperty<bool>(false);
 
         _mainCamera = Camera.main;
         distanceToCam = _mainCamera.transform.position.y - y;
@@ -59,11 +61,21 @@ public class KeyboardInputs : InputSchemeBase
     // Update is called once per frame
     void FixedUpdate()
     {
-        PingButtonValue.Value =    Bindings.Any(t=>Input.GetKey(t.KeyAction));
+        ActionButtonValue.Value =    Bindings.Any(t=>Input.GetKey(t.KeyAction));
         SprintButtonValue.Value =  Bindings.Any(t=>Input.GetKey(t.KeySprint));
         AbilityButtonValue.Value = Bindings.Any(t=>Input.GetKey(t.KeyAbility));
         ShootButtonValue.Value =   Input.GetMouseButton(0);
+
+        var hori = GetHorizontal();
+        LeftButtonValue.Value = hori < -ButtonPressThreshold;
+        RightButtonValue.Value = hori > ButtonPressThreshold;
+
+        var vert = GetVertical();
+        DownButtonValue.Value =  vert < -ButtonPressThreshold;
+        UpButtonValue.Value = vert > ButtonPressThreshold;
+
     }
+    
 
     public override Vector3 GetLookTarget()
     {
@@ -74,6 +86,6 @@ public class KeyboardInputs : InputSchemeBase
 
     public override string GetID()
     {
-        return "Keyboard"; //todo, make this more unique!
+        return "Keyboard" + Bindings[0].name; //todo, make this more unique!
     }
 }

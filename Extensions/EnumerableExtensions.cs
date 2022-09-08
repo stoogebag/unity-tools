@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -40,6 +42,11 @@ public static class EnumerableExtensions
             UnityEngine.Object.Destroy(o.gameObject);
         }
         list.Clear();
+    }
+
+    public static void DisposeWith(this IDisposable d, Component component)
+    {
+        component.OnDestroyAsObservable().Subscribe(u => d.Dispose());
     }
     
 }
