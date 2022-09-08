@@ -1,3 +1,4 @@
+#if DOTWEEN
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,3 +30,5 @@ public class WindowSlideIn : MonoBehaviour, IWindowAnimation
 
     public bool Active { get; }
 }
+
+#endif
