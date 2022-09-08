@@ -5,7 +5,7 @@ using UnityEngine;
 using stoogebag;
 using UnityEngine.UI;
 
-public class MenuButton : MonoBehaviour
+public class MenuButton : SelectableUIElement
 {
     #if FISHNET
     public PlayerInfo Owner { get; private set; }

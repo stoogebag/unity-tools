@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 
 namespace stoogebag
@@ -119,5 +120,15 @@ namespace stoogebag
         //     EditorUtility.IsPersistent(go.transform.root.gameObject) && !(go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)))
         // }
         //
+
+        public static IDisposable TemporarilyScaleDisposable(this Transform t, Vector3 scale)
+        {
+            t.localScale = t.localScale.ScaleByVector(scale);
+            return Disposable.Create(() =>
+            {
+                t.localScale = t.localScale.ScaleByVector(scale.Invert());
+            });
+        } 
     }
+    
 }

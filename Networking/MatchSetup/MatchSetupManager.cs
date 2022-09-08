@@ -13,7 +13,6 @@ using UniRx;
 public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManager<TMatchInfo>>
     where TMatchInfo : MatchInfoBase
 {
-    public SynchronisedMatchInfo MatchInfoSync;
 
     public TMatchInfo MatchInfo;
 
@@ -21,7 +20,6 @@ public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManage
     {
         base.Awake();
 
-        MatchInfoSync = GetComponent<SynchronisedMatchInfo>();
         //this.ObserveEveryValueChanged(t => t.Players).Subscribe(t => print(Players.Select(t => t.Name).ToList()));
     }
 
@@ -67,17 +65,16 @@ public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManage
 
 public class PlayerInfo
 {
-    private static int count;
     public string Name = "player";
-    //public bool isLocal;
-    public int connectionID;
+    public string ID;
+    public Color Color = Color.blue; //unsure should we do this.
+    public bool Ready;
     
     [NonSerialized]
     public InputSchemeBase Input; //this may be lost across network operations, so we keep the controller guid in case we need to get it back at some point...
     
-    public Color Color = Color.blue; //unsure should we do this.
 
-    public string ID;
+    public int connectionID;
     public string inputID = "";
 
     public void ComputeID()

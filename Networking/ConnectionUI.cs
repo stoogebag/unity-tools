@@ -21,11 +21,17 @@ public class ConnectionUI : MonoBehaviour
         Host = this.GetChild<Button>("Host");
         Join = this.GetChild<Button>("Join");
 
-        Host.OnClickAsObservable().Subscribe(u =>
+        Host.OnClickAsObservable().SubscribeAsync(async u =>
         {
+            var window = FindObjectOfType<SimpleTextWindow>(true);
+
+            var result =await window.PopupAndAwaitResult("are u sure mate?");
+
+            if (result.Result == TemporaryWindow<string, object>.Result.Cancel) return;
+            
             NetworkConnectManager.Instance.StartServer();
             NetworkConnectManager.Instance.TryConnect();
-        });
+        } );
         
         Join.OnClickAsObservable().Subscribe(u =>
         {

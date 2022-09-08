@@ -37,6 +37,16 @@ namespace stoogebag
             return (w - v).magnitude;
         }
 
+        public static float DistanceToSquared(this Vector4 v, Vector4 w)
+        {
+            return (w - v).sqrMagnitude;
+        }
+
+        public static float DistanceTo(this Vector4 v, Vector4 w)
+        {
+            return (w - v).magnitude;
+        }
+
         public static Vector3 WithX(this Vector3 v, float x)
         {
             return new Vector3(x, v.y, v.z);
@@ -86,7 +96,22 @@ namespace stoogebag
             return v.DistanceTo(u) <= eps;
         }
 
-        
+        /// <summary>
+        /// inverts pointwise
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 Invert(this Vector3 v)
+        {
+            return new Vector3(1f / v.x, 1f / v.y, 1f / v.z);
+        }
+        /// <summary>
+        /// scales pointwise
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 ScaleByVector(this Vector3 v, Vector3 w)
+        {
+            return new Vector3(v.x*w.x,  v.y*w.y, v.z*w.z);
+        }
         
     }
 }

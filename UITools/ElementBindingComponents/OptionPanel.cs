@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using stoogebag;
 using TMPro;
@@ -9,8 +10,6 @@ using UnityEngine.UI;
 
 public class OptionPanel : MonoBehaviour
 {
-
-
     public string[] OptionsArray;
 
     public int index;
@@ -26,10 +25,12 @@ public class OptionPanel : MonoBehaviour
     private Func<string, bool> IsAvailableFunc;
     private Func<string> _labelFunc;
     private CompositeDisposable _disposable = new();
+    private Action<string> _setValueFunc;
+    private Func<string> _getValueFunc;
 
     public IObservable<Unit> RefreshObservable => Observable.FromEvent(h => OnRefresh += h, h => OnRefresh -= h);
     
-    private void TryChangeIndex(int i)
+    public void TryChangeIndex(int i)
     {
         if (OptionsArray.Length == 0) return; 
         while (true)
@@ -46,6 +47,8 @@ public class OptionPanel : MonoBehaviour
     {
         if(textValue != null) textValue.text = option;
         if(textLabel != null) textLabel.text = _labelFunc();
+        _setValueFunc(option);
+        
         OnRefresh?.Invoke();
     }
 
@@ -67,6 +70,9 @@ public class OptionPanel : MonoBehaviour
     public void Bind(Func<string> getValue, Action<string> setValue, Func<string> getLabelFunc,string[] options, string selected, Func<string, bool> availabilityFunc = null)
     {
         _disposable.Clear();
+
+        _getValueFunc = getValue;
+        _setValueFunc = setValue;
         
         if(textLabel != null) textLabel.text = getLabelFunc();
         _labelFunc = getLabelFunc;
@@ -98,5 +104,17 @@ public class OptionPanel : MonoBehaviour
     public void Bind<T>(ReactiveProperty<T> prop, Func<T, string> toString, Func<string, T> fromString, string[] options, Func<string> getLabelFunc, T selected, Func<T, bool> availabilityFunc)
     {
         Bind(() => toString(prop.Value), s=> prop.Value = fromString(s), getLabelFunc, options, toString(selected), s=> availabilityFunc(fromString(s)) );
-    } 
+    }
+
+
+    public void Bind<T>(ReactiveProperty<T> prop, Dictionary<string, T> nameToOptionDic, Func<string> getLabelFunc,
+        T selected, Func<T, bool> availabilityFunc, Func<T,T,float> distanceFunc = null)
+    {
+        var optionToNameDic = nameToOptionDic.ToDictionary(t => t.Value, t => t.Key);
+
+        Func<T, string> toString = (t => optionToNameDic.TryGetOrClosest<T, string>(t, distanceFunc));
+        
+        Func<string, T> fromString = (t => nameToOptionDic[t]);
+        Bind(prop, toString,fromString,nameToOptionDic.Keys.ToArray(), getLabelFunc,selected,availabilityFunc);
+    }
 }

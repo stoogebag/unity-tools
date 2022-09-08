@@ -42,7 +42,6 @@ public class NetworkConnectManager : PersistentSingleton<NetworkConnectManager>
     {
         _networkManager.ServerManager.StartConnection();
         _networkManager.GetComponent<Multipass>().SetClientTransport<Yak>();
-        print(NetworkingExtensions.GetLocalIPAddress());
     }
 
     public void TryConnect()

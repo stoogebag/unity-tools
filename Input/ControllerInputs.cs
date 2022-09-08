@@ -10,28 +10,15 @@ using System.Linq;
 public class ControllerInputs : InputSchemeBase
 {
     public InputDevice controller;
-    public ControllerBindings Bindings = DefaultBindings; 
+    public ControllerBindings Bindings;// = DefaultBindings;
 
-    public static ControllerBindings DefaultBindings = new();
+    //public static ControllerBindings DefaultBindings = ControllerBindings.CreateInstance<ControllerBindings>();
 
-    public ControllerInputs(InputDevice controller, ControllerBindings bindings)
+    public void Bind(InputDevice controller, ControllerBindings bindings)
     {
         this.controller = controller;
         this.Bindings = bindings;
     }
-
-    private void Start()
-    {
-        PingButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        ShootButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        SprintButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        AbilityButtonValue = new UniRx.ReactiveProperty<bool>(false);
-        ItemButtonValue = new UniRx.ReactiveProperty<bool>(false);
-
-
-        //PingButtonValue.Subscribe(t => print("!" +t));
-    }
-
 
     public override float GetHorizontal()
     {
@@ -69,12 +56,13 @@ public class ControllerInputs : InputSchemeBase
 
     public override string GetID()
     {
-        return "Controller-" + controller.GUID.ToString();
+        return "Controller-" + controller.GUID.ToString() + Bindings.name;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!Application.isFocused) return;
         if(controller == null)
         {
             if(InputManager.ActiveDevice.IsAttached) controller = InputManager.ActiveDevice;
@@ -92,15 +80,23 @@ public class ControllerInputs : InputSchemeBase
         //print(GetVertical());
 
         //print(controller.GetFirstPressedButton());
-        PingButtonValue.Value = Bindings.ButtonPing.Any(b=> controller.GetControl(b).Value > 0);
+        ActionButtonValue.Value = Bindings.ButtonPing.Any(b=> controller.GetControl(b).Value > 0);
         ShootButtonValue.Value = Bindings.ButtonShoot.Any(b => controller.GetControl(b).Value > 0);
         SprintButtonValue.Value = Bindings.ButtonSprint.Any(b => controller.GetControl(b).Value > 0);
         ItemButtonValue.Value = Bindings.ButtonItem.Any(b => controller.GetControl(b).Value > 0);
 
 
+        var hori = GetHorizontal();
+        LeftButtonValue.Value = hori < -ButtonPressThreshold;
+        RightButtonValue.Value = hori > ButtonPressThreshold;
+
+        var vert = GetVertical();
+        DownButtonValue.Value =  vert < -ButtonPressThreshold;
+        UpButtonValue.Value = vert > ButtonPressThreshold;
 
     }
 
+    public static float ButtonPressThreshold = .5f;
     public void Bind(InputDevice input)
     {
         controller = input;

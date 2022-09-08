@@ -24,6 +24,15 @@ namespace stoogebag
             else return default;
         }
 
+        public static TValue TryGetOrClosest<TKey, TValue>(this Dictionary<TKey, TValue> dic, TKey key, Func<TKey, TKey, float> distanceFunc)
+        {
+            if (dic.TryGetValue(key, out var val)) return val;
+            if (distanceFunc == null) return default;
+            return dic.MinItem(t => distanceFunc(t.Key, key)).Value;
+        }
+
+
+
     }
 
     public static class EnumerableExtensions

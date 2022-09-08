@@ -13,6 +13,8 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
 {
     private Dictionary<string,PlayerInfo> _connectedPlayers = new Dictionary<string,PlayerInfo>();
 
+    private Dictionary<string, InputSchemeBase> _connectedInputs = new();
+
     public int MaxPlayers = 4;
 
     public event Action<PlayerInfo> PlayerConnected;
@@ -56,7 +58,7 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
             if (Input.GetKeyDown(bindings.CancelKey))
             {
                 var playerInfo = GetPlayer(bindings);
-                TryDisconnect(playerInfo);
+                if(playerInfo != null) TryDisconnect(playerInfo);
             }
         }
     }
@@ -108,6 +110,7 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
 
     private void TryDisconnect(PlayerInfo p)
     {
+        if (p == null) return;
         if(_connectedPlayers.Keys.Contains(p.ID)) DisconnectPlayer(p);
     }
 
@@ -117,7 +120,8 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     {
         if (GetPlayer(controller, bindings) != null) return;
 
-        var input = new ControllerInputs(controller, bindings);
+        var input = gameObject.AddComponent<ControllerInputs>();
+        input.Bind(controller, bindings);
         
         var player = new PlayerInfo
         {
@@ -130,7 +134,8 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     {
         if (GetPlayer(bindings) != null) return;
 
-        var input = new KeyboardInputs(bindings);
+        var input = gameObject.AddComponent<KeyboardInputs>();
+        input.Bind(bindings);
         
         var player = new PlayerInfo
         {
@@ -152,14 +157,24 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     {
         player.ComputeID();
         _connectedPlayers.Add(player.ID, player);
+        _connectedInputs.Add(player.ID, player.Input);
+        
+        
+        
         PlayerConnected?.Invoke(player);
     }
 
     private void DisconnectPlayer(PlayerInfo player)
     {
         _connectedPlayers.Remove(player.ID);
+        _connectedInputs.Remove(player.ID);
+        
+        if(player.Input != null) Destroy(player.Input);
         PlayerDisconnected?.Invoke(player);
     }
+
+    public InputSchemeBase GetInput(string id) => _connectedInputs.TryGetOrDefault(id);
+
 
     // public virtual string GetNewPlayerName()
     // {
