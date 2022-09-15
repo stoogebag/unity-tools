@@ -49,4 +49,12 @@ public static class EnumerableExtensions
         component.OnDestroyAsObservable().Subscribe(u => d.Dispose());
     }
     
+    // Ensures that the capacity of this list is at least the given minimum 
+    // value. If the currect capacity of the list is less than min, the
+    // capacity is increased to twice the current capacity or to min, 
+    // whichever is larger. 
+    public static void EnsureCapacity<T>(this List<T> list, int min)
+    {
+        if (list.Capacity < min) list.Capacity = min;
+    }
 }

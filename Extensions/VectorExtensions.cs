@@ -66,6 +66,10 @@ namespace stoogebag
         {
             return new Vector3(v.x, v.y, z);
         }
+        public static Vector4 WithW(this Vector3 v, float w)
+        {
+            return new Vector4(v.x, v.y, v.z, w);
+        }
 
         public static Vector2 Rounded(this Vector2 v, int decimalPlaces = 0)
         {

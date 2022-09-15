@@ -16,6 +16,16 @@ public class Window : MonoBehaviour
 
     protected CompositeDisposable _disposable = new();
     
+    [SerializeField]
+    private bool ActivateOnStart = false;
+
+    protected virtual void Start()
+    {
+
+        if (ActivateOnStart) Activate();
+    }
+
+
     public IWindowAnimation Anim {
         get
         {
@@ -44,7 +54,7 @@ public class Window : MonoBehaviour
 
 public abstract class TemporaryWindow<TInputModel, TDataModel> : Window where TDataModel : class
 {
-    private CompositeDisposable _disposable = new();
+    private CompositeDisposable _popupDisposable = new();
     public async Task<WindowResult> PopupAndAwaitResult(TInputModel inputs, TDataModel data = null)
     {
         Bind(inputs, data);
@@ -58,7 +68,7 @@ public abstract class TemporaryWindow<TInputModel, TDataModel> : Window where TD
                 Result = Result.Proceed,
                 Data = m
             });
-        }).AddTo(_disposable);
+        }).AddTo(_popupDisposable);
 
         CancelObservable.Subscribe(m =>
         {
@@ -66,10 +76,10 @@ public abstract class TemporaryWindow<TInputModel, TDataModel> : Window where TD
             {
                 Result = Result.Cancel,
             });
-        }).AddTo(_disposable);
+        }).AddTo(_popupDisposable);
 
         var result = await close.Task;
-        _disposable.Clear();
+        _popupDisposable.Clear();
         await this.Deactivate(); //possibly dont bother awaiting this...
         return result;
     }
