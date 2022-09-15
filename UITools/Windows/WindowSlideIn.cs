@@ -11,6 +11,9 @@ public class WindowSlideIn : MonoBehaviour, IWindowAnimation
     public Vector3 RelativeOffScreenPos = Vector3.down * 10f;
     [SerializeField] private float time = 0.5f;
 
+    [SerializeField]
+    private bool AnimateOnClose = true;
+
     public async Task Activate()
     {
         gameObject.SetActive(true);
@@ -21,10 +24,16 @@ public class WindowSlideIn : MonoBehaviour, IWindowAnimation
 
     public async Task Deactivate()
     {
-        var pos = transform.position;
-        await transform.DOMove(pos + RelativeOffScreenPos, time).AsyncWaitForCompletion();
-        gameObject.SetActive(false);
-        transform.position = pos;
+        if (AnimateOnClose)
+        {
+            var pos = transform.position;
+            await transform.DOMove(pos + RelativeOffScreenPos, time).AsyncWaitForCompletion();
+            gameObject.SetActive(false);
+            transform.position = pos;
+        }
+        else gameObject.SetActive(false);
+
+
     }
 
     public bool Active { get; }
