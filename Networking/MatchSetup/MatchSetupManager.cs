@@ -1,3 +1,5 @@
+using System;
+using UnityEngine;
 #if FISHNET
 using System;
 using System.Collections;
@@ -6,7 +8,6 @@ using System.Linq;
 using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
-using UnityEngine;
 using stoogebag;
 using UniRx;
 
@@ -63,6 +64,18 @@ public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManage
     public abstract void StartMatch();
 }
 
+
+/// <summary>
+/// matchinfo has to be a networkbehaviour so that it can be synchronised. this sucks but that's life.
+/// </summary>
+public abstract class MatchInfoBase : NetworkBehaviour
+{
+    public int ID { get; private set; }
+
+    public abstract void InitialiseDefaults();
+}
+#endif
+
 public class PlayerInfo
 {
     public string Name = "player";
@@ -85,14 +98,3 @@ public class PlayerInfo
 
 
 }
-
-/// <summary>
-/// matchinfo has to be a networkbehaviour so that it can be synchronised. this sucks but that's life.
-/// </summary>
-public abstract class MatchInfoBase : NetworkBehaviour
-{
-    public int ID { get; private set; }
-
-    public abstract void InitialiseDefaults();
-}
-#endif
