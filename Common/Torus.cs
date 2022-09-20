@@ -5,14 +5,13 @@ using stoogebag;
 
 public class Torus : MonoBehaviour
 {
-    private BoxCollider boundsCollider;
+    //private BoxCollider boundsCollider;
     private Bounds bounds;
 
     void Start()
     {
-        boundsCollider = FindObjectOfType<StageBounds>().gameObject.GetComponent<BoxCollider>();
-        bounds = boundsCollider.bounds;
-
+        //boundsCollider = FindObjectOfType<IBoundsProvider>().Bpunds.gameObject.GetComponent<BoxCollider>();
+        bounds = GetComponent<IBoundsProvider>().Bounds;
     }
 
     // Update is called once per frame
@@ -40,3 +39,8 @@ public class Torus : MonoBehaviour
 
     }
 }
+
+public interface IBoundsProvider
+{
+    public Bounds Bounds { get; }
+} 
