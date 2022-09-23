@@ -9,35 +9,60 @@ using stoogebag;
 using UniRx;
 public class WindowSlideIn : MonoBehaviour, IWindowAnimation
 {
-    public Vector3 RelativeOffScreenPos = Vector3.down * 10f;
-    [SerializeField] private float time = 0.5f;
+    /// <summary>
+    /// optional. 
+    /// </summary>
+    [SerializeField]
+    private Transform OffScreenPos;
 
+    [SerializeField] private Vector3 Offset = new Vector3(0,10,0);
+
+    public Vector3 _originalPos;
+    
+    [SerializeField] 
+    private Ease ease = Ease.Linear;
+    [SerializeField] 
+    private float time = 0.5f;
     [SerializeField]
     private bool AnimateOnClose = true;
+
+    private Vector3 _differenceVec;
+    private Vector3 _offScreenPos;
+
+    private void Awake()
+    {
+        _originalPos = transform.position;
+        _offScreenPos = OffScreenPos?.position ?? transform.position + Offset;
+    }
 
     public async Task Activate()
     {
         gameObject.SetActive(true);
-        var pos = transform.position;
-        transform.position = pos + RelativeOffScreenPos;
-        await transform.DOMove(pos, time).AsyncWaitForCompletion();
+
+        transform.position = _offScreenPos;
+        await transform.DOMove(_originalPos, time).SetEase(ease).AsyncWaitForCompletion();
     }
 
     public async Task Deactivate()
     {
         if (AnimateOnClose)
         {
-            var pos = transform.position;
-            await transform.DOMove(pos + RelativeOffScreenPos, time).AsyncWaitForCompletion();
+            await transform.DOMove(_offScreenPos, time).SetEase(ease).AsyncWaitForCompletion();
             gameObject.SetActive(false);
-            transform.position = pos;
+            ResetPosition();
         }
-        else gameObject.SetActive(false);
-
-
+        else
+        {
+            gameObject.SetActive(false);
+            ResetPosition();
+        }
     }
 
-    public bool Active { get; }
+    private void ResetPosition()
+    {
+        transform.position = _originalPos;
+    }
+
 }
 
 #endif

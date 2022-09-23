@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using stoogebag;
 using TMPro;
-using Unity.VisualScripting;
 
 public class LoadingPopup : MonoBehaviour
 {
