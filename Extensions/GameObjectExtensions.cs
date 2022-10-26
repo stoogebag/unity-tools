@@ -53,7 +53,7 @@ namespace stoogebag
             return go.transform.FirstOrDefault(name).gameObject;
         }
 
-        public static T GetChild<T>(this MonoBehaviour component, string name) where T: MonoBehaviour
+        public static T GetChild<T>(this MonoBehaviour component, string name) where T: Component
         {
             return component.gameObject.FirstOrDefault<T>(name);
         }
@@ -85,7 +85,23 @@ namespace stoogebag
 
             return null;
         }
-        
+
+        public static IEnumerable<Transform> GetAllDescendents(this Transform transform, Func<Transform, bool> query = null)
+        {
+            if (query == null || query(transform)) {
+                yield return transform;
+            }
+
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var result = GetAllDescendents(transform.GetChild(i), query);
+                foreach (var t in result)
+                {
+                    yield return t;
+                }
+            }
+        }
+
         
 
         public static Vector3 PositionOffset(this GameObject me, GameObject other)

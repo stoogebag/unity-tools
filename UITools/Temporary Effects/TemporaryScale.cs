@@ -1,4 +1,6 @@
-﻿using DG.Tweening;
+﻿#if DOTWEEN
+
+using DG.Tweening;
 using stoogebag;
 using UniRx;
 using UnityEngine;
@@ -27,3 +29,5 @@ public class TemporaryScale : TemporaryEffectBase
         _disposable.Clear();
     }
 }
+
+#endif
