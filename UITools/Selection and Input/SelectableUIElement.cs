@@ -9,7 +9,7 @@ public abstract class SelectableUIElement : MonoBehaviour
     public List<UISelector> Owners { get; }
 
     public TemporaryEffectBase[] SelectionEffects;
-    public CompositeDisposable _selectedDisposable = new();
+    public CompositeDisposable _selectedDisposable = new CompositeDisposable();
     
     public SelectableUIElement LeftNeighbour;
     public SelectableUIElement RightNeighbour;

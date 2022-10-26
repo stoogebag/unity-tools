@@ -17,7 +17,7 @@ public class KeyboardInputs : InputSchemeBase
 
     public void Bind(KeyBindings binding)
     {
-        Bindings = new() { binding };
+        Bindings = new List<KeyBindings>() { binding };
     }
 
     //public static KeyBindings DefaultBindings = ScriptableObject.CreateInstance<KeyBindings>();

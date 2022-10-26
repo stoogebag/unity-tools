@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MeshBuilder
 {
-    private List<Triangle> Tris = new();
+    private List<Triangle> Tris = new List<Triangle>();
 
     public Mesh GetMesh()
     {

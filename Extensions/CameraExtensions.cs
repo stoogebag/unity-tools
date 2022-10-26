@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using stoogebag;
+using UnityEngine;
 
 public static class CameraExtensions
 {
@@ -18,6 +19,21 @@ public static class CameraExtensions
         cam.nearClipPlane = minD- virtualsphereRadius;
     }
 
+    public static Vector3 GetWorldMousePosition(this Camera cam, float distance)
+    {
+        return cam.ScreenToWorldPoint(Input.mousePosition.WithZ(distance));
+    }
+
+    public static RaycastHit Raycast(this Camera cam, Vector3 screenPos, LayerMask layers, float distance = 100)
+    {
+        var ray = cam.ScreenPointToRay(screenPos);
+        
+        if (Physics.Raycast(ray, out var hit, distance, layers))
+        {
+            return hit;
+        }
+        else return default;
+    }
     
     
 }

@@ -33,6 +33,12 @@ namespace stoogebag
             else go.layer = layer;
         }
 
+        public static int GetLayerMask(this GameObject go)
+        {
+            int layerMask = 1 << go.layer;
+            return layerMask;
+        }
+        
         public static Transform FirstOrDefault(this Transform transform, string name)
         {
             return transform.FirstOrDefault(t => t.name == name);
@@ -43,7 +49,7 @@ namespace stoogebag
             if (typeof(T) == typeof(GameObject)) return go.FirstOrDefault(name) as T;
             return go.transform.FirstOrDefault(t =>
             {
-                if(t.name != name) return false;
+                if(name != null && t.name != name) return false;
                 if (t.gameObject.TryGetComponent<T>(out var x)) return true;
                 return false;
             }).GetComponent<T>();
@@ -53,7 +59,7 @@ namespace stoogebag
             return go.transform.FirstOrDefault(name).gameObject;
         }
 
-        public static T GetChild<T>(this MonoBehaviour component, string name) where T: MonoBehaviour
+        public static T GetChild<T>(this MonoBehaviour component, string name = null) where T: MonoBehaviour
         {
             return component.gameObject.FirstOrDefault<T>(name);
         }

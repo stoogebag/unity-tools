@@ -12,7 +12,7 @@ namespace stoogebag
 
         public static void CreateFolder(string path)
         {
-            var split = path.Split("/");
+            var split = path.Split('/');
             var partial = split[0];
             
             for (var i = 1; i < split.Length; i++)

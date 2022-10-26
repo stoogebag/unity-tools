@@ -9,7 +9,7 @@ using stoogebag;
 
 public class WindowManager : Singleton<WindowManager>
 {
-    private Dictionary<string,Window> _windows = new();
+    private Dictionary<string,Window> _windows = new Dictionary<string, Window>();
 
     // tests
      [Button]

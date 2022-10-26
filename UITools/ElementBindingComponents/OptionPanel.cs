@@ -24,7 +24,7 @@ public class OptionPanel : MonoBehaviour
 
     private Func<string, bool> IsAvailableFunc;
     private Func<string> _labelFunc;
-    private CompositeDisposable _disposable = new();
+    private CompositeDisposable _disposable = new CompositeDisposable();
     private Action<string> _setValueFunc;
     private Func<string> _getValueFunc;
 
@@ -92,7 +92,7 @@ public class OptionPanel : MonoBehaviour
     
     public void Bind<TEnum>(Func<TEnum> getValue, Action<TEnum> setValue, Func<string> getLabelFunc, TEnum selected, Func<TEnum, bool> availabilityFunc = null) where TEnum: struct, System.Enum
     {
-        Bind(() => getValue().ToString(), s => setValue(Enum.Parse<TEnum>(s)), getLabelFunc,
+        Bind(() => getValue().ToString(), s => setValue((TEnum)Enum.Parse(typeof(TEnum), s)), getLabelFunc,
             Enum.GetNames(typeof(TEnum)), Enum.GetName((typeof(TEnum)), selected));
     }
     

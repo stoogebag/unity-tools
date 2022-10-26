@@ -6,13 +6,13 @@ public class UISelector : UIInteractorBase
 {
     public float cooldown = 0.3f;
 
-    private CompositeDisposable _disposable = new();
+    private CompositeDisposable _disposable = new CompositeDisposable();
     
 
     public SelectableUIElement InitialSelectedElement;
     private DateTime lastInputTime = DateTime.MinValue;
 
-    public List<InputSchemeBase> Inputs = new();
+    public List<InputSchemeBase> Inputs = new List<InputSchemeBase>();
     
     private void Start()
     {

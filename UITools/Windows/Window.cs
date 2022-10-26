@@ -14,7 +14,7 @@ public class Window : MonoBehaviour
     public event Action OnActivated;
     public event Action OnDeactivated;
 
-    protected CompositeDisposable _disposable = new();
+    protected CompositeDisposable _disposable = new CompositeDisposable();
     
     [SerializeField]
     private bool ActivateOnStart = false;
@@ -54,7 +54,7 @@ public class Window : MonoBehaviour
 
 public abstract class TemporaryWindow<TInputModel, TDataModel> : Window where TDataModel : class
 {
-    private CompositeDisposable _popupDisposable = new();
+    private CompositeDisposable _popupDisposable = new CompositeDisposable();
     public async Task<WindowResult> PopupAndAwaitResult(TInputModel inputs, TDataModel data = null)
     {
         Bind(inputs, data);

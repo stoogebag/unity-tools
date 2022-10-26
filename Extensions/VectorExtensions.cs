@@ -72,15 +72,37 @@ namespace stoogebag
         }
 
         public static Vector2 Rounded(this Vector2 v, int decimalPlaces = 0)
-        {
-            var pow = (float)Math.Pow(10, decimalPlaces);
-            return new Vector2((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow);
-        }
+                {
+                    var pow = (float)Math.Pow(10, decimalPlaces);
+                    return new Vector2((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow);
+                }
         public static Vector3 Rounded(this Vector3 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
             
             return new Vector3((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow,(float)Math.Round(v.z*pow)/pow);
+        }
+        public static Vector2 Floor(this Vector2 v, int decimalPlaces = 0)
+        {
+            var pow = (float)Math.Pow(10, decimalPlaces);
+            return new Vector2((float)Math.Floor(v.x*pow)/pow, (float)Math.Floor(v.y*pow)/pow);
+        }
+        public static Vector3 Floor(this Vector3 v, int decimalPlaces = 0)
+        {
+            var pow = (float)Math.Pow(10, decimalPlaces);
+                
+            return new Vector3((float)Math.Floor(v.x*pow)/pow, (float)Math.Floor(v.y*pow)/pow,(float)Math.Floor(v.z*pow)/pow);
+        }
+        public static Vector2 Ceiling(this Vector2 v, int decimalPlaces = 0)
+        {
+            var pow = (float)Math.Pow(10, decimalPlaces);
+            return new Vector2((float)Math.Ceiling(v.x*pow)/pow, (float)Math.Ceiling(v.y*pow)/pow);
+        }
+        public static Vector3 Ceiling(this Vector3 v, int decimalPlaces = 0)
+        {
+            var pow = (float)Math.Pow(10, decimalPlaces);
+                
+            return new Vector3((float)Math.Ceiling(v.x*pow)/pow, (float)Math.Ceiling(v.y*pow)/pow,(float)Math.Ceiling(v.z*pow)/pow);
         }
 
         public static float Dot(this Vector3 v, Vector3 u)
@@ -116,6 +138,17 @@ namespace stoogebag
         {
             return new Vector3(v.x*w.x,  v.y*w.y, v.z*w.z);
         }
+
+        /// <summary>
+        /// scales pointwise
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 Scale(this Vector2 v, float x, float y)
+        {
+            return new Vector2(v.x*x,  v.y*y);
+        }
+
+
         
     }
 }

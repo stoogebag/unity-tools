@@ -1,33 +1,40 @@
 ﻿using UnityEngine;
 
-public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
+namespace stoogebag
+{
 
-    public static T Instance { get; private set; }
 
-    protected virtual void Awake()
+    public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        if (Instance != null)
+
+        public static T Instance { get; private set; }
+
+        protected virtual void Awake()
         {
-            Destroy(gameObject);
-            return;
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this as T;
         }
 
-        Instance = this as T;
+        protected virtual void OnApplicationQuit()
+        {
+            Instance = null;
+            Destroy(gameObject);
+        }
     }
 
-    protected virtual void OnApplicationQuit() {
-        Instance = null;
-        Destroy(gameObject);
-    }
-}
-
-public abstract class PersistentSingleton<T> : Singleton<T> where T : MonoBehaviour
-{
-    protected override void Awake()
+    public abstract class PersistentSingleton<T> : Singleton<T> where T : MonoBehaviour
     {
-        base.Awake();
-        DontDestroyOnLoad(gameObject);
+        protected override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(gameObject);
+        }
     }
+
+
 }
-
-
