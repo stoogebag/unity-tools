@@ -26,7 +26,6 @@ public class ConnectionUI : MonoBehaviour
             var window = FindObjectOfType<SimpleTextWindow>(true);
 
             var result =await window.PopupAndAwaitResult("are u sure mate?");
-
             if (result.Result == TemporaryWindow<string, object>.Result.Cancel) return;
             
             NetworkConnectManager.Instance.StartServer();
