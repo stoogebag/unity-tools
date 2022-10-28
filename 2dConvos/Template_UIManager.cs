@@ -188,8 +188,8 @@ public class Template_UIManager : MonoBehaviour
         foreach (Button b in maxPlayerChoices) { b.transform.GetChild(0).GetComponent<Text>().text = ""; b.transform.GetChild(0).GetComponent<Text>().color = Color.white; }
         NPC_Container.SetActive(false);
         playerContainer.SetActive(false);
-        NPCSprite.gameObject.SetActive(false);
-        playerSprite.gameObject.SetActive(false);
+        if(NPCSprite != null) NPCSprite.gameObject.SetActive(false);
+        if(playerSprite != null) playerSprite.gameObject.SetActive(false);
 
         //playerSprite.sprite = null;
         //NPCSprite.sprite = null;
@@ -261,13 +261,13 @@ public class Template_UIManager : MonoBehaviour
             //If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
             if (data.tag == "1")
             {
-                NPCSprite.gameObject.SetActive(true);
+                if(NPCSprite != null) NPCSprite.gameObject.SetActive(true);
                 NPC_Container.SetActive(true);
             }
             else
             {
                 //Sets the NPC container on
-                playerSprite.gameObject.SetActive(true);
+                if(playerSprite != null) playerSprite.gameObject.SetActive(true);
                 NPC_Container.SetActive(true);
             }
         }

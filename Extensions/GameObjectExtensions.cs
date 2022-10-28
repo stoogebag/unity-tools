@@ -59,7 +59,7 @@ namespace stoogebag
             return go.transform.FirstOrDefault(name).gameObject;
         }
 
-        public static T GetChild<T>(this MonoBehaviour component, string name) where T: Component
+        public static T GetChild<T>(this MonoBehaviour component, string name = null) where T: Component
         {
             return component.gameObject.FirstOrDefault<T>(name);
         }

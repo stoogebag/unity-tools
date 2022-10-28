@@ -7,7 +7,6 @@ using Sirenix.OdinInspector;
 using stoogebag;
 using UniRx;
 using UniRx.Triggers;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SalsaRigging : MonoBehaviour

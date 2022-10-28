@@ -7,21 +7,27 @@ public class CutsceneManager : MonoBehaviour
 {
     public static CutsceneManager instance;
 
+    public VIDE_Assign OpeningDialogue;
+    public VIDE_Assign HelpDialogue;
+
+    public VIDE_Assign FailDialogue;
+    public VIDE_Assign SuccessDialogue;
+    
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
-        assign = FindObjectOfType<VIDE_Assign>();
         ui = FindObjectOfType<Template_UIManager>();
+        
+        if(OpeningDialogue !=null) StartConvo(OpeningDialogue);
+        
     }
 
     // Update is called once per frame
 
-    public void StartConvo()
+    public void StartConvo(VIDE_Assign assign)
     {
         ui.Interact(assign);
-
-        
     }
 
     void Update()
@@ -30,7 +36,6 @@ public class CutsceneManager : MonoBehaviour
         ui.enabled = true;
     }
 
-    private VIDE_Assign assign;
     private Template_UIManager ui;
 
 
