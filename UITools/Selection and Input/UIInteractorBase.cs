@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
-public class UIInteractorBase : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
 {
-    
-    protected SelectableUIElement _selectedElement;
-    protected void Select(SelectableUIElement uiElement)
+    public class UIInteractorBase : MonoBehaviour
     {
-        if (_selectedElement == uiElement) return;
-        
-        _selectedElement?.OnDeselected(this);
-        _selectedElement = uiElement;
-        _selectedElement?.OnSelected(this);
-    }
     
+        protected SelectableUIElement _selectedElement;
+        protected void Select(SelectableUIElement uiElement)
+        {
+            if (_selectedElement == uiElement) return;
+        
+            _selectedElement?.OnDeselected(this);
+            _selectedElement = uiElement;
+            _selectedElement?.OnSelected(this);
+        }
+    
+    }
 }

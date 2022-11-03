@@ -1,61 +1,60 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
-using stoogebag;
 using UniRx;
 using UnityEngine.UI;
 
-public class YesNoWindow : Window
+namespace stoogebag_MonuMental.stoogebag.UITools.Windows
 {
-
-    public Button Yes;
-    public Button No;
-
-    public void Bind(Action onSuccess, Action onCancel = null, Func<bool> validateYes = null , Func<bool> validateNo = null )
+    public class YesNoWindow : Window
     {
-        _onSuccess = onSuccess;
-        _onCancel = onCancel;
-        _validateYes = validateYes ?? (() =>true) ;
-        _validateNo = validateNo ?? (() =>true) ;
-    }
 
-    public override async Task Activate()
-    {
-        await base.Activate();
+        public Button Yes;
+        public Button No;
 
-        No.OnClickAsObservable().Subscribe(a =>
+        public void Bind(Action onSuccess, Action onCancel = null, Func<bool> validateYes = null , Func<bool> validateNo = null )
         {
-            if (_validateNo())
+            _onSuccess = onSuccess;
+            _onCancel = onCancel;
+            _validateYes = validateYes ?? (() =>true) ;
+            _validateNo = validateNo ?? (() =>true) ;
+        }
+
+        public override async Task Activate()
+        {
+            await base.Activate();
+
+            No.OnClickAsObservable().Subscribe(a =>
             {
-                Deactivate();
-                _onCancel?.Invoke();
-            }
-        }).AddTo(_disposable);
+                if (_validateNo())
+                {
+                    Deactivate();
+                    _onCancel?.Invoke();
+                }
+            }).AddTo(_disposable);
         
-        Yes.OnClickAsObservable().Subscribe(a =>
-        {
-            if (_validateYes())
+            Yes.OnClickAsObservable().Subscribe(a =>
             {
-                Deactivate();
-                _onSuccess?.Invoke();
-            }
-        }).AddTo(_disposable);
+                if (_validateYes())
+                {
+                    Deactivate();
+                    _onSuccess?.Invoke();
+                }
+            }).AddTo(_disposable);
+        }
+
+        private Action _onSuccess;
+        private Action _onCancel;
+        private Func<bool> _validateYes;
+        private Func<bool> _validateNo;
+
+        public override async Task Deactivate()
+        {
+            _disposable.Clear();
+            await base.Deactivate();
+        }
+
+    
+    
+    
     }
-
-    private Action _onSuccess;
-    private Action _onCancel;
-    private Func<bool> _validateYes;
-    private Func<bool> _validateNo;
-
-    public override async Task Deactivate()
-    {
-        _disposable.Clear();
-        await base.Deactivate();
-    }
-
-    
-    
-    
 }

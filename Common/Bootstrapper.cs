@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public static class Bootstrapper
+namespace stoogebag_MonuMental.stoogebag.Common
 {
-    private const string MainPrefabPath = "Prefabs/Managers/Managers"; 
-    
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void Execute()
+    public static class Bootstrapper
     {
-        var obj = Resources.Load(MainPrefabPath);
-        if (obj == null) return;
-        Object.DontDestroyOnLoad(Object.Instantiate(obj));
+        private const string MainPrefabPath = "Prefabs/Managers/Managers"; 
+    
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        public static void Execute()
+        {
+            var obj = Resources.Load(MainPrefabPath);
+            if (obj == null) return;
+            Object.DontDestroyOnLoad(Object.Instantiate(obj));
+        }
     }
 }

@@ -1,14 +1,17 @@
-using UnityEngine;
 using UnityEditor;
- 
-public static class DebugMenu
+using UnityEngine;
+
+namespace stoogebag_MonuMental.stoogebag.Editor
 {
-    [MenuItem("Debug/Print Global Position")]
-    public static void PrintGlobalPosition()
+    public static class DebugMenu
     {
-        if (Selection.activeGameObject != null)
+        [MenuItem("Debug/Print Global Position")]
+        public static void PrintGlobalPosition()
         {
-            Debug.Log(Selection.activeGameObject.name + " is at " + Selection.activeGameObject.transform.position);
+            if (Selection.activeGameObject != null)
+            {
+                Debug.Log(Selection.activeGameObject.name + " is at " + Selection.activeGameObject.transform.position);
+            }
         }
     }
 }

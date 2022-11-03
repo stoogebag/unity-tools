@@ -1,9 +1,7 @@
 ﻿#if UNITY_EDITOR
-using System.Linq;
 using UnityEditor;
-using static UnityEditor.AssetDatabase;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Editor
 {
     public static class EditorTools {
 

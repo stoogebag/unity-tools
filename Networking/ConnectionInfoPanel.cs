@@ -1,17 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using stoogebag;
 
-public class ConnectionInfoPanel : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Networking
 {
-    void Start()
+    public class ConnectionInfoPanel : MonoBehaviour
     {
+        void Start()
+        {
         
-    }
+        }
 
-    void Update()
-    {
+        void Update()
+        {
         
+        }
     }
 }

@@ -1,46 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
+using stoogebag_MonuMental.stoogebag.Extensions;
 using UnityEngine;
-using stoogebag;
 
-public class Torus : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Common
 {
-    //private BoxCollider boundsCollider;
-    private Bounds bounds;
-
-    void Start()
+    public class Torus : MonoBehaviour
     {
-        //boundsCollider = FindObjectOfType<IBoundsProvider>().Bpunds.gameObject.GetComponent<BoxCollider>();
-        bounds = GetComponent<IBoundsProvider>().Bounds;
+        //private BoxCollider boundsCollider;
+        private Bounds bounds;
+
+        void Start()
+        {
+            //boundsCollider = FindObjectOfType<IBoundsProvider>().Bpunds.gameObject.GetComponent<BoxCollider>();
+            bounds = GetComponent<IBoundsProvider>().Bounds;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            var p = transform;
+            var pos = p.position;
+            if (pos.x >= bounds.max.x)
+            {
+                p.position = p.position.WithX(p.position.x - bounds.size.x);
+            }
+            else if (pos.x <= bounds.min.x)
+            {
+                p.position = p.position.WithX(p.position.x + bounds.size.x);
+            }
+
+            if (pos.z >= bounds.max.z)
+            {
+                p.position = p.position.WithZ(p.position.z - bounds.size.z);
+            }
+            else if (pos.z <= bounds.min.z)
+            {
+                p.position = p.position.WithZ(p.position.z + bounds.size.z);
+            }
+
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public interface IBoundsProvider
     {
-        var p = transform;
-        var pos = p.position;
-        if (pos.x >= bounds.max.x)
-        {
-            p.position = p.position.WithX(p.position.x - bounds.size.x);
-        }
-        else if (pos.x <= bounds.min.x)
-        {
-            p.position = p.position.WithX(p.position.x + bounds.size.x);
-        }
-
-        if (pos.z >= bounds.max.z)
-        {
-            p.position = p.position.WithZ(p.position.z - bounds.size.z);
-        }
-        else if (pos.z <= bounds.min.z)
-        {
-            p.position = p.position.WithZ(p.position.z + bounds.size.z);
-        }
-
+        public Bounds Bounds { get; }
     }
 }
-
-public interface IBoundsProvider
-{
-    public Bounds Bounds { get; }
-} 

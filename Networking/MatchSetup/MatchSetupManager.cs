@@ -1,4 +1,5 @@
 using System;
+using stoogebag_MonuMental.stoogebag.Input;
 using UnityEngine;
 #if FISHNET
 using System;
@@ -76,25 +77,28 @@ public abstract class MatchInfoBase : NetworkBehaviour
 }
 #endif
 
-public class PlayerInfo
+namespace stoogebag_MonuMental.stoogebag.Networking.MatchSetup
 {
-    public string Name = "player";
-    public string ID;
-    public Color Color = Color.blue; //unsure should we do this.
-    public bool Ready;
-    
-    [NonSerialized]
-    public InputSchemeBase Input; //this may be lost across network operations, so we keep the controller guid in case we need to get it back at some point...
-    
-
-    public int connectionID;
-    public string inputID = "";
-
-    public void ComputeID()
+    public class PlayerInfo
     {
-        inputID = (Input?.GetID() ?? "NONE");
-        ID = connectionID + "-" + inputID;
+        public string Name = "player";
+        public string ID;
+        public Color Color = Color.blue; //unsure should we do this.
+        public bool Ready;
+    
+        [NonSerialized]
+        public InputSchemeBase Input; //this may be lost across network operations, so we keep the controller guid in case we need to get it back at some point...
+    
+
+        public int connectionID;
+        public string inputID = "";
+
+        public void ComputeID()
+        {
+            inputID = (Input?.GetID() ?? "NONE");
+            ID = connectionID + "-" + inputID;
+        }
+
+
     }
-
-
 }

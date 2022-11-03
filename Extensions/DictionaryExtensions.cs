@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class DictionaryExtensions
     {
@@ -35,42 +35,6 @@ namespace stoogebag
 
     }
 
-    public static class EnumerableExtensions
-    {
-        //public static HashSet<T> ToHashSet<T>(this IEnumerable<T> me)
-        //{
-        //    var hs = new HashSet<T>();
-        //    hs.AddRange(me);
-        //    return hs;
-        //}
-
-        public static void AddRange<T>(this HashSet<T> me, IEnumerable<T> e)
-        {
-            foreach (var t in e)
-            {
-                me.Add(t);
-            }
-
-        }
-
-        public static int IndexOfFirst<T>(this IEnumerable<T> me, Func<T, bool> condition)
-        {
-            int i = 0;
-            foreach(var x in me)
-            {
-                if (condition(x)) return i;
-                i++;
-            }
-            return -1;
-
-        }
-
-        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> me)
-        {
-            return me.Where(t => t != null);
-        }
-
-    }
     public abstract class UnitySerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         [SerializeField, HideInInspector]

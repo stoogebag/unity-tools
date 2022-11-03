@@ -1,63 +1,64 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using stoogebag;
+using stoogebag_MonuMental.stoogebag.Extensions;
 using TMPro;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class LabelledSlider : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
 {
-    [SerializeField]private TextMeshProUGUI label;
-     [SerializeField] private TextMeshProUGUI value;
-    private Slider slider;
-
-    private void Awake()
+    public class LabelledSlider : MonoBehaviour
     {
-        if(label == null) label = gameObject.FirstOrDefault<TextMeshProUGUI>("label");
-        if(value == null) value = gameObject.FirstOrDefault<TextMeshProUGUI>("value");
-        slider = GetComponentInChildren<Slider>();
-    }
+        [SerializeField]private TextMeshProUGUI label;
+        [SerializeField] private TextMeshProUGUI value;
+        private Slider slider;
 
-    public void Bind(string labelString, ReactiveProperty<float> prop, float min, float max,float stepSize = 1)
-    {
-        label.text = labelString;
-
-        slider.wholeNumbers = stepSize == 1f;
-        slider.minValue = (float)min;
-        slider.maxValue = max;
-        slider.value = prop.Value;
-        
-        slider.OnValueChangedAsObservable().Subscribe(v =>
+        private void Awake()
         {
-            if (stepSize != 1)
+            if(label == null) label = gameObject.FirstOrDefault<TextMeshProUGUI>("label");
+            if(value == null) value = gameObject.FirstOrDefault<TextMeshProUGUI>("value");
+            slider = GetComponentInChildren<Slider>();
+        }
+
+        public void Bind(string labelString, ReactiveProperty<float> prop, float min, float max,float stepSize = 1)
+        {
+            label.text = labelString;
+
+            slider.wholeNumbers = stepSize == 1f;
+            slider.minValue = (float)min;
+            slider.maxValue = max;
+            slider.value = prop.Value;
+        
+            slider.OnValueChangedAsObservable().Subscribe(v =>
             {
-                float steppedValue = Mathf.Round(v / stepSize) *stepSize;
-                if (steppedValue != v)
+                if (stepSize != 1)
                 {
-                    slider.value = steppedValue;
-                    //Debug.Log(string.Format("New stepped Slider value: {0}", slider.value));
-                    return;
+                    float steppedValue = Mathf.Round(v / stepSize) *stepSize;
+                    if (steppedValue != v)
+                    {
+                        slider.value = steppedValue;
+                        //Debug.Log(string.Format("New stepped Slider value: {0}", slider.value));
+                        return;
+                    }
                 }
-            }
             
-            prop.Value = v;
-        });
+                prop.Value = v;
+            });
         
-        var downButton = gameObject.FirstOrDefault<Button>("labelButton");
-        downButton.OnClickAsObservable().Subscribe(t =>
-        {
-            slider.value = slider.value - stepSize;
-        });
-        var upButton = gameObject.FirstOrDefault<Button>("valueButton");
-        upButton.OnClickAsObservable().Subscribe(t =>
-        {
-            slider.value = slider.value + stepSize;
-        });
+            var downButton = gameObject.FirstOrDefault<Button>("labelButton");
+            downButton.OnClickAsObservable().Subscribe(t =>
+            {
+                slider.value = slider.value - stepSize;
+            });
+            var upButton = gameObject.FirstOrDefault<Button>("valueButton");
+            upButton.OnClickAsObservable().Subscribe(t =>
+            {
+                slider.value = slider.value + stepSize;
+            });
         
         
-        value.text = Math.Round(prop.Value, 1).ToString();
-        prop.Subscribe(v=> value.text = Math.Round(v, 1).ToString());
+            value.text = Math.Round(prop.Value, 1).ToString();
+            prop.Subscribe(v=> value.text = Math.Round(v, 1).ToString());
+        }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UniRx;
 using UnityEngine;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class GameObjectExtensions { 
         //public static string TryGetGuid(this GameObject me)

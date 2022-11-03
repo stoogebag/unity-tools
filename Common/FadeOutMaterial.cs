@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using stoogebag;
 
-public class FadeOutMaterial : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Common
 {
-    public string FadePropertyName = "DissolveQuantity";
+    public class FadeOutMaterial : MonoBehaviour
+    {
+        public string FadePropertyName = "DissolveQuantity";
 
+    }
 }

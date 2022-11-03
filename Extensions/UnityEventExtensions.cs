@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class UnityEventExtensions
     {

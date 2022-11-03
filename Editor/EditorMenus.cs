@@ -5,7 +5,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Editor
 {
     public class EditorMenus
     {

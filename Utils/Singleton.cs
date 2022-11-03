@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Utils
 {
 
 

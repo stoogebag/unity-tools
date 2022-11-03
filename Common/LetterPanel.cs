@@ -1,63 +1,64 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using stoogebag;
+using stoogebag_MonuMental.stoogebag.Extensions;
 using TMPro;
 using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class LetterPanel : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Common
 {
-
-    public static char[] AlphabetArray = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_.@!".ToCharArray();
-
-    public int index;
-    public char letter => AlphabetArray[index];
-
-    public Button back;
-    public Button forward;
-    public TextMeshProUGUI text;
-    
-    
-    event Action OnRefresh;
-    public IObservable<Unit> RefreshObservable => Observable.FromEvent(h => OnRefresh += h, h => OnRefresh -= h);
-    
-    
-    void Start()
+    public class LetterPanel : MonoBehaviour
     {
-        back.OnClickAsObservable().Subscribe(t =>
+
+        public static char[] AlphabetArray = "ABCDEFGHIJKLMNOPQRSTUVWXYZ_.@!".ToCharArray();
+
+        public int index;
+        public char letter => AlphabetArray[index];
+
+        public Button back;
+        public Button forward;
+        public TextMeshProUGUI text;
+    
+    
+        event Action OnRefresh;
+        public IObservable<Unit> RefreshObservable => Observable.FromEvent(h => OnRefresh += h, h => OnRefresh -= h);
+    
+    
+        void Start()
         {
-            index = (index - 1 + AlphabetArray.Length) % AlphabetArray.Length;
-            Refresh();
-        });
-        forward.OnClickAsObservable().Subscribe(t =>
-        {
-            index = (index + 1) % AlphabetArray.Length;
+            back.OnClickAsObservable().Subscribe(t =>
+            {
+                index = (index - 1 + AlphabetArray.Length) % AlphabetArray.Length;
+                Refresh();
+            });
+            forward.OnClickAsObservable().Subscribe(t =>
+            {
+                index = (index + 1) % AlphabetArray.Length;
             
-            Refresh();
-        });
-    }
+                Refresh();
+            });
+        }
 
-    private void Refresh()
-    {
-        text.text = letter.ToString();
-        OnRefresh?.Invoke();
-    }
+        private void Refresh()
+        {
+            text.text = letter.ToString();
+            OnRefresh?.Invoke();
+        }
 
-    public void SetLetter(char c)
-    {
-        index = AlphabetArray.IndexOfFirst(t => t == c);
-        if (index == -1) index = 0;
+        public void SetLetter(char c)
+        {
+            index = AlphabetArray.IndexOfFirst(t => t == c);
+            if (index == -1) index = 0;
         
-        Refresh();
-    }
+            Refresh();
+        }
     
-    public void Bind(char selected)
-    {
-        //textLabel.text = label;
-        //OptionsArray = options;
-        //IsAvailableFunc = availabilityFunc;
-        SetLetter(Char.ToUpper(selected)); 
+        public void Bind(char selected)
+        {
+            //textLabel.text = label;
+            //OptionsArray = options;
+            //IsAvailableFunc = availabilityFunc;
+            SetLetter(Char.ToUpper(selected)); 
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-namespace stoogebag
+﻿namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class Packages
     {

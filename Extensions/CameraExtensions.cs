@@ -1,39 +1,41 @@
-﻿using stoogebag;
-using UnityEngine;
+﻿using UnityEngine;
 
-public static class CameraExtensions
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
-
-/// <summary>
-/// https://forum.unity.com/threads/fit-object-exactly-into-perspective-cameras-field-of-view-focus-the-object.496472/#post-8181533
-/// </summary>
-/// <param name="cam"></param>
-/// <param name="bounds"></param>
-    public static void FitToBounds(this Camera cam, Bounds bounds)
+    public static class CameraExtensions
     {
-        float virtualsphereRadius = Vector3.Magnitude(bounds.max-bounds.center);
-        float minD = (virtualsphereRadius )/ Mathf.Sin(Mathf.Deg2Rad*cam.fieldOfView/2);
-        Vector3 normVectorBoundsCenter2CurrentCamPos= (cam.transform.position - bounds.center) / Vector3.Magnitude(cam.transform.position -  bounds.center);
-        cam.transform.position =  minD*normVectorBoundsCenter2CurrentCamPos;
-        cam.transform.LookAt(bounds.center);
-        cam.nearClipPlane = minD- virtualsphereRadius;
-    }
 
-    public static Vector3 GetWorldMousePosition(this Camera cam, float distance)
-    {
-        return cam.ScreenToWorldPoint(Input.mousePosition.WithZ(distance));
-    }
-
-    public static RaycastHit Raycast(this Camera cam, Vector3 screenPos, LayerMask layers, float distance = 100)
-    {
-        var ray = cam.ScreenPointToRay(screenPos);
-        
-        if (Physics.Raycast(ray, out var hit, distance, layers))
+        /// <summary>
+        /// https://forum.unity.com/threads/fit-object-exactly-into-perspective-cameras-field-of-view-focus-the-object.496472/#post-8181533
+        /// </summary>
+        /// <param name="cam"></param>
+        /// <param name="bounds"></param>
+        public static void FitToBounds(this Camera cam, Bounds bounds)
         {
-            return hit;
+            float virtualsphereRadius = Vector3.Magnitude(bounds.max-bounds.center);
+            float minD = (virtualsphereRadius )/ Mathf.Sin(Mathf.Deg2Rad*cam.fieldOfView/2);
+            Vector3 normVectorBoundsCenter2CurrentCamPos= (cam.transform.position - bounds.center) / Vector3.Magnitude(cam.transform.position -  bounds.center);
+            cam.transform.position =  minD*normVectorBoundsCenter2CurrentCamPos;
+            cam.transform.LookAt(bounds.center);
+            cam.nearClipPlane = minD- virtualsphereRadius;
         }
-        else return default;
+
+        public static Vector3 GetWorldMousePosition(this Camera cam, float distance)
+        {
+            return cam.ScreenToWorldPoint(UnityEngine.Input.mousePosition.WithZ(distance));
+        }
+
+        public static RaycastHit Raycast(this Camera cam, Vector3 screenPos, LayerMask layers, float distance = 100)
+        {
+            var ray = cam.ScreenPointToRay(screenPos);
+        
+            if (Physics.Raycast(ray, out var hit, distance, layers))
+            {
+                return hit;
+            }
+            else return default;
+        }
+    
+    
     }
-    
-    
 }

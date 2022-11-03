@@ -1,23 +1,23 @@
 
 #if UNITY_EDITOR
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using stoogebag;
 using UnityEditor;
+using UnityEngine;
 
-[ExecuteInEditMode]
-public class RemoveEmptyScripts : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Editor
 {
-    void Start()
+    [ExecuteInEditMode]
+    public class RemoveEmptyScripts : MonoBehaviour
     {
+        void Start()
+        {
         
-    }
+        }
 
-    void Update()
-    {
-        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(gameObject);
+        void Update()
+        {
+            GameObjectUtility.RemoveMonoBehavioursWithMissingScript(gameObject);
+        }
     }
 }
 #endif

@@ -1,17 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using stoogebag_MonuMental.stoogebag.Extensions;
 using UnityEngine;
-using stoogebag;
 
-public class StripWhitespace : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag._2dConvos
 {
-
-    [Button]
-    void StripWhitespaceFromChildNames()
+    public class StripWhitespace : MonoBehaviour
     {
-        gameObject.ForAllChildrenRecursive(go=> go.name = (go.name.Trim()));
-    }
 
+        [Button]
+        void StripWhitespaceFromChildNames()
+        {
+            gameObject.ForAllChildrenRecursive(go=> go.name = (go.name.Trim()));
+        }
+
+    }
 }

@@ -1,27 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
-using stoogebag;
+using stoogebag_MonuMental.stoogebag.Extensions;
 using UnityEngine;
 
-public class FollowMouseLocationInWorld : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Common
 {
-    private Camera _mainCamera;
-    private float distanceToCam = 10f;
-
-    [SerializeField]
-    private float y = 0f;
-
-    // Start is called before the first frame update
-    void Start()
+    public class FollowMouseLocationInWorld : MonoBehaviour
     {
-        _mainCamera = Camera.main;
-        distanceToCam = _mainCamera.transform.position.y - y;
-    }
+        private Camera _mainCamera;
+        private float distanceToCam = 10f;
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        var loc = _mainCamera.ScreenToWorldPoint(Input.mousePosition.WithZ(distanceToCam));
-        transform.position = loc;
+        [SerializeField]
+        private float y = 0f;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            _mainCamera = Camera.main;
+            distanceToCam = _mainCamera.transform.position.y - y;
+        }
+
+        // Update is called once per frame
+        void FixedUpdate()
+        {
+            var loc = _mainCamera.ScreenToWorldPoint(UnityEngine.Input.mousePosition.WithZ(distanceToCam));
+            transform.position = loc;
+        }
     }
 }

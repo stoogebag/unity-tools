@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class VectorExtensions
     {

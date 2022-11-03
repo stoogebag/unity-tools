@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -7,55 +6,84 @@ using UniRx.Triggers;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public static class EnumerableExtensions
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
-    public static T MinItem<T>(this IEnumerable<T> me, Func<T, float> valuation)
+    public static class EnumerableExtensions
     {
-        T minItem = me.First();
-        var min = float.MaxValue;
-        foreach (var t in me)
+        public static T MinItem<T>(this IEnumerable<T> me, Func<T, float> valuation)
         {
-            var val = valuation(t);
-            if (val < min)
+            T minItem = me.First();
+            var min = float.MaxValue;
+            foreach (var t in me)
             {
-                min = val;
-                minItem = t;
+                var val = valuation(t);
+                if (val < min)
+                {
+                    min = val;
+                    minItem = t;
+                }
             }
+
+            return minItem;
+
         }
 
-        return minItem;
-
-    }
-
-    public static void DestroyAndClear<T>(this List<T> list) where T : Object
-    {
-        foreach (var o in list)
+        public static void DestroyAndClear<T>(this List<T> list) where T : Object
         {
-            UnityEngine.Object.Destroy(o);
+            foreach (var o in list)
+            {
+                UnityEngine.Object.Destroy(o);
+            }
+            list.Clear();
         }
-        list.Clear();
-    }
-    public static void DestroyAndClearGameObjects<T>(this List<T> list) where T : Component
-    {
-        foreach (var o in list)
+        public static void DestroyAndClearGameObjects<T>(this List<T> list) where T : Component
         {
-            UnityEngine.Object.Destroy(o.gameObject);
+            foreach (var o in list)
+            {
+                UnityEngine.Object.Destroy(o.gameObject);
+            }
+            list.Clear();
         }
-        list.Clear();
-    }
 
-    public static void DisposeWith(this IDisposable d, Component component)
-    {
-        component.OnDestroyAsObservable().Subscribe(u => d.Dispose());
-    }
+        public static void DisposeWith(this IDisposable d, Component component)
+        {
+            component.OnDestroyAsObservable().Subscribe(u => d.Dispose());
+        }
     
-    // Ensures that the capacity of this list is at least the given minimum 
-    // value. If the currect capacity of the list is less than min, the
-    // capacity is increased to twice the current capacity or to min, 
-    // whichever is larger. 
-    public static void EnsureCapacity<T>(this List<T> list, int min)
-    {
-        if (list.Capacity < min) list.Capacity = min;
+        // Ensures that the capacity of this list is at least the given minimum 
+        // value. If the currect capacity of the list is less than min, the
+        // capacity is increased to twice the current capacity or to min, 
+        // whichever is larger. 
+        public static void EnsureCapacity<T>(this List<T> list, int min)
+        {
+            if (list.Capacity < min) list.Capacity = min;
+        }
+
+        
+        public static void AddRange<T>(this HashSet<T> me, IEnumerable<T> e)
+        {
+            foreach (var t in e)
+            {
+                me.Add(t);
+            }
+
+        }
+
+        public static int IndexOfFirst<T>(this IEnumerable<T> me, Func<T, bool> condition)
+        {
+            int i = 0;
+            foreach(var x in me)
+            {
+                if (condition(x)) return i;
+                i++;
+            }
+            return -1;
+
+        }
+
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> me)
+        {
+            return me.Where(t => t != null);
+        }
     }
-    
 }

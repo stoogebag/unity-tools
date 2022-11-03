@@ -3,15 +3,18 @@
 using UnityEditor;
 using UnityEngine;
 
-public static class Extensions
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
-
-    public static T Instantiate<T>(this MonoScript s) where T:ScriptableObject
+    public static class Extensions
     {
-        return  (T)ScriptableObject.CreateInstance(s.GetClass());
+
+        public static T Instantiate<T>(this MonoScript s) where T:ScriptableObject
+        {
+            return  (T)ScriptableObject.CreateInstance(s.GetClass());
+        }
+    
+    
     }
-    
-    
 }
 
 #endif

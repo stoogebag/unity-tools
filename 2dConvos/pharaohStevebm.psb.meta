@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9ed82ed32958c0b4db8fa8cb5b674ac5
+guid: b34be79f3436d1a49b2d65543860b083
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -726,7 +726,7 @@ ScriptedImporter:
     spriteName: 
     isGroup: 1
     parentIndex: -1
-    spriteID: 
+    spriteID: 00000000000000000000000000000000
     layerID: -158745408
     mosaicPosition: {x: 0, y: 0}
   - name: face

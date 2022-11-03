@@ -2,77 +2,80 @@
 using System.Threading.Tasks;
 using UniRx;
 
-public static class ObservableExtensions
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
-    
-    //
-    // public static IDisposable SubscribeAsync<TResult>(this IObservable<TResult> source, Func<AsyncResult,  Task> action) =>
-    //     source.Select(_ => Observable.FromAsyncPattern(action))
-    //         .Concat()
-    //         .Subscribe();
-    //
-    //
-    //
-    // public static IObservable<TResult> SelectAsync<TSource, TResult>(this IObservable<TSource> source, Func<TSource, Task<TResult>> projectAsync)
-    // {
-    //     return Observable.Create<TResult>(
-    //         observer =>
-    //         {
-    //             var throttle = new BehaviorSubject<TResult>(default);
-    //
-    //             var observable = source
-    //                 .Zip(throttle, (value, _) => value)
-    //                 .SelectMany(value => Observable.Defer(() => Observable.StartAsync(() => projectAsync(value))))
-    //                 .Publish();
-    //
-    //             return new CompositeDisposable(
-    //                 observable.Subscribe(throttle),
-    //                 observable.Subscribe(observer),
-    //                 observable.Connect(),
-    //                 throttle
-    //             );
-    //         }
-    //     );
-    // }
-
-   public static IDisposable SubscribeAsync<T>(this IObservable<T> source, Func<T, Task> onNext,
-        Action<Exception> onError = null, Action onComplete = null)
+    public static class ObservableExtensions
     {
-        //argument error checking omitted for brevity
-        T current = default(T);
-        bool processing = false;
-        bool haveCurrent = false;
+    
+        //
+        // public static IDisposable SubscribeAsync<TResult>(this IObservable<TResult> source, Func<AsyncResult,  Task> action) =>
+        //     source.Select(_ => Observable.FromAsyncPattern(action))
+        //         .Concat()
+        //         .Subscribe();
+        //
+        //
+        //
+        // public static IObservable<TResult> SelectAsync<TSource, TResult>(this IObservable<TSource> source, Func<TSource, Task<TResult>> projectAsync)
+        // {
+        //     return Observable.Create<TResult>(
+        //         observer =>
+        //         {
+        //             var throttle = new BehaviorSubject<TResult>(default);
+        //
+        //             var observable = source
+        //                 .Zip(throttle, (value, _) => value)
+        //                 .SelectMany(value => Observable.Defer(() => Observable.StartAsync(() => projectAsync(value))))
+        //                 .Publish();
+        //
+        //             return new CompositeDisposable(
+        //                 observable.Subscribe(throttle),
+        //                 observable.Subscribe(observer),
+        //                 observable.Connect(),
+        //                 throttle
+        //             );
+        //         }
+        //     );
+        // }
 
-        return source
-            .Where((v) =>
-            {
-                if (processing)
-                {
-                    current = v;
-                    haveCurrent = true;
-                }
+        public static IDisposable SubscribeAsync<T>(this IObservable<T> source, Func<T, Task> onNext,
+            Action<Exception> onError = null, Action onComplete = null)
+        {
+            //argument error checking omitted for brevity
+            T current = default(T);
+            bool processing = false;
+            bool haveCurrent = false;
 
-                return !processing;
-            })
-            .Subscribe((v) =>
+            return source
+                .Where((v) =>
                 {
-                    Action<Task> runNext = null;
-                    runNext = (task) =>
+                    if (processing)
                     {
-                        if (haveCurrent)
+                        current = v;
+                        haveCurrent = true;
+                    }
+
+                    return !processing;
+                })
+                .Subscribe((v) =>
+                    {
+                        Action<Task> runNext = null;
+                        runNext = (task) =>
                         {
-                            haveCurrent = false;
-                            onNext(current).ContinueWith(runNext);
-                        }
-                        else
-                        {
-                            processing = false;
-                        }
-                    };
-                    processing = true;
-                    onNext(v).ContinueWith(runNext);
-                },
-                onError,
-                onComplete);
+                            if (haveCurrent)
+                            {
+                                haveCurrent = false;
+                                onNext(current).ContinueWith(runNext);
+                            }
+                            else
+                            {
+                                processing = false;
+                            }
+                        };
+                        processing = true;
+                        onNext(v).ContinueWith(runNext);
+                    },
+                    onError,
+                    onComplete);
+        }
     }
 }

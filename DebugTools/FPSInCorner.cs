@@ -2,39 +2,42 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class FPSInCorner : TextInCorner
+namespace stoogebag_MonuMental.stoogebag.DebugTools
 {
-    public int cacheSize = 5;
-    public bool lockOnLowest = true;
-
-    private int index = 0;
-    public float waitTime = 5;
-    float lowestSeen = float.MaxValue;
-    private float[] _cache;
-
-    private void Awake()
+    public class FPSInCorner : TextInCorner
     {
-        _cache = new float[cacheSize];
-    }
+        public int cacheSize = 5;
+        public bool lockOnLowest = true;
 
-    public override string GetText()
-    {
-        
-        
-        if (Time.time < waitTime) return "wait plz";
-        var val = 1/Time.unscaledDeltaTime;
-     
-        _cache[index] = val;   var num = val;
-        index = (index + 1) % cacheSize;
-        if(lockOnLowest){
-            lowestSeen =  Math.Min(lowestSeen, val);
-            num = lowestSeen;
-        }
-        else
+        private int index = 0;
+        public float waitTime = 5;
+        float lowestSeen = float.MaxValue;
+        private float[] _cache;
+
+        private void Awake()
         {
-            num = _cache.Sum(t => t) / cacheSize;
+            _cache = new float[cacheSize];
         }
+
+        public override string GetText()
+        {
+        
+        
+            if (Time.time < waitTime) return "wait plz";
+            var val = 1/Time.unscaledDeltaTime;
+     
+            _cache[index] = val;   var num = val;
+            index = (index + 1) % cacheSize;
+            if(lockOnLowest){
+                lowestSeen =  Math.Min(lowestSeen, val);
+                num = lowestSeen;
+            }
+            else
+            {
+                num = _cache.Sum(t => t) / cacheSize;
+            }
     
-        return (num).ToString() + " FPS";
+            return (num).ToString() + " FPS";
+        }
     }
 }

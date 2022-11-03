@@ -1,57 +1,59 @@
-using System.Collections;
-using stoogebag;
-using UniRx;
+using stoogebag_MonuMental.stoogebag.Input;
+using stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents;
 using UnityEngine;
 
-[RequireComponent(typeof(OptionPanel))]
-public class OptionPanelInputNav : SelectableUIElement
+namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
 {
-    private OptionPanel _panel;
+    [RequireComponent(typeof(OptionPanel))]
+    public class OptionPanelInputNav : SelectableUIElement
+    {
+        private OptionPanel _panel;
 
-    public InputSchemeBase Input;
+        public InputSchemeBase Input;
 
-    public Orientation Orientation = Orientation.Horizontal;
-    private void Awake()
-    {
-        _panel = GetComponent<OptionPanel>();
-    }
-    public override void OnLeft(UISelector player)
-    {
-        if (Orientation == Orientation.Horizontal)
+        public Orientation Orientation = Orientation.Horizontal;
+        private void Awake()
         {
-            _panel.TryChangeIndex(-1);
+            _panel = GetComponent<OptionPanel>();
         }
-    }
-    public override void OnRight(UISelector player)
-    {
-        if (Orientation == Orientation.Horizontal)
+        public override void OnLeft(UISelector player)
         {
-            _panel.TryChangeIndex(1);
+            if (Orientation == Orientation.Horizontal)
+            {
+                _panel.TryChangeIndex(-1);
+            }
         }
-    }
+        public override void OnRight(UISelector player)
+        {
+            if (Orientation == Orientation.Horizontal)
+            {
+                _panel.TryChangeIndex(1);
+            }
+        }
     
-    public override void OnUp(UISelector player)
-    {
-        if (Orientation == Orientation.Vertical)
+        public override void OnUp(UISelector player)
         {
-            _panel.TryChangeIndex(1);
+            if (Orientation == Orientation.Vertical)
+            {
+                _panel.TryChangeIndex(1);
+            }
         }
-    }
-    public override void OnDown(UISelector player)
-    {
-        if (Orientation == Orientation.Vertical)
+        public override void OnDown(UISelector player)
+        {
+            if (Orientation == Orientation.Vertical)
+            {
+                _panel.TryChangeIndex(-1);
+            }
+        }
+        public override void OnAction(UISelector player)
         {
             _panel.TryChangeIndex(-1);
         }
     }
-    public override void OnAction(UISelector player)
-    {
-        _panel.TryChangeIndex(-1);
-    }
-}
 
-public enum Orientation
-{
-  Vertical,
-  Horizontal,
+    public enum Orientation
+    {
+        Vertical,
+        Horizontal,
+    }
 }

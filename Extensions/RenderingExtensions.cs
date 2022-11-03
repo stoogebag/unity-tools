@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class RenderingExtensions
     {

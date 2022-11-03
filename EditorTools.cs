@@ -1,11 +1,9 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag
 {
  
  namespace Utilities

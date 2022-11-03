@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace stoogebag
+namespace stoogebag_MonuMental.stoogebag.Extensions
 {
     public static class Units {
 

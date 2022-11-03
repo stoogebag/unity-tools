@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public abstract class TextInCorner : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.DebugTools
 {
+    public abstract class TextInCorner : MonoBehaviour
+    {
         private enum Corner
         {
             TopLeft,
@@ -61,4 +63,5 @@ public abstract class TextInCorner : MonoBehaviour
 
         public abstract string GetText();
 
+    }
 }

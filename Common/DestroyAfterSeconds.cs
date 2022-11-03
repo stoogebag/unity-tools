@@ -1,21 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using stoogebag;
 using System;
+using UnityEngine;
 
-public class DestroyAfterSeconds : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Common
 {
-    public float Time = 30;
-    private DateTime started;
-
-    void Start()
+    public class DestroyAfterSeconds : MonoBehaviour
     {
-        //started = DateTime.UtcNow;
-        Destroy(gameObject, Time);
-    }
+        public float Time = 30;
+        private DateTime started;
 
-    void Update()
-    {
+        void Start()
+        {
+            //started = DateTime.UtcNow;
+            Destroy(gameObject, Time);
+        }
+
+        void Update()
+        {
+        }
     }
 }

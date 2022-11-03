@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
-public class PortalPair : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Portals
 {
-    public Portal[] Portals { private set; get; }
-    public RenderTexture[] tempTextures { get; private set; }
-
-    private void Awake()
+    public class PortalPair : MonoBehaviour
     {
-        Portals = GetComponentsInChildren<Portal>();
+        public Portal[] Portals { private set; get; }
+        public RenderTexture[] tempTextures { get; private set; }
 
-        tempTextures = Portals.Select(t=> new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32)).ToArray();
-    }
-
-    private void Start()
-    {
-        for (var i = 0; i < Portals.Length; i++)
+        private void Awake()
         {
-            Portals[i].Renderer.material.mainTexture = tempTextures[i];
+            Portals = GetComponentsInChildren<Portal>();
+
+            tempTextures = Portals.Select(t=> new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32)).ToArray();
         }
 
+        private void Start()
+        {
+            for (var i = 0; i < Portals.Length; i++)
+            {
+                Portals[i].Renderer.material.mainTexture = tempTextures[i];
+            }
+
+        }
     }
 }

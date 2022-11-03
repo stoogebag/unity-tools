@@ -1,17 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using stoogebag;
 
-public class OnlinePlayerJoinManager : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.Networking.MatchSetup
 {
-    void Start()
+    public class OnlinePlayerJoinManager : MonoBehaviour
     {
+        void Start()
+        {
         
-    }
+        }
 
-    void Update()
-    {
+        void Update()
+        {
         
+        }
     }
 }

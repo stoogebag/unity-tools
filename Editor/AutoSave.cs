@@ -6,7 +6,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
- 
+namespace stoogebag_MonuMental.stoogebag.Editor
+{
     /// <summary>
     /// Unity has probably discussed an auto-save feature countless times over the years
     /// and decided not to implement... so take that information as you'd like. I personally
@@ -16,7 +17,7 @@ using UnityEngine;
     /// Love your friendly neighborhood Tarodev
     /// </summary>
     [CustomEditor(typeof(AutoSaveConfig))]
-    public class AutoSave : Editor {
+    public class AutoSave : UnityEditor.Editor {
         private static AutoSaveConfig _config;
         private static CancellationTokenSource _tokenSource;
         private static Task _task;
@@ -87,3 +88,4 @@ using UnityEngine;
             EditorGUILayout.HelpBox("You can move this asset where ever you'd like.\nWith ❤, Tarodev.", MessageType.Info);
         }
     }
+}

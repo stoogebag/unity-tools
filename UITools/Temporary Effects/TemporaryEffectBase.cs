@@ -1,11 +1,13 @@
-﻿using System;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 
-public abstract class TemporaryEffectBase : MonoBehaviour
+namespace stoogebag_MonuMental.stoogebag.UITools.Temporary_Effects
 {
-    protected CompositeDisposable _disposable = new CompositeDisposable();
+    public abstract class TemporaryEffectBase : MonoBehaviour
+    {
+        protected CompositeDisposable _disposable = new CompositeDisposable();
 
-    public abstract void Activate();
-    public abstract void Deactivate();
+        public abstract void Activate();
+        public abstract void Deactivate();
+    }
 }
