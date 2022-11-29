@@ -4,10 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
+using DG;
 using stoogebag_MonuMental.stoogebag.UITools.Windows;
 using UnityEngine;
 using UniRx;
-public class WindowSlideIn : MonoBehaviour, IWindowAnimation
+public class WindowSlideInUI : MonoBehaviour, IWindowAnimation
 {
     /// <summary>
     /// optional. 
@@ -40,8 +41,11 @@ public class WindowSlideIn : MonoBehaviour, IWindowAnimation
     {
         gameObject.SetActive(true);
 
-        transform.position = _offScreenPos;
-        await transform.DOMove(_originalPos, time).SetEase(ease).AsyncWaitForCompletion();
+        var rect = GetComponent<RectTransform>();
+        rect.position = _offScreenPos;
+        
+        
+        await rect.DOAnchorPos3D(_originalPos, time, true).SetEase(ease).AsyncWaitForCompletion();
     }
 
     public async Task Deactivate()

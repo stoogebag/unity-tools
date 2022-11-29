@@ -1,4 +1,6 @@
 ﻿using System;
+using UniRx;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace stoogebag_MonuMental.stoogebag.Extensions
@@ -146,6 +148,13 @@ namespace stoogebag_MonuMental.stoogebag.Extensions
         }
 
 
-        
+        public static Vector2 FromPolar(float r, float thetaInRadians)
+        {
+            return new Vector2((float)Math.Cos(thetaInRadians) * r, (float)Math.Sin(thetaInRadians) * r);
+        }
+        public static Vector2 FromPolarDegrees(float r, float theta)
+        {
+            return FromPolar(r, theta * (float)Math.PI / 180f);
+        }
     }
 }

@@ -1,7 +1,8 @@
 ﻿#if DOTWEEN
 
 using DG.Tweening;
-using stoogebag;
+using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag_MonuMental.stoogebag.UITools.Temporary_Effects;
 using UniRx;
 using UnityEngine;
 
