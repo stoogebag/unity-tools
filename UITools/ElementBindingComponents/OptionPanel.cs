@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
+namespace stoogebag.UITools.ElementBindingComponents
 {
     public class OptionPanel : MonoBehaviour
     {

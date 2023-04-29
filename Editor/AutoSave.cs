@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Editor
+namespace stoogebag.Editor
 {
     /// <summary>
     /// Unity has probably discussed an auto-save feature countless times over the years

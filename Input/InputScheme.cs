@@ -1,7 +1,7 @@
 ﻿using UniRx;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Input
+namespace stoogebag.Input
 {
     public abstract class InputSchemeBase : MonoBehaviour
     {

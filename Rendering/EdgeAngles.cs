@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Rendering
+namespace stoogebag.Rendering
 {
     public class EdgeAngles :MonoBehaviour
     {

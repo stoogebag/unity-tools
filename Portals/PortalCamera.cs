@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using RenderPipeline = UnityEngine.Rendering.RenderPipelineManager;
 
-namespace stoogebag_MonuMental.stoogebag.Portals
+namespace stoogebag.Portals
 {
     public class PortalCamera : MonoBehaviour
     {

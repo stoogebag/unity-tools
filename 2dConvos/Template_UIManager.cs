@@ -16,7 +16,7 @@ using VIDE_Data;
 
 //<--- Import to use VD class
 
-namespace stoogebag_MonuMental.stoogebag._2dConvos
+namespace stoogebag._2dConvos
 {
     public class Template_UIManager : MonoBehaviour
     {

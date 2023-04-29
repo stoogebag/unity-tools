@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Common
+namespace stoogebag.Common
 {
 	public class Spinner : MonoBehaviour {
 

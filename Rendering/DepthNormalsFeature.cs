@@ -25,7 +25,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace stoogebag_MonuMental.stoogebag.Rendering
+namespace stoogebag.Rendering
 {
     public class DepthNormalsFeature : ScriptableRendererFeature {
         class RenderPass : ScriptableRenderPass {

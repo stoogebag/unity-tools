@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Networking
+namespace stoogebag.Networking
 {
     public class ConnectionInfoPanel : MonoBehaviour
     {

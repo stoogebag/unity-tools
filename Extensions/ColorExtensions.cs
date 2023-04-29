@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class ColorExtensions
     {
@@ -24,6 +24,11 @@ namespace stoogebag_MonuMental.stoogebag.Extensions
         public static Vector4 ToVector4(this Color color)
         {
             return new Vector4(color.r, color.g, color.b, color.a);
+        }
+
+        public static Color WithAlpha(this Color color, float a)
+        {
+            return new Color(color.r, color.g, color.b, a);
         }
         
     }

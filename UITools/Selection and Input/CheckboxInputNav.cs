@@ -2,7 +2,7 @@ using System;
 using UniRx;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
+namespace stoogebag.UITools.Selection_and_Input
 {
     public class CheckboxInputNav : SelectableUIElement
     {

@@ -6,7 +6,7 @@ using UniRx.Triggers;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class EnumerableExtensions
     {
@@ -41,6 +41,15 @@ namespace stoogebag_MonuMental.stoogebag.Extensions
             foreach (var o in list)
             {
                 UnityEngine.Object.Destroy(o.gameObject);
+            }
+            list.Clear();
+        }
+        public static void DestroyImmediateAndClearGameObjects<T>(this List<T> list) where T : Component
+        {
+            foreach (var o in list)
+            {
+                if (o == null) continue;
+                UnityEngine.Object.DestroyImmediate(o.gameObject);
             }
             list.Clear();
         }

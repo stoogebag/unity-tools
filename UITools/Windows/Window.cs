@@ -1,9 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Windows
+namespace stoogebag.UITools.Windows
 {
     public class Window : MonoBehaviour
     {
@@ -12,15 +13,31 @@ namespace stoogebag_MonuMental.stoogebag.UITools.Windows
         public event Action OnActivated;
         public event Action OnDeactivated;
 
+        [Button]
+        public void ActivateTest()
+        {
+            Activate();
+        }
+        [Button]
+        public void DeactivateTest()
+        {
+            Deactivate();
+        }
+        
+
         protected CompositeDisposable _disposable = new CompositeDisposable();
     
         [SerializeField]
-        private bool ActivateOnStart = false;
+        private bool InitialiseOnStart = true;
 
         protected virtual void Start()
         {
 
-            if (ActivateOnStart) Activate();
+            if (InitialiseOnStart)
+            {
+                if (Active == ActiveState.Inactive) Activate();
+                else Deactivate();
+            }
         }
 
 
@@ -32,22 +49,59 @@ namespace stoogebag_MonuMental.stoogebag.UITools.Windows
             }
         }
     
+        //todo: make this sealed, and fire onActivate and onActivationComplete instead
         public virtual async Task Activate()
         {
-            if (Active) return;
-            await Anim.Activate();
-            Active = true;
-            OnActivated?.Invoke();
+            if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
+            Active = ActiveState.Activating;
+
+            gameObject.SetActive(true);
+
+            if (Anim == null)
+            {
+                Active = ActiveState.Active;
+                OnActivated?.Invoke();
+                return;
+            }
+            var x = await Anim.Activate();
+            if (x)
+            {
+                Active = ActiveState.Active;
+                OnActivated?.Invoke();
+            }
         }
         public virtual async Task Deactivate()
         {
-            if (!Active) return;
-            await Anim.Deactivate();
-            Active = false;
-            OnDeactivated?.Invoke();
+            if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
+            Active = ActiveState.Deactivating;
+            
+            if (Anim == null)
+            {
+                Active = ActiveState.Inactive;
+                OnDeactivated?.Invoke();
+                return;
+            }
+            
+            var x = await Anim.Deactivate();
+            if (x)
+            {
+                Active = ActiveState.Inactive;
+                OnDeactivated?.Invoke();
+
+                gameObject.SetActive(false);
+
+            }
         }
 
-        public bool Active = false;
+        public ActiveState Active = ActiveState.Inactive;
+    }
+
+    public enum ActiveState
+    {
+        Active,
+        Inactive,
+        Activating,
+        Deactivating
     }
 
     public abstract class TemporaryWindow<TInputModel, TDataModel> : Window where TDataModel : class

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Portals
+namespace stoogebag.Portals
 {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]

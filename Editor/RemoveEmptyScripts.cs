@@ -4,7 +4,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Editor
+namespace stoogebag.Editor
 {
     [ExecuteInEditMode]
     public class RemoveEmptyScripts : MonoBehaviour

@@ -1,7 +1,7 @@
 ﻿using UniRx;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Temporary_Effects
+namespace stoogebag.UITools.Temporary_Effects
 {
     public abstract class TemporaryEffectBase : MonoBehaviour
     {

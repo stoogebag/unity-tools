@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using stoogebag_MonuMental.stoogebag.UITools.Temporary_Effects;
+using stoogebag.UITools.Temporary_Effects;
 using UniRx;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
+namespace stoogebag.UITools.Selection_and_Input
 {
     public abstract class SelectableUIElement : MonoBehaviour
     {

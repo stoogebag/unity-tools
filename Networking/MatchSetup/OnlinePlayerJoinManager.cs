@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Networking.MatchSetup
+namespace stoogebag.Networking.MatchSetup
 {
     public class OnlinePlayerJoinManager : MonoBehaviour
     {

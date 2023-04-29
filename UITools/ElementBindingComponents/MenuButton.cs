@@ -1,9 +1,9 @@
 using System;
-using stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input;
+using stoogebag.UITools.Selection_and_Input;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
+namespace stoogebag.UITools.ElementBindingComponents
 {
     public class MenuButton : SelectableUIElement
     {

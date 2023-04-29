@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Rendering
+namespace stoogebag.Rendering
 {
     public class MeshBuilder
     {

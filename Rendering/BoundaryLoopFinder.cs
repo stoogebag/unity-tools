@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 //todo:use this if u care
-namespace stoogebag_MonuMental.stoogebag.Rendering
+namespace stoogebag.Rendering
 {
     public class BoundaryLoopFinder
     {

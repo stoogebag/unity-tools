@@ -1,11 +1,11 @@
 using System;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.Common
+namespace stoogebag.Common
 {
     public class LetterPanel : MonoBehaviour
     {

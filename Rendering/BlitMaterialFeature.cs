@@ -17,7 +17,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace stoogebag_MonuMental.stoogebag.Rendering
+namespace stoogebag.Rendering
 {
     public class BlitMaterialFeature : ScriptableRendererFeature {
         class RenderPass : ScriptableRenderPass {

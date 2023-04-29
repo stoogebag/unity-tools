@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
 
-namespace stoogebag_MonuMental.stoogebag.Editor
+namespace stoogebag.Editor
 {
     public static class EditorTools {
 

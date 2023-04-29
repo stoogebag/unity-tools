@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Portals
+namespace stoogebag.Portals
 {
     [RequireComponent(typeof(BoxCollider))]
     public class Portal : MonoBehaviour

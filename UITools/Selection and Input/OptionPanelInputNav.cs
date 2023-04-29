@@ -1,8 +1,8 @@
-using stoogebag_MonuMental.stoogebag.Input;
-using stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents;
+using stoogebag.Input;
+using stoogebag.UITools.ElementBindingComponents;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
+namespace stoogebag.UITools.Selection_and_Input
 {
     [RequireComponent(typeof(OptionPanel))]
     public class OptionPanelInputNav : SelectableUIElement

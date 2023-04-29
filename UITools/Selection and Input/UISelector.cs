@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using stoogebag_MonuMental.stoogebag.Input;
+using stoogebag.Input;
 using UniRx;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
+namespace stoogebag.UITools.Selection_and_Input
 {
     public class UISelector : UIInteractorBase
     {

@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.Common
+namespace stoogebag.Common
 {
 	public class CameraFade : MonoBehaviour {
 

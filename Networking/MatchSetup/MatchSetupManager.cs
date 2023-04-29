@@ -1,5 +1,5 @@
 using System;
-using stoogebag_MonuMental.stoogebag.Input;
+using stoogebag.Input;
 using UnityEngine;
 #if FISHNET
 using System;
@@ -77,7 +77,7 @@ public abstract class MatchInfoBase : NetworkBehaviour
 }
 #endif
 
-namespace stoogebag_MonuMental.stoogebag.Networking.MatchSetup
+namespace stoogebag.Networking.MatchSetup
 {
     public class PlayerInfo
     {

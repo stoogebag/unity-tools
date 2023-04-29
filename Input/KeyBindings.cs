@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Input
+namespace stoogebag.Input
 {
     [CreateAssetMenu()]
     public class KeyBindings : ScriptableObject

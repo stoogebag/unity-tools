@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class RandomExtensions
     {

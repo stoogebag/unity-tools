@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Selection_and_Input
+namespace stoogebag.UITools.Selection_and_Input
 {
     public class UIInteractorBase : MonoBehaviour
     {

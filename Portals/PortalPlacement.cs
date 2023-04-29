@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 //[RequireComponent(typeof(CameraMove))]
-namespace stoogebag_MonuMental.stoogebag.Portals
+namespace stoogebag.Portals
 {
     public class PortalPlacement : MonoBehaviour
     {

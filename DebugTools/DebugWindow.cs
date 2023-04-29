@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.DebugTools
+namespace stoogebag.DebugTools
 {
     public class DebugWindow : MonoBehaviour
     {

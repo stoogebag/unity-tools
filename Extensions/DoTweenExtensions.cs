@@ -1,15 +1,18 @@
 ﻿using DG.Tweening;
 
-public static class DoTweenExtensions
+namespace stoogebag.Extensions
 {
-    
-    
-    public static async System.Threading.Tasks.Task AsyncWaitForCompletion(this Tween t)
+    public static class DoTweenExtensions
     {
-        if (!t.active) {
-            //if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
-            return;
+    
+    
+        public static async System.Threading.Tasks.Task AsyncWaitForCompletion(this Tween t)
+        {
+            if (!t.active) {
+                //if (Debugger.logPriority > 0) Debugger.LogInvalidTween(t);
+                return;
+            }
+            while (t.active && !t.IsComplete()) await System.Threading.Tasks.Task.Yield();
         }
-        while (t.active && !t.IsComplete()) await System.Threading.Tasks.Task.Yield();
     }
 }

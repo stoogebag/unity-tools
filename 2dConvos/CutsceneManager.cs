@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag._2dConvos
+namespace stoogebag._2dConvos
 {
     public class CutsceneManager : MonoBehaviour
     {

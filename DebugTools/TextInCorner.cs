@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.DebugTools
+namespace stoogebag.DebugTools
 {
     public abstract class TextInCorner : MonoBehaviour
     {

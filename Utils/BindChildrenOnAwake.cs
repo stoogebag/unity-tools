@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Utils
+namespace stoogebag.Utils
 {
     public class BindChildrenOnAwake : MonoBehaviour
     {

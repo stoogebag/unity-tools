@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Editor
+namespace stoogebag.Editor
 {
     [InitializeOnLoad]
     public static class UIMousePos 

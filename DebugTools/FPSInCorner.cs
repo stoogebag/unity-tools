@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.DebugTools
+namespace stoogebag.DebugTools
 {
     public class FPSInCorner : TextInCorner
     {

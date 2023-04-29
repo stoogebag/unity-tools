@@ -1,8 +1,8 @@
 using Sirenix.OdinInspector;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag._2dConvos
+namespace stoogebag._2dConvos
 {
     public class StripWhitespace : MonoBehaviour
     {

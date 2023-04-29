@@ -1,69 +1,89 @@
 #if DOTWEEN
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
-using stoogebag_MonuMental.stoogebag.UITools.Windows;
+using Sirenix.OdinInspector;
+using stoogebag.Extensions;
 using UnityEngine;
-using UniRx;
-public class WindowSlideIn : MonoBehaviour, IWindowAnimation
+
+namespace stoogebag.UITools.Windows
 {
-    /// <summary>
-    /// optional. 
-    /// </summary>
-    [SerializeField]
-    private Transform OffScreenPos;
+    public class WindowSlideIn : MonoBehaviour, IWindowAnimation
+    {
+        /// <summary>
+        /// optional. 
+        /// </summary>
+        [SerializeField]
+        private Transform OffScreenPos;
 
-    [SerializeField] private Vector3 Offset = new Vector3(0,10,0);
+        [SerializeField] private Vector3 Offset = new Vector3(0,10,0);
 
-    public Vector3 _originalPos;
+        [SerializeField] private bool useLocalPosition = true;
+
+        public Vector3 _originalPos;
     
-    [SerializeField] 
-    private Ease ease = Ease.Linear;
-    [SerializeField] 
-    private float time = 0.5f;
-    [SerializeField]
-    private bool AnimateOnClose = true;
+        [SerializeField] 
+        private Ease ease = Ease.Linear;
+        [SerializeField] 
+        private float time = 0.5f;
+        [SerializeField]
+        private bool AnimateOnClose = true;
 
-    private Vector3 _differenceVec;
-    private Vector3 _offScreenPos;
+        private Vector3 _differenceVec;
+        private Vector3 _offScreenPos;
 
-    private void Awake()
-    {
-        _originalPos = transform.position;
-        if(OffScreenPos != null) _offScreenPos = OffScreenPos.position;
-            else  _offScreenPos =  transform.position + Offset;
-    }
-
-    public async Task Activate()
-    {
-        gameObject.SetActive(true);
-
-        transform.position = _offScreenPos;
-        await transform.DOMove(_originalPos, time).SetEase(ease).AsyncWaitForCompletion();
-    }
-
-    public async Task Deactivate()
-    {
-        if (AnimateOnClose)
+        [Button]
+        private void BakePositions()
         {
-            await transform.DOMove(_offScreenPos, time).SetEase(ease).AsyncWaitForCompletion();
-            gameObject.SetActive(false);
-            ResetPosition();
+            _originalPos = useLocalPosition ? transform.localPosition : transform.position;
+            if(OffScreenPos != null) _offScreenPos = OffScreenPos.position;
+            else  _offScreenPos =  transform.localPosition + Offset;
         }
-        else
+
+        private void Awake()
         {
-            gameObject.SetActive(false);
-            ResetPosition();
+            BakePositions();
         }
-    }
 
-    private void ResetPosition()
-    {
-        transform.position = _originalPos;
-    }
+        public async Task<bool> Activate()
+        {
+            gameObject.SetActive(true);
 
+            if(useLocalPosition) transform.localPosition = _offScreenPos;
+            else transform.position = _offScreenPos;
+
+            var tween = useLocalPosition ?  transform.DOLocalMove(_originalPos, time).SetEase(ease) : transform.DOMove(_originalPos, time).SetEase(ease);
+            
+            await DoTweenExtensions.AsyncWaitForCompletion(tween);
+
+            return true;
+        }
+
+        public async Task<bool> Deactivate()
+        {
+            if (AnimateOnClose)
+            {
+                var tween = useLocalPosition
+                    ? transform.DOLocalMove(_offScreenPos, time).SetEase(ease)
+                    : transform.DOMove(_offScreenPos, time).SetEase(ease);
+                    await DoTweenExtensions.AsyncWaitForCompletion(tween);
+                gameObject.SetActive(false);
+                ResetPosition();
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                ResetPosition();
+            }
+
+            return true;
+        }
+
+        private void ResetPosition()
+        {
+            transform.position = _originalPos;
+        }
+
+    }
 }
 
 #endif

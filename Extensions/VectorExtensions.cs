@@ -1,9 +1,7 @@
 ﻿using System;
-using UniRx;
-using Unity.Mathematics;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class VectorExtensions
     {

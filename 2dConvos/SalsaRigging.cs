@@ -1,11 +1,11 @@
 using System.Linq;
 using CrazyMinnow.SALSA;
 using Sirenix.OdinInspector;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using UniRx;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag._2dConvos
+namespace stoogebag._2dConvos
 {
     public class SalsaRigging : MonoBehaviour
     {

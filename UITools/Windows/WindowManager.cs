@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Windows
+namespace stoogebag.UITools.Windows
 {
     public class WindowManager : Singleton<WindowManager>
     {

@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class Extensions
     {

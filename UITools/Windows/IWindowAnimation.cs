@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Windows
+namespace stoogebag.UITools.Windows
 {
     public interface IWindowAnimation
     {
-        public Task Activate();
-        public Task Deactivate();
+        public Task<bool> Activate(); //returns true if the activation completes successfully (ie without interruption)
+        public Task<bool> Deactivate();
     }
 }

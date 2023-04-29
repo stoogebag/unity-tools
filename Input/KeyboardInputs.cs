@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Input
+namespace stoogebag.Input
 {
     public class KeyboardInputs : InputSchemeBase
     {

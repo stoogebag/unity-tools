@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using TMPro;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.UITools
+namespace stoogebag.UITools
 {
     public class LoadingPopup : MonoBehaviour
     {

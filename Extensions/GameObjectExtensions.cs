@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class GameObjectExtensions { 
         //public static string TryGetGuid(this GameObject me)
@@ -51,7 +52,7 @@ namespace stoogebag_MonuMental.stoogebag.Extensions
                 if(name != null && t.name != name) return false;
                 if (t.gameObject.TryGetComponent<T>(out var x)) return true;
                 return false;
-            }).GetComponent<T>();
+            })?.GetComponent<T>();
         }
         public static GameObject FirstOrDefault(this GameObject go, string name = null) // 
         {
@@ -62,8 +63,18 @@ namespace stoogebag_MonuMental.stoogebag.Extensions
         {
             return component.gameObject.FirstOrDefault<T>(name);
         }
+        public static GameObject GetChildWithComponent<T>(this MonoBehaviour component, string name = null) where T: Component
+        {
+            return component.GetChild<T>(name).gameObject;
+        }
 
-        public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition = null) // 
+        public static IEnumerable<GameObject> GetChildrenWithComponent<T>(this MonoBehaviour component, bool includeInactive = false)
+            where T : Component
+        {
+            return component.gameObject.GetComponentsInChildren<T>(includeInactive).Select(t => t.gameObject);
+        }
+
+        public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition) // 
         {
             return go.transform.FirstOrDefault(t =>
             {
@@ -160,6 +171,35 @@ namespace stoogebag_MonuMental.stoogebag.Extensions
                 var t = go.AddComponent<T>();
                 return t;
             }
+        }
+
+        //weird find function for sugar/convenience. use like "MyProperty = MyProperty.Find(name)"
+        public static T FindByName<T>(this T obj, string name, bool includeInactive = true) where T : Component
+        {
+            if (!includeInactive)
+            {
+                var g = GameObject.Find(name).GetComponent<T>();
+                return g;
+            }
+            else return FindIncludingInactive<T>(obj, name);
+        }
+        
+        
+        //this one actually works on inactive. WARNING!! may accidentally find prefabs i think.
+        //todo: if theres an issue might look at checking obj.gameObject.scene
+        private static T FindIncludingInactive<T>(T obj, string name) where T:Component
+        {
+            var objs = Resources.FindObjectsOfTypeAll(typeof(T)).Cast<T>();
+ 
+            foreach (var t in objs)
+            {
+                if (t.name == name)
+                {
+                    return t;
+                }
+            }
+ 
+            return null;
         }
     }
     

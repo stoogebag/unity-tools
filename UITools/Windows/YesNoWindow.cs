@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using UniRx;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Windows
+namespace stoogebag.UITools.Windows
 {
     public class YesNoWindow : Window
     {

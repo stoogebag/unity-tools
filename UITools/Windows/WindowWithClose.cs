@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using stoogebag_MonuMental.stoogebag.Extensions;
+using stoogebag.Extensions;
 using UniRx;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.Windows
+namespace stoogebag.UITools.Windows
 {
     public class WindowWithClose : Window
     {

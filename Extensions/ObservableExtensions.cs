@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UniRx;
 
-namespace stoogebag_MonuMental.stoogebag.Extensions
+namespace stoogebag.Extensions
 {
     public static class ObservableExtensions
     {

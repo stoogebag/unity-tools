@@ -1,11 +1,11 @@
 using System;
+using stoogebag.Extensions;
 using TMPro;
 using UniRx;
-using stoogebag_MonuMental.stoogebag.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
+namespace stoogebag.UITools.ElementBindingComponents
 {
     public class SpinnerInput : MonoBehaviour
     {
@@ -20,17 +20,14 @@ namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
         
         private void Awake()
         {
-            if(label == null) label = gameObject.FirstOrDefault<TextMeshProUGUI>("label");
-            if(value == null) value = gameObject.FirstOrDefault<TextMeshProUGUI>("value");
-            
-            if(increment == null) increment = gameObject.FirstOrDefault<Button>("increment");
-            if(increment == null) decrement = gameObject.FirstOrDefault<Button>("decrement");
         }
         
         public void Bind(string labelString, ReactiveProperty<int> prop, int min, int max,float stepSize = 1)
         {
-            label.text = labelString;
-        
+            if(label != null) label.text = labelString;
+
+            InitButtons();
+            
             _disposable.Clear();
         
             increment.OnClickAsObservable().Subscribe(t =>
@@ -38,7 +35,7 @@ namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
                 prop.Value = Math.Min(prop.Value + 1, max);
             }).AddTo(_disposable);
             decrement.OnClickAsObservable().Subscribe(t =>
-            {
+            { 
                 prop.Value = Math.Max(prop.Value - 1, min);
             }).AddTo(_disposable);
 
@@ -46,7 +43,14 @@ namespace stoogebag_MonuMental.stoogebag.UITools.ElementBindingComponents
             value.text = prop.Value.ToString();//Math.Round(prop.Value, 1).ToString();
             prop.Subscribe(v => value.text = prop.Value.ToString());//Math.Round(v, 1).ToString());
         }
-    
-    
+
+        private void InitButtons()
+        {
+            if(label == null) label = gameObject.FirstOrDefault<TextMeshProUGUI>("label");
+            if(value == null) value = gameObject.FirstOrDefault<TextMeshProUGUI>("value");
+            
+            if(increment == null) increment = gameObject.FirstOrDefault<Button>("increment");
+            if(decrement == null) decrement = gameObject.FirstOrDefault<Button>("decrement");
+        }
     }
 }

@@ -1,73 +1,77 @@
 #if DOTWEEN
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
-using DG;
-using stoogebag_MonuMental.stoogebag.UITools.Windows;
+using stoogebag.Extensions;
 using UnityEngine;
-using UniRx;
-public class WindowSlideInUI : MonoBehaviour, IWindowAnimation
+
+namespace stoogebag.UITools.Windows
 {
-    /// <summary>
-    /// optional. 
-    /// </summary>
-    [SerializeField]
-    private Transform OffScreenPos;
+    public class WindowSlideInUI : MonoBehaviour, IWindowAnimation
+    {
+        /// <summary>
+        /// optional. 
+        /// </summary>
+        [SerializeField]
+        private Transform OffScreenPos;
 
-    [SerializeField] private Vector3 Offset = new Vector3(0,10,0);
+        [SerializeField] private Vector3 Offset = new Vector3(0,-1000,0);
 
-    public Vector3 _originalPos;
+        public Vector3 _originalPos;
     
-    [SerializeField] 
-    private Ease ease = Ease.Linear;
-    [SerializeField] 
-    private float time = 0.5f;
-    [SerializeField]
-    private bool AnimateOnClose = true;
+        [SerializeField] 
+        private Ease ease = Ease.InOutQuad;
+        [SerializeField] 
+        private float time = 0.5f;
+        [SerializeField]
+        private bool AnimateOnClose = true;
 
-    private Vector3 _differenceVec;
-    private Vector3 _offScreenPos;
+        private Vector3 _differenceVec;
+        private Vector3 _offScreenPos;
 
-    private void Awake()
-    {
-        _originalPos = transform.position;
-        if(OffScreenPos != null) _offScreenPos = OffScreenPos.position;
-            else  _offScreenPos =  transform.position + Offset;
-    }
+        private void Awake()
+        {
+            _originalPos = ((RectTransform)transform).anchoredPosition;
+            if(OffScreenPos != null) _offScreenPos = OffScreenPos.position;
+            else  _offScreenPos =  _originalPos + Offset;
+        }
 
-    public async Task Activate()
-    {
-        gameObject.SetActive(true);
+        public async Task<bool> Activate()
+        {
+            gameObject.SetActive(true);
 
-        var rect = GetComponent<RectTransform>();
-        rect.position = _offScreenPos;
+            var rect = GetComponent<RectTransform>();
+            rect.anchoredPosition = _offScreenPos;
         
         
-        await rect.DOAnchorPos3D(_originalPos, time, true).SetEase(ease).AsyncWaitForCompletion();
-    }
+            await DoTweenExtensions.AsyncWaitForCompletion(rect.DOAnchorPos3D(_originalPos, time, true).SetEase(ease));
 
-    public async Task Deactivate()
-    {
-        if (AnimateOnClose)
-        {
-            await transform.DOMove(_offScreenPos, time).SetEase(ease).AsyncWaitForCompletion();
-            gameObject.SetActive(false);
-            ResetPosition();
+            return true;
         }
-        else
+
+        public async Task<bool> Deactivate()
         {
-            gameObject.SetActive(false);
-            ResetPosition();
+            if (AnimateOnClose)
+            {
+                var rect = GetComponent<RectTransform>();
+                await DoTweenExtensions.AsyncWaitForCompletion(rect.DOAnchorPos3D(_offScreenPos, time).SetEase(ease));
+                gameObject.SetActive(false);
+                ResetPosition();
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                ResetPosition();
+            }
+
+            return true;
         }
-    }
 
-    private void ResetPosition()
-    {
-        transform.position = _originalPos;
-    }
+        private void ResetPosition()
+        {
+            ((RectTransform)transform).anchoredPosition = _originalPos;
+        }
 
+    }
 }
 
 #endif
