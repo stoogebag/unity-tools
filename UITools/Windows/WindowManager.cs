@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using stoogebag;
+using stoogebag.Utils;
 
 namespace stoogebag.UITools.Windows
 {

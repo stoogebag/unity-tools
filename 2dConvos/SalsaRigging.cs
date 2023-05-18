@@ -20,6 +20,10 @@ namespace stoogebag._2dConvos
         public string movingEyeString = "eye";
 
         public string eyeNoBlinkString = "eye";
+        
+        [SerializeField]
+        private bool hideUnusedSprites = true;
+
     
         [SerializeField]
         private SpriteRenderer[] invisibleOnBlink;
@@ -40,7 +44,7 @@ namespace stoogebag._2dConvos
 
             var mouthLayer = mouthLargeObj.sortingOrder;
         
-            var salsa = mouthLargeObj.gameObject.GetOrAddComponent<Salsa2D>();
+            var salsa = gameObject.GetOrAddComponent<Salsa2D>();
 
             salsa.mouthLayer = mouthLayer; //this is the dumbest shit ever
             salsa.spriteRenderer = mouthLargeObj;
@@ -73,6 +77,29 @@ namespace stoogebag._2dConvos
 
 
 
+            if (hideUnusedSprites)
+            {
+                foreach (var ch in allChildren)
+                {
+                    if (ch.gameObject.TryGetComponent<SpriteRenderer>(out var sr))
+                    {
+                        if (sr.gameObject == this.gameObject) continue;
+                        
+                        if(randomEyes.eyes.Contains(sr)) continue;
+                        if(randomEyes.eyeLids.Contains(sr)) continue;
+                        if(invisibleOnBlink.Contains(sr)) continue;
+
+                        
+                        if(sr ==  mouthClosedObj) continue;
+                        if(sr ==  mouthSmallObj) continue;
+                        if(sr ==  mouthMediumObj) continue;
+                        if(sr ==  mouthLargeObj) continue;
+
+                        sr.gameObject.SetActive(false);
+                        
+                    }
+                }
+            }
 
 
         }
