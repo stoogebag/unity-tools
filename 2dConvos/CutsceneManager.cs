@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if VIDE 
+using UnityEngine;
 
 namespace stoogebag._2dConvos
 {
@@ -48,3 +49,4 @@ namespace stoogebag._2dConvos
 
     }
 }
+#endif

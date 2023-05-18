@@ -8,6 +8,8 @@
  *  You are NOT limited to what this script can do. This script is only for convenience. You are completely free to write your own manager or build from this one.
  */
 
+#if VIDE
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -511,3 +513,4 @@ namespace stoogebag._2dConvos
 
     }
 }
+#endif

@@ -26,6 +26,12 @@ namespace stoogebag.Extensions
                 action(trans.gameObject);
             }
         }
+        public static void ForAllChildrenRecursive<T>(this GameObject go, Action<T> action) {
+            if (go == null) return;
+            foreach (var trans in go.GetComponentsInChildren<T>(true)) {
+                action(trans);
+            }
+        }
 
         public static void SetLayer(this GameObject go, int layer, bool includeChildren = false)
         {
@@ -62,6 +68,10 @@ namespace stoogebag.Extensions
         public static T GetChild<T>(this MonoBehaviour component, string name = null) where T: Component
         {
             return component.gameObject.FirstOrDefault<T>(name);
+        }
+        public static GameObject GetChild(this MonoBehaviour component, string name = null) 
+        {
+            return component.gameObject.FirstOrDefault(name);
         }
         public static GameObject GetChildWithComponent<T>(this MonoBehaviour component, string name = null) where T: Component
         {
@@ -201,6 +211,13 @@ namespace stoogebag.Extensions
  
             return null;
         }
+
+        public static void TrimChildNames(this GameObject go)
+        {
+            go.ForAllChildrenRecursive(t=>t.name = t.name.Trim());
+        }
+
+
     }
     
 }

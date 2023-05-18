@@ -18,19 +18,19 @@ namespace stoogebag.Rendering
         /// </summary>
         void GenerateMeshData()
         {
-            Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
-            MeshDataBuilder.SplitMesh(mesh);
+            //Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
+            //MeshDataBuilder.SplitMesh(mesh);
         
-            var info = new MeshInfo(mesh);
-            info.InitialiseDictionaries();
+            //var info = new MeshInfo(mesh);
+            //info.InitialiseDictionaries();
         
-            SetVertexColors(mesh, info, edge =>
-            {
-                var tris = info.edgeToTrianglesDic[edge];
-                if (tris.Count == 1) return true;
+            //SetVertexColors(mesh, info, edge =>
+            //{
+            //    var tris = info.edgeToTrianglesDic[edge];
+            //    if (tris.Count == 1) return true;
 
-                return false;
-            });
+            //    return false;
+            //});
             
         
         
