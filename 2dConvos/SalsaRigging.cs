@@ -1,3 +1,5 @@
+#if SALSA
+
 using System.Linq;
 using CrazyMinnow.SALSA;
 using Sirenix.OdinInspector;
@@ -90,3 +92,4 @@ namespace stoogebag._2dConvos
         }
     }
 }
+#endif
