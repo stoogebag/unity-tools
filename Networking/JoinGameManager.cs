@@ -6,6 +6,8 @@ using FishNet;
 using FishNet.Managing;
 using FishNet.Object;
 using stoogebag;
+using stoogebag.Extensions;
+using stoogebag.UITools;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;

@@ -5,7 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using FishNet;
 using InControl;
+using ReactUnity.Helpers;
 using stoogebag;
+using stoogebag.Extensions;
+using stoogebag.Input;
+using stoogebag.Networking.MatchSetup;
+using stoogebag.Utils;
 using UniRx;
 using UnityEngine;
 
@@ -26,6 +31,12 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
 
     public IObservable<PlayerInfo> PlayerDisconnectedObservable =>
         Observable.FromEvent<PlayerInfo>(h => PlayerDisconnected += h, h => PlayerDisconnected -= h);
+
+
+    private void Start()
+    {
+        myInt.Subscribe(i => OnMaxPlayersChanged.Invoke(i));
+    }
 
     void Update()
     {
@@ -176,6 +187,17 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     public InputSchemeBase GetInput(string id) => _connectedInputs.TryGetOrDefault(id);
 
 
+
+    public void ButtonPressed()
+    {
+        myInt.Value++;
+        
+    }
+
+    public ReactiveProperty<int> myInt = new ReactiveProperty<int>(0);
+    public ReactAction<int> OnMaxPlayersChanged = new ReactAction<int>();
+    
+    
     // public virtual string GetNewPlayerName()
     // {
     //     

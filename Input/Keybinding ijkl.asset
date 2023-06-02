@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd3ce6bbd1d34455b45c85c0b08647e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f15de8ae48d90047bcf10ea7b4a8d1b, type: 3}
   m_Name: Keybinding ijkl
   m_EditorClassIdentifier: 
-  KeyLeft: 106
-  KeyRight: 108
-  KeyUp: 105
-  KeyDown: 107
-  KeyAction: 111
-  KeySprint: 0
-  KeyAbility: 0
-  StartKey: 111
-  CancelKey: 117
+  KeyLeft: 97
+  KeyRight: 100
+  KeyUp: 119
+  KeyDown: 115
+  KeyAction: 32
+  KeySprint: 304
+  KeyAbility: 101
+  StartKey: 32
+  CancelKey: 27

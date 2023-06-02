@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd3ce6bbd1d34455b45c85c0b08647e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f15de8ae48d90047bcf10ea7b4a8d1b, type: 3}
   m_Name: Keybinding WASD
   m_EditorClassIdentifier: 
   KeyLeft: 97

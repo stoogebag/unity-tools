@@ -1,8 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using stoogebag.Input;
 using UnityEngine;
 #if FISHNET
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,7 @@ using FishNet;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using stoogebag;
+using stoogebag.Utils;
 using UniRx;
 
 public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManager<TMatchInfo>>
@@ -25,7 +26,7 @@ public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManage
         //this.ObserveEveryValueChanged(t => t.Players).Subscribe(t => print(Players.Select(t => t.Name).ToList()));
     }
 
-    private void Start()
+    private async void Start()
     {
         var client = NetworkClient.Instance;
         if (client == null)
@@ -34,8 +35,7 @@ public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManage
 
             if (InstanceFinder.IsOffline)
             {
-                NetworkConnectManager.Instance.StartServer();
-                NetworkConnectManager.Instance.TryConnect();
+                await NetworkConnectManager.Instance.StartDebug();
             }
 
             //var info = GetMatchInfo();
@@ -74,7 +74,17 @@ public abstract class MatchInfoBase : NetworkBehaviour
     public int ID { get; private set; }
 
     public abstract void InitialiseDefaults();
+
+    public abstract MatchInfoModel GetModel();
+
+    
 }
+
+public abstract class MatchInfoModel
+{
+    public int ID;
+}
+
 #endif
 
 namespace stoogebag.Networking.MatchSetup

@@ -2,55 +2,108 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using FishNet.Managing;
+using FishNet.Transporting.FishyUnityTransport;
+using ReactUnity.Helpers;
+using RSG;
 using UnityEngine;
 using stoogebag;
+using stoogebag.Extensions;
+using stoogebag.UITools.Windows;
+using stoogebag.Utils;
 using UniRx;
 using UnityEngine.UI;
 
-public class ConnectionUI : MonoBehaviour
+public class ConnectionUI : ReactUIManager
 {
-    
-    [InitialiseOnAwake]
-    private Button Host;
-    
-    [InitialiseOnAwake]
-    public Button Join;
+    private ReactiveProperty<int> myInt = new ReactiveProperty<int>();
+    public ReactAction<int> OnIntChanged = new ReactAction<int>();
 
-    private void Awake()
+    protected override void Awake()
     {
-        Host = this.GetChild<Button>("Host");
-        Join = this.GetChild<Button>("Join");
+        base.Awake();
+        _networkManager = GetComponent<NetworkManager>();
+    }
 
-        Host.OnClickAsObservable().SubscribeAsync(async u =>
+    private async void Start()
+    {
+        myInt.Subscribe(i => OnIntChanged?.Invoke(i));
+
+        //await Task.Delay(1000);
+        //var prom = HostClick();
+
+
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (prommy != null) print(prommy.CurState);
+    }
+
+    public Promise prommy;
+
+
+    private static event Action Done;
+
+    public async Task HostClick()
+    {
+        //
+        await NetworkConnectManager.Instance.StartServer();
+        await  NetworkConnectManager.Instance.TryConnectAsHost();
+
+        HostClickFinished?.Invoke();
+    }
+    
+    
+
+    public ReactAction HostClickFinished = new ReactAction();
+
+    public  IPromise<string> OnHostClick()
+    {
+
+        return new Promise<string>(async (res, err) =>
         {
-            var window = FindObjectOfType<SimpleTextWindow>(true);
 
-            var result =await window.PopupAndAwaitResult("are u sure mate?");
-            if (result.Result == TemporaryWindow<string, object>.Result.Cancel) return;
-            
-            NetworkConnectManager.Instance.StartServer();
-            NetworkConnectManager.Instance.TryConnect();
-        } );
-        
-        Join.OnClickAsObservable().Subscribe(u =>
-        {
-            NetworkConnectManager.Instance.TryConnect();
+            print(1);
+            await Task.Delay(1000);
 
-            //var textInput = TextInputPopup.Create();
-
+            print(2);
+            res("butt!");
         });
 
+
+    }
+    public  IPromise OnHostClick2()
+    {
+
+        return new Promise(async (res, err) =>
+        {
+
+            print(1);
+            await Task.Delay(1000);
+
+            print(2);
+            res();
+        });
+
+
     }
 
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    public async Task JoinClickLAN()
     {
-        
+        NetworkConnectManager.Instance.TryConnectLAN();
+        JoinClickFinished?.Invoke();
     }
+    public async Task JoinClickOnline()
+    {
+        NetworkConnectManager.Instance.TryConnectOnline();
+        JoinClickFinished?.Invoke();
+    }
+    public ReactAction JoinClickFinished = new ReactAction();
+    private NetworkManager _networkManager;
 }
 
 #endif

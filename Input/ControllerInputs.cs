@@ -6,6 +6,7 @@ using System;
 using UniRx;
 using InControl;
 using System.Linq;
+using stoogebag.Input;
 
 public class ControllerInputs : InputSchemeBase
 {

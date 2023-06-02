@@ -9,8 +9,11 @@ namespace stoogebag.Utils
 
         public static T Instance { get; private set; }
 
+        public bool Persistent;
+
         protected virtual void Awake()
         {
+            if(Persistent) DontDestroyOnLoad(gameObject);
             if (Instance != null)
             {
                 Destroy(gameObject);
