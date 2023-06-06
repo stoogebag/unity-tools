@@ -50,15 +50,24 @@ public class ConnectionUI : ReactUIManager
     public async Task HostClick()
     {
         //
-        await NetworkConnectManager.Instance.StartServer();
+        await NetworkConnectManager.Instance.StartServer(false);
         await  NetworkConnectManager.Instance.TryConnectAsHost();
 
         HostClickFinished?.Invoke();
+    }
+    public async Task HostClickOnline()
+    {
+        //
+        await NetworkConnectManager.Instance.StartServer(true);
+        await  NetworkConnectManager.Instance.TryConnectAsHost();
+
+        HostClickOnlineFinished?.Invoke();
     }
     
     
 
     public ReactAction HostClickFinished = new ReactAction();
+    public ReactAction HostClickOnlineFinished = new ReactAction();
 
     public  IPromise<string> OnHostClick()
     {

@@ -668,26 +668,31 @@ namespace UnityEditor {
 
 			return type;
 		}
-
-		public static AudioType GetPlatformConversionType(AudioType inType , BuildTargetGroup targetGroup , AudioImporterFormat format) {
+#if UNITY_EDITOR
+		public static AudioType GetPlatformConversionType(AudioType inType, BuildTargetGroup targetGroup,
+			AudioImporterFormat format)
+		{
 			Assembly unityEditorAssembly = typeof(AudioImporter).Assembly;
 			Type audioUtilClass = unityEditorAssembly.GetType("UnityEditor.AudioUtil");
 			MethodInfo method = audioUtilClass.GetMethod(
 				"GetPlatformConversionType",
 				BindingFlags.Static | BindingFlags.Public
-				);
-			
+			);
+
 			AudioType type = (AudioType)method.Invoke(
 				null,
-				new object[] {
-				inType,
-				targetGroup,
-				format
-			}
+				new object[]
+				{
+					inType,
+					targetGroup,
+					format
+				}
 			);
-			
+
 			return type;
 		}
+		
+#endif
 
 		public static bool HaveAudioCallback(MonoBehaviour behaviour) {
 			Assembly unityEditorAssembly = typeof(AudioImporter).Assembly;

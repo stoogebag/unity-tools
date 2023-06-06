@@ -25,5 +25,5 @@ MonoBehaviour:
   ButtonShoot: 10000000fb010000
   ButtonItem: 16000000
   ButtonSprint: 0f000000
-  ButtonStart: 680000006a000000
+  ButtonStart: 680000006a00000065000000
   ButtonCancel: 14000000

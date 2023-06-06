@@ -68,6 +68,7 @@ public abstract class MatchSetupManager<TMatchInfo> : Singleton<MatchSetupManage
 
 /// <summary>
 /// matchinfo has to be a networkbehaviour so that it can be synchronised. this sucks but that's life.
+/// this is also why it can't be generic with a TMatchInfo or anything.
 /// </summary>
 public abstract class MatchInfoBase : NetworkBehaviour
 {

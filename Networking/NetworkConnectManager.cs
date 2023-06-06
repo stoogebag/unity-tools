@@ -47,9 +47,26 @@ public class NetworkConnectManager : PersistentSingleton<NetworkConnectManager>
         _networkManager = InstanceFinder.NetworkManager;
     }
 
-    public async Task StartServer()
+    private Multipass _multipass => _networkManager.GetComponent<Multipass>();
+
+    public async Task StartServer(bool online = false)
     {
-        await StartRelayHost();
+        if (online)
+        {
+            // var fut = _networkManager.gameObject.AddComponent<FishyUnityTransport>();
+            // _multipass.Transports.Add(fut);
+            //
+            await StartRelayHost();
+        }
+        else
+        {
+             var fut = _multipass.GetTransport<FishyUnityTransport>();
+             if(fut != null) fut.enabled = false;
+             //_multipass.Transports.Remove(fut);
+             //DestroyImmediate(fut);
+             
+             _networkManager.ServerManager.StartConnection();
+        }
         //_networkManager.ServerManager.StartConnection();
         _networkManager.GetComponent<Multipass>().SetClientTransport<Yak>();
     }
@@ -172,11 +189,7 @@ public class NetworkConnectManager : PersistentSingleton<NetworkConnectManager>
 
     public async Task StartDebug()
     {
-         var fut = _networkManager.GetComponent<Multipass>().GetTransport<FishyUnityTransport>();
-         DestroyImmediate(fut);
-        
-        
-        await StartServer();
+        await StartServer(false);
         await TryConnectAsHost();
     }
 }

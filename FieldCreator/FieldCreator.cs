@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
+
 
 [Serializable]
 public class FieldCreator
@@ -85,3 +88,4 @@ public static class FieldCreatorPostProcessor
 
 }
 
+#endif

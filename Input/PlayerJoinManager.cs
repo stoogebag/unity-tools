@@ -33,11 +33,6 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
         Observable.FromEvent<PlayerInfo>(h => PlayerDisconnected += h, h => PlayerDisconnected -= h);
 
 
-    private void Start()
-    {
-        myInt.Subscribe(i => OnMaxPlayersChanged.Invoke(i));
-    }
-
     void Update()
     {
         if (!Application.isFocused) return;
@@ -55,12 +50,11 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
         CheckKeyboard();
     }
 
-    public List<KeyBindings> AvailableKeyboardBindings; 
-    public List<ControllerBindings> AvailableControllerBindings; 
+    
     
     private void CheckKeyboard()
     {
-        foreach (var bindings in AvailableKeyboardBindings)
+        foreach (var bindings in InputSchemesManager.Instance.AvailableKeyboardBindings)
         {
             if (Input.GetKeyDown(bindings.StartKey))
             {
@@ -79,7 +73,7 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
     {
         var a = controller.GetControl(InputNames.aButton);
 
-        foreach (var bindings in AvailableControllerBindings)
+        foreach (var bindings in InputSchemesManager.Instance.AvailableControllerBindings)
         {
             foreach (var type in bindings.ButtonStart)
             {
@@ -169,7 +163,8 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
         player.ComputeID();
         _connectedPlayers.Add(player.ID, player);
         _connectedInputs.Add(player.ID, player.Input);
-        
+
+        InputSchemesManager.Instance.ConnectedInputs[player.Input.GetID()] = player.Input;
         
         
         PlayerConnected?.Invoke(player);
@@ -186,16 +181,6 @@ public class PlayerJoinManager : Singleton<PlayerJoinManager>
 
     public InputSchemeBase GetInput(string id) => _connectedInputs.TryGetOrDefault(id);
 
-
-
-    public void ButtonPressed()
-    {
-        myInt.Value++;
-        
-    }
-
-    public ReactiveProperty<int> myInt = new ReactiveProperty<int>(0);
-    public ReactAction<int> OnMaxPlayersChanged = new ReactAction<int>();
     
     
     // public virtual string GetNewPlayerName()

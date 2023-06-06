@@ -13,6 +13,7 @@ namespace stoogebag.Input
         public ReactiveProperty<bool> ActionButtonValue = new ReactiveProperty<bool>();
         public ReactiveProperty<bool> ShootButtonValue = new ReactiveProperty<bool>();
         public ReactiveProperty<bool> ItemButtonValue= new ReactiveProperty<bool>();
+        public ReactiveProperty<bool> JumpButtonValue= new ReactiveProperty<bool>();
 
         public ReactiveProperty<bool> SprintButtonValue= new ReactiveProperty<bool>();
         public ReactiveProperty<bool> AbilityButtonValue= new ReactiveProperty<bool>();
@@ -29,5 +30,11 @@ namespace stoogebag.Input
         /// <returns></returns>
         public abstract string GetID();
 
+    }
+
+    public interface IHasInputScheme
+    {
+        public InputSchemeBase InputScheme { get; }
+        void SetInput(InputSchemeBase input);
     }
 }
