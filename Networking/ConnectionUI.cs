@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FishNet.Managing;
-using FishNet.Transporting.FishyUnityTransport;
-using ReactUnity.Helpers;
+using FishNet.Transporting;
 using RSG;
 using UnityEngine;
 using stoogebag;
@@ -15,20 +14,19 @@ using stoogebag.Utils;
 using UniRx;
 using UnityEngine.UI;
 
-public class ConnectionUI : ReactUIManager
+public class ConnectionUI : MonoBehaviour
 {
-    private ReactiveProperty<int> myInt = new ReactiveProperty<int>();
-    public ReactAction<int> OnIntChanged = new ReactAction<int>();
+    //public ReactAction<int> OnIntChanged = new ReactAction<int>();
 
-    protected override void Awake()
+    protected  void Awake()
     {
-        base.Awake();
+        //base.Awake();
         _networkManager = GetComponent<NetworkManager>();
     }
 
     private async void Start()
     {
-        myInt.Subscribe(i => OnIntChanged?.Invoke(i));
+        // myInt.Subscribe(i => OnIntChanged?.Invoke(i));
 
         //await Task.Delay(1000);
         //var prom = HostClick();
@@ -47,71 +45,37 @@ public class ConnectionUI : ReactUIManager
 
     private static event Action Done;
 
-    public async Task HostClick()
+    public async Task HostClickLocal()
     {
+        print("host local...");
         //
         await NetworkConnectManager.Instance.StartServer(false);
         await  NetworkConnectManager.Instance.TryConnectAsHost();
 
-        HostClickFinished?.Invoke();
+        // HostClickFinished?.Invoke();
     }
     public async Task HostClickOnline()
     {
+        
+        print("host online...");
         //
         await NetworkConnectManager.Instance.StartServer(true);
         await  NetworkConnectManager.Instance.TryConnectAsHost();
 
-        HostClickOnlineFinished?.Invoke();
+        // HostClickOnlineFinished?.Invoke();
     }
     
-    
-
-    public ReactAction HostClickFinished = new ReactAction();
-    public ReactAction HostClickOnlineFinished = new ReactAction();
-
-    public  IPromise<string> OnHostClick()
+    public async Task JoinClickLocal()
     {
-
-        return new Promise<string>(async (res, err) =>
-        {
-
-            print(1);
-            await Task.Delay(1000);
-
-            print(2);
-            res("butt!");
-        });
-
-
-    }
-    public  IPromise OnHostClick2()
-    {
-
-        return new Promise(async (res, err) =>
-        {
-
-            print(1);
-            await Task.Delay(1000);
-
-            print(2);
-            res();
-        });
-
-
-    }
-
-
-    public async Task JoinClickLAN()
-    {
-        NetworkConnectManager.Instance.TryConnectLAN();
-        JoinClickFinished?.Invoke();
+        await NetworkConnectManager.Instance.TryConnectLAN();
+        // JoinClickFinished?.Invoke();
     }
     public async Task JoinClickOnline()
     {
-        NetworkConnectManager.Instance.TryConnectOnline();
-        JoinClickFinished?.Invoke();
+        await NetworkConnectManager.Instance.TryConnectOnline();
+        // JoinClickFinished?.Invoke();
     }
-    public ReactAction JoinClickFinished = new ReactAction();
+    // public ReactAction JoinClickFinished = new ReactAction();
     private NetworkManager _networkManager;
 }
 
