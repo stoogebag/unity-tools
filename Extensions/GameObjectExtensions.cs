@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 namespace stoogebag.Extensions
@@ -217,7 +218,38 @@ namespace stoogebag.Extensions
             go.ForAllChildrenRecursive(t=>t.name = t.name.Trim());
         }
 
+        public static RaycastHit RaycastFromScreenPos(Vector3 screenPos, float  rayDist = 100f)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            if (Physics.Raycast(ray, out var hit, rayDist))
+            {
+                return hit;
+            }
 
+            return default;
+        }
+        
+        public static RaycastHit RaycastFromMousePos(float rayDist = 100f)
+        {
+            return RaycastFromScreenPos(UnityEngine.Input.mousePosition, rayDist);
+        }
+
+        public static GameObject GameObjectAtScreenPos(Vector3 screenPos, float  rayDist = 100f)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            if (Physics.Raycast(ray, out var hit, rayDist))
+            {
+                return hit.collider.gameObject;
+            }
+
+            return null;
+        }
+
+        public static GameObject GameObjectAtMousePos(float rayDist = 100f)
+        {
+            return GameObjectAtScreenPos(UnityEngine.Input.mousePosition, rayDist);
+        }
+
+       
     }
-    
 }
