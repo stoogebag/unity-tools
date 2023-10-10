@@ -154,5 +154,16 @@ namespace stoogebag.Extensions
         {
             return FromPolar(r, theta * (float)Math.PI / 180f);
         }
+        
+        
+        public static (float, Vector3) ProjectToLine(this Vector3 v, Vector3 point, Vector3 direction)
+        {
+            //gets the projection of v onto the line defined by point and direction
+            //https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-a-certain-distance-away-from-another-point
+            var t = Vector3.Dot(v - point, direction) / Vector3.Dot(direction, direction);
+            var proj = point + t * direction;
+            Debug.DrawLine(point, proj, Color.red);
+            return (t, proj);
+        }
     }
 }

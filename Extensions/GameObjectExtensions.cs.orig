@@ -226,6 +226,14 @@ namespace stoogebag.Extensions
                 return hit;
             }
 
+<<<<<<< HEAD
+        public static T TryGetOrAddComponent<T>(this GameObject go) where T:Component
+        {
+            if (go.TryGetComponent<T>(out var t)) return t;
+            else return go.AddComponent<T>();
+        }
+        
+=======
             return default;
         }
         
@@ -245,20 +253,12 @@ namespace stoogebag.Extensions
             return null;
         }
 
-        public static T TryGetOrAddComponent<T>(this GameObject go) where T:Component
-        {
-        {
-            if (go.TryGetComponent<T>(out var t)) return t;
-            else return go.AddComponent<T>();
-        }
-        
-        }
-
-
         public static GameObject GameObjectAtMousePos(float rayDist = 100f)
         {
             return GameObjectAtScreenPos(UnityEngine.Input.mousePosition, rayDist);
         }
+
        
+>>>>>>> 36328ddb0a1a4a3b6f12a175e4ae70f7b4e24309
     }
 }
