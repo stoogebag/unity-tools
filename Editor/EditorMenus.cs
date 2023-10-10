@@ -15,6 +15,7 @@ namespace stoogebag.Editor
             var gameObject = Selection.activeGameObject;
             SaveAsPrefab(gameObject);
         }
+
         public static void SaveAsPrefab(GameObject gameObject)
         {
             var folderPath = "Assets/Prefabs/Saved";
@@ -23,8 +24,20 @@ namespace stoogebag.Editor
             PrefabUtility.SaveAsPrefabAsset(gameObject, path);
         }
 
+        [MenuItem("stooge/Autorefresh Off")]
+        public static void AutorefreshOff()
+        {
+            EditorPrefs.SetBool("kAutoRefresh", false);
+        }
+
+        [MenuItem("stooge/Autorefresh On")]
+        public static void AutorefreshOn()
+        {
+            EditorPrefs.SetBool("kAutoRefresh", true);
+        }
+
     }
 }
- 
+
 
 #endif

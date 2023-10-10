@@ -218,6 +218,12 @@ namespace stoogebag.Extensions
         }
 
 
+        public static T TryGetOrAddComponent<T>(this GameObject go) where T:Component
+        {
+            if (go.TryGetComponent<T>(out var t)) return t;
+            else return go.AddComponent<T>();
+        }
+        
     }
     
 }
