@@ -16,4 +16,3 @@ public class RegenerateTree : MonoBehaviour
     }
 }
 #endif
-#endif
