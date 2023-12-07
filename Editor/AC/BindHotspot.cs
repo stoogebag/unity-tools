@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#if ADVENTURE_CREATOR
+
+using System.Collections;
 using System.Collections.Generic;
 using AC;
 using UnityEditor;
@@ -20,3 +22,4 @@ public class BindHotspot
         }
     }
 }
+#endif

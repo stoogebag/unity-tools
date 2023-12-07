@@ -1,4 +1,5 @@
-using System;
+#if ADVENTURE_CREATOR
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,3 +48,4 @@ public class ExamineHotspot : MonoBehaviour
         });
     }
 }
+#endif

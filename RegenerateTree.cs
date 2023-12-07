@@ -1,3 +1,5 @@
+#if BROCCOLI
+
 using Broccoli.Factory;
 using Sirenix.OdinInspector;
 using System.Collections;
@@ -13,3 +15,5 @@ public class RegenerateTree : MonoBehaviour
 
     }
 }
+
+#endif

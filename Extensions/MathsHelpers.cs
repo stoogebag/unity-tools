@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_EDITOR
 public static class MathsHelpers
 {
 
@@ -29,4 +28,3 @@ public static class MathsHelpers
         return points;
     } 
 }
-#endif
