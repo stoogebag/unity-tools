@@ -13,6 +13,23 @@ public class ControllerInputs : InputSchemeBase
     public InputDevice controller;
     public ControllerBindings Bindings;// = DefaultBindings;
 
+    public bool BindOnStart;
+
+    private void Start()
+    {
+        if (BindOnStart)
+        {
+            var controllers = InputManager.Devices;
+            InputManager.OnActiveDeviceChanged += ( current) =>
+            {
+                if (current != null)
+                {
+                    Bind(current, Bindings);
+                }
+            };
+        }
+    }
+
     //public static ControllerBindings DefaultBindings = ControllerBindings.CreateInstance<ControllerBindings>();
 
     public void Bind(InputDevice controller, ControllerBindings bindings)

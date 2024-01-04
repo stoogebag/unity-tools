@@ -1,5 +1,5 @@
 #if INCONTROL_EXISTS
-
+#if FISHNET
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -224,4 +224,5 @@ public static class InputNames
     public static readonly InputControlType yButton = InputControlType.Action4;
 }
 
+#endif
 #endif

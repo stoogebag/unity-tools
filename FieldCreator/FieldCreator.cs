@@ -25,7 +25,7 @@ public class FieldCreator
     public bool Dirty = false;
     
 
-    [UnityEditor.Callbacks.DidReloadScripts]
+    //[UnityEditor.Callbacks.DidReloadScripts]
     public static void Test()
     {
         //if (!FieldCreatorPostProcessor.AnyDirty) return;
