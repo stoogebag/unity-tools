@@ -260,5 +260,11 @@ namespace stoogebag.Extensions
             return GameObjectAtScreenPos(UnityEngine.Input.mousePosition, rayDist);
         }
        
+        
+        public static T GetEnabledComponent<T>(this GameObject go) where T: MonoBehaviour
+        {
+            var t = go.GetComponents<T>();
+            return t.FirstOrDefault(t=>t.enabled);
+        }
     }
 }
