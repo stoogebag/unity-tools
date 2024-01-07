@@ -63,6 +63,7 @@ namespace stoogebag.Input
             ActionButtonValue.Value =    Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeyAction));
             SprintButtonValue.Value =  Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeySprint));
             AbilityButtonValue.Value = Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeyAbility));
+            BackButtonValue.Value = Bindings.Any(t=>UnityEngine.Input.GetKey(t.CancelKey));
             ShootButtonValue.Value =   UnityEngine.Input.GetMouseButton(0);
 
             var hori = GetHorizontal();
