@@ -4,6 +4,7 @@ using System.Linq;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace stoogebag.Extensions
 {
@@ -265,6 +266,26 @@ namespace stoogebag.Extensions
         {
             var t = go.GetComponents<T>();
             return t.FirstOrDefault(t=>t.enabled);
+        }
+
+
+        public static void TryDestroy(this GameObject go)
+        {
+            if(go != null) GameObject.Destroy(go);
+        }
+        public static void TryDestroyImmediate(this GameObject go)
+        {
+            if(go != null) GameObject.DestroyImmediate(go);
+        }
+
+        public static T ReplaceOrAddComponent<T>(this GameObject go) where T : Component
+        {
+            if (go.TryGetComponent<T>(out var t))
+            {
+                Object.DestroyImmediate(t);
+            }
+
+            return go.AddComponent<T>();
         }
     }
 }

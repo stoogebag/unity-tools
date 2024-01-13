@@ -6,7 +6,6 @@
         "GUID:15fc0a57446b3144c949da3e2b9737a9",
         "GUID:b42d3f2b4b2024b0fb4b93601f0faf4c",
         "GUID:560b04d1a97f54a4e82edc0cbbb69285",
-        "GUID:e048eeec9bdb9d30448017b829deb3f6",
         "GUID:df380645f10b7bc4b97d4f5eb6303d95",
         "GUID:7c88a4a7926ee5145ad2dfa06f454c67",
         "GUID:fb7d16cea6c2c9d4fb5901d48791bae6",
@@ -26,16 +25,15 @@
         "GUID:21449d754a5529a45996d8394893b50d",
         "GUID:347a20883bb61d74abf78fec0515bb21",
         "GUID:c240c7a8153142ad92a23143a68f0c23",
-        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f",
-        "GUID:fe25561d224ed4743af4c60938a59d0b",
-        "GUID:03058786646e84a4587858e9302c3f41",
-        "GUID:5540e30183c82e84b954c033c388e06c"
+        "GUID:d8154a2980c5bdb4298794827a50b1aa"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
-    "precompiledReferences": [],
+    "precompiledReferences": [
+        "SALSA-LipSync.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

@@ -3,6 +3,7 @@
 using System.Linq;
 using CrazyMinnow.SALSA;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using stoogebag.Extensions;
 using UniRx;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace stoogebag._2dConvos
 {
     public class SalsaRigging : MonoBehaviour
     {
+        public bool TrimWhitespace = true;
+        
         public string MouthClosedName = "mouth_closed";
         public string MouthSmallName = "mouth_small";
         public string MouthMediumName = "mouth_med";
@@ -29,23 +32,29 @@ namespace stoogebag._2dConvos
         private SpriteRenderer[] invisibleOnBlink;
 
         [Button]
-        public void Rig()
+        public void Rig(AudioSource source = null)
         {
+            if(TrimWhitespace) gameObject.StripWhitespaceFromChildNames();
+
             var mouthClosedObj = this.GetChild<SpriteRenderer>(MouthClosedName);
             var mouthSmallObj = this.GetChild<SpriteRenderer>(MouthSmallName);
             var mouthMediumObj = this.GetChild<SpriteRenderer>(MouthMediumName);
             var mouthLargeObj = this.GetChild<SpriteRenderer>(MouthLargeName);
 
-        
             var mouthClosedSprite = mouthClosedObj?.sprite;
             var mouthSmallSprite = mouthSmallObj?.sprite;
             var mouthMediumSprite = mouthMediumObj?.sprite;
             var mouthLargeSprite = mouthLargeObj.sprite;
-
             var mouthLayer = mouthLargeObj.sortingOrder;
         
             var salsa = gameObject.GetOrAddComponent<Salsa2D>();
 
+            if (source != null)
+            {
+                DestroyImmediate(gameObject.GetComponent<AudioSource>());
+                salsa.audioSrc = source;
+            }
+            
             salsa.mouthLayer = mouthLayer; //this is the dumbest shit ever
             salsa.spriteRenderer = mouthLargeObj;
         
@@ -71,11 +80,7 @@ namespace stoogebag._2dConvos
 
             randomEyes.eyes = movingEyes.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
             randomEyes.eyeLids = eyelids.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
-            
             invisibleOnBlink = disappearOnBlink.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
-
-
-
 
             if (hideUnusedSprites)
             {
@@ -100,7 +105,41 @@ namespace stoogebag._2dConvos
                     }
                 }
             }
+            
+            //do the heirarchy thing. add a parent for scale etc. 
+//            var parent = new GameObject("SalsaRig");
 
+            var eyes = new GameObject("eyes");
+            var eyeL = new GameObject("eyeL");
+            var eyeR = new GameObject("eyeR");
+            var mouth  = new GameObject("mouth");
+            
+            eyes.transform.parent = gameObject.transform;
+            eyeL.transform.parent = eyes.transform;
+            eyeR.transform.parent = eyes.transform;
+            mouth.transform.parent = gameObject.transform;
+            
+            foreach (var t in allChildren.Where(t=>t.name.StartsWith("eye")).ToList())
+            {
+                var go = t.gameObject;
+                if (go.name.EndsWith("L"))
+                {
+                    t.parent = eyeL.transform;
+                }
+                else if (go.name.EndsWith("R"))
+                {
+                    t.parent = eyeR.transform;
+                }
+                else
+                {
+                    t.parent = eyes.transform;
+                }
+            }
+            
+            foreach (var t in allChildren.Where(t=>t.name.StartsWith("mouth")).ToList())
+            {
+                t.parent = mouth.transform;
+            }
 
         }
 

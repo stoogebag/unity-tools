@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
 
-namespace stoogebag._2dConvos
+namespace stoogebag
 {
     public class StripWhitespace : MonoBehaviour
     {
@@ -12,6 +12,16 @@ namespace stoogebag._2dConvos
         {
             gameObject.ForAllChildrenRecursive(go=> go.name = (go.name.Trim()));
         }
+        
 
+    }
+
+    public static class StripWhitespaceExtensions
+    {
+        public static void StripWhitespaceFromChildNames(this GameObject go)
+        {
+            go.ForAllChildrenRecursive(go=> go.name = (go.name.Trim()));
+        }
+        
     }
 }
