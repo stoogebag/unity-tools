@@ -103,6 +103,10 @@ public class ControllerInputs : InputSchemeBase
         SprintButtonValue.Value = Bindings.ButtonSprint.Any(b => controller.GetControl(b).Value > 0);
         ItemButtonValue.Value = Bindings.ButtonItem.Any(b => controller.GetControl(b).Value > 0);
 
+        SelectLeftButtonValue.Value = Bindings.ButtonSelectLeft.Any(b => controller.GetControl(b).Value > 0);
+        SelectRightButtonValue.Value = Bindings.ButtonSelectRight.Any(b => controller.GetControl(b).Value > 0);
+
+        
 
         var hori = GetHorizontal();
         LeftButtonValue.Value = hori < -ButtonPressThreshold;

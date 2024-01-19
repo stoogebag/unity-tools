@@ -24,7 +24,10 @@ namespace stoogebag.Input
         public ReactiveProperty<bool> DownButtonValue= new ReactiveProperty<bool>();
         public ReactiveProperty<bool> LeftButtonValue= new ReactiveProperty<bool>();
         public ReactiveProperty<bool> RightButtonValue= new ReactiveProperty<bool>();
-   
+
+        public ReactiveProperty<bool> SelectLeftButtonValue= new ReactiveProperty<bool>();
+        public ReactiveProperty<bool> SelectRightButtonValue= new ReactiveProperty<bool>();
+
     
         /// <summary>
         /// this should be unique to the controller i think

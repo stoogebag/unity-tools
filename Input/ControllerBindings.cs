@@ -54,5 +54,17 @@ public class ControllerBindings : ScriptableObject
     };
 
     
+    public List<InputControlType> ButtonSelectLeft = new()
+    {
+        InputControlType.LeftBumper,
+        //InputControlType.Button4
+    };
+    public List<InputControlType> ButtonSelectRight = new()
+    {
+        InputControlType.RightBumper,
+        //InputControlType.Button4
+    };
+    
+    
 }
 #endif

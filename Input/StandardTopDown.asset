@@ -27,3 +27,5 @@ MonoBehaviour:
   ButtonSprint: 0f000000
   ButtonStart: 680000006a00000065000000
   ButtonCancel: 14000000
+  ButtonSelectLeft: 11000000
+  ButtonSelectRight: 12000000

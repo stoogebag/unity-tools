@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace stoogebag.Input
 {
@@ -15,7 +16,11 @@ namespace stoogebag.Input
         public KeyCode KeyAbility = KeyCode.E;
 
         public KeyCode StartKey = KeyCode.Space;
-        public KeyCode CancelKey = KeyCode.Escape;
+        [FormerlySerializedAs("CancelKey")] public KeyCode KeyCancel = KeyCode.Escape;
 
+        
+        public KeyCode KeySelectLeft = KeyCode.Q;
+        public KeyCode KeySelectRight = KeyCode.E;
+        
     }
 }
