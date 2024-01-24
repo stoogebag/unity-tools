@@ -10,7 +10,6 @@ using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using stoogebag._2dConvos;
 using stoogebag.Extensions;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -29,7 +28,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     
     [SerializeField] private bool ClearRigs = true;
 
-    [SerializeField] private AnimatorController animatorController;
+    [SerializeField] private RuntimeAnimatorController animatorController;
     
     [Button]
     void RigFaces()
