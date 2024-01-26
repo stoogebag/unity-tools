@@ -35,6 +35,22 @@ namespace stoogebag.Extensions
             }
             else return default;
         }
+        
+        public static bool Raycast(this Camera cam, Vector3 screenPos, LayerMask layers, float distance,  out Vector3 worldPos)
+        {
+            var ray = cam.ScreenPointToRay(screenPos);
+        
+            if (Physics.Raycast(ray, out var hit, distance, layers))
+            {
+                worldPos = hit.point;
+                return true;
+            }
+            else
+            {
+                worldPos = default;
+                return false;
+            }
+        }
     
     
     }

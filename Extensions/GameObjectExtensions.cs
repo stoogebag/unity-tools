@@ -287,5 +287,19 @@ namespace stoogebag.Extensions
 
             return go.AddComponent<T>();
         }
+        
+        public static bool TryGetComponentInAncestor<T>(this GameObject go, out T t) 
+        {
+            var current = go.transform;
+            while (true)
+            {
+                t = current.gameObject.GetComponent<T>();
+                if (t != null) return true;
+                
+                current = current.parent;
+                if (current == null) return false;
+            }
+        }
+        
     }
 }

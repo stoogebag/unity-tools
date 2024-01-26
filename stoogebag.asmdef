@@ -26,7 +26,8 @@
         "GUID:347a20883bb61d74abf78fec0515bb21",
         "GUID:c240c7a8153142ad92a23143a68f0c23",
         "Plugins",
-        "RootMotion"
+        "RootMotion",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
