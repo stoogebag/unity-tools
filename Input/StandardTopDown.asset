@@ -21,11 +21,14 @@ MonoBehaviour:
   AxisLookUp: 6
   AxisLookDown: 7
   AxisSprint: 15
-  ButtonPing: 1100000013000000
+  ButtonInteract: 13000000
   ButtonShoot: 10000000fb010000
   ButtonItem: 16000000
   ButtonSprint: 0f000000
   ButtonStart: 680000006a00000065000000
   ButtonCancel: 14000000
+  ButtonCrouch: 11000000
+  ButtonLook: 14000000
+  ButtonTab: 12000000
   ButtonSelectLeft: 11000000
   ButtonSelectRight: 12000000

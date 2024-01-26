@@ -20,10 +20,10 @@ public class ControllerBindings : ScriptableObject
     public InputControlType AxisSprint = InputControlType.LeftTrigger;
     //public static InputControlType AxisShoot = InputControlType.RightTrigger;
 
-    public List<InputControlType> ButtonPing = new()
+    public List<InputControlType> ButtonInteract = new()
     {
-        InputControlType.LeftBumper,
-        InputControlType.Button4
+        //InputControlType.LeftBumper,
+        InputControlType.Action1
     };
 
     public List<InputControlType> ButtonShoot = new()
@@ -53,6 +53,22 @@ public class ControllerBindings : ScriptableObject
         InputControlType.Button6, //todo this
     };
 
+    public List<InputControlType> ButtonCrouch = new()
+    {
+        InputControlType.LeftBumper,
+        //InputControlType.Button4
+    };
+    public List<InputControlType> ButtonLook = new()
+    {
+        InputControlType.Action3
+        //InputControlType.Button4
+    };
+    public List<InputControlType> ButtonTab = new()
+    {
+        InputControlType.RightBumper,
+        //InputControlType.Button4
+    };
+    
     
     public List<InputControlType> ButtonSelectLeft = new()
     {

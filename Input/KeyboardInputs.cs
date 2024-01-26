@@ -68,6 +68,10 @@ namespace stoogebag.Input
             SelectRightButtonValue.Value = Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeySelectRight));
             ShootButtonValue.Value =   UnityEngine.Input.GetMouseButton(0);
 
+            LookButtonValue.Value = Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeySelectRight));
+            CrouchButtonValue.Value = Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeyCrouch));
+            TabButtonValue.Value = Bindings.Any(t=>UnityEngine.Input.GetKey(t.KeyTab));
+
             var hori = GetHorizontal();
             LeftButtonValue.Value = hori < -ButtonPressThreshold;
             RightButtonValue.Value = hori > ButtonPressThreshold;

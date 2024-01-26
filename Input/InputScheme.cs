@@ -16,6 +16,11 @@ namespace stoogebag.Input
         public ReactiveProperty<bool> JumpButtonValue= new ReactiveProperty<bool>();
 
         public ReactiveProperty<bool> SprintButtonValue= new ReactiveProperty<bool>();
+        public ReactiveProperty<bool> CrouchButtonValue= new ReactiveProperty<bool>();
+        
+        public ReactiveProperty<bool> LookButtonValue= new ReactiveProperty<bool>();
+        public ReactiveProperty<bool> TabButtonValue= new ReactiveProperty<bool>();
+        
         public ReactiveProperty<bool> AbilityButtonValue= new ReactiveProperty<bool>();
         
         public ReactiveProperty<bool> BackButtonValue= new ReactiveProperty<bool>();

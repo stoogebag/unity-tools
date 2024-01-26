@@ -15,6 +15,11 @@ namespace stoogebag.Input
         public KeyCode KeySprint = KeyCode.LeftShift;
         public KeyCode KeyAbility = KeyCode.E;
 
+        public KeyCode KeyLook = KeyCode.E;
+        public KeyCode KeyCrouch = KeyCode.LeftControl;
+
+        public KeyCode KeyTab = KeyCode.Tab;
+        
         public KeyCode StartKey = KeyCode.Space;
         [FormerlySerializedAs("CancelKey")] public KeyCode KeyCancel = KeyCode.Escape;
 

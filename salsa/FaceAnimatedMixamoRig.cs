@@ -92,8 +92,13 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     {
         if(_rigidBody == null) _rigidBody = GetComponentInParent<Rigidbody>();
         if(_animator == null) _animator = GetComponent<Animator>();
-        _animator.SetFloat("Speed",_rigidBody.velocity.magnitude);
+        //if(_cc == null) _cc = GetComponentInAncestor<MainCharacterControllerInControl>();
+        _animator.SetFloat("Speed",_rigidBody.velocity.magnitude, 0.1f,Time.deltaTime);
+        
+        _animator.SetBool("Crouched", Crouch);
+        
     }
+    public bool Crouch { get; set; }
 }
   
 

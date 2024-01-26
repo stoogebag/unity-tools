@@ -98,10 +98,15 @@ public class ControllerInputs : InputSchemeBase
         //print(GetVertical());
 
         //print(controller.GetFirstPressedButton());
-        ActionButtonValue.Value = Bindings.ButtonPing.Any(b=> controller.GetControl(b).Value > 0);
+        ActionButtonValue.Value = Bindings.ButtonInteract.Any(b=> controller.GetControl(b).Value > 0);
         ShootButtonValue.Value = Bindings.ButtonShoot.Any(b => controller.GetControl(b).Value > 0);
         SprintButtonValue.Value = Bindings.ButtonSprint.Any(b => controller.GetControl(b).Value > 0);
         ItemButtonValue.Value = Bindings.ButtonItem.Any(b => controller.GetControl(b).Value > 0);
+        CrouchButtonValue.Value = Bindings.ButtonCrouch.Any(b => controller.GetControl(b).Value > 0);
+        LookButtonValue.Value = Bindings.ButtonItem.Any(b => controller.GetControl(b).Value > 0);
+        TabButtonValue.Value = Bindings.ButtonTab.Any(b => controller.GetControl(b).Value > 0);
+        
+        
 
         SelectLeftButtonValue.Value = Bindings.ButtonSelectLeft.Any(b => controller.GetControl(b).Value > 0);
         SelectRightButtonValue.Value = Bindings.ButtonSelectRight.Any(b => controller.GetControl(b).Value > 0);
