@@ -69,15 +69,18 @@ namespace stoogebag.Extensions
         }
 
         public static Vector2 Rounded(this Vector2 v, int decimalPlaces = 0)
-                {
-                    var pow = (float)Math.Pow(10, decimalPlaces);
-                    return new Vector2((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow);
-                }
+        {
+            var pow = (float)Math.Pow(10, decimalPlaces);
+            return new Vector2((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow);
+        }
         public static Vector3 Rounded(this Vector3 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-            
             return new Vector3((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow,(float)Math.Round(v.z*pow)/pow);
+        }
+        public static Vector3Int RoundedToInt(this Vector3 v)
+        {
+            return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y),Mathf.RoundToInt(v.z));
         }
         public static Vector2 Floor(this Vector2 v, int decimalPlaces = 0)
         {

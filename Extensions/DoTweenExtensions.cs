@@ -1,4 +1,6 @@
-﻿using DG.Tweening;
+﻿#if DOTWEEN
+
+using DG.Tweening;
 
 namespace stoogebag.Extensions
 {
@@ -16,3 +18,5 @@ namespace stoogebag.Extensions
         }
     }
 }
+
+#endif
