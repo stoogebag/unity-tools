@@ -62,6 +62,18 @@ namespace stoogebag.Extensions
                 return false;
             })?.GetComponent<T>();
         }
+        public static T FirstOrDefault<T>(this MonoBehaviour component, string name = null) where T:class// 
+        {
+            var go = component.gameObject;
+            return go.FirstOrDefault<T>(name);
+            if (typeof(T) == typeof(GameObject)) return go.FirstOrDefault(name) as T;
+            return go.transform.FirstOrDefault(t =>
+            {
+                if(name != null && t.name != name) return false;
+                if (t.gameObject.TryGetComponent<T>(out var x)) return true;
+                return false;
+            })?.GetComponent<T>();
+        }
         public static GameObject FirstOrDefault(this GameObject go, string name = null) // 
         {
             return go.transform.FirstOrDefault(name).gameObject;
