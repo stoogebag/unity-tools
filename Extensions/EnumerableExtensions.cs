@@ -90,7 +90,7 @@ namespace stoogebag.Extensions
 
         }
 
-        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> me)
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> me) where T: class
         {
             return me.Where(t => t != null);
         }
