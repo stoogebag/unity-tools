@@ -126,7 +126,7 @@ namespace stoogebag.Extensions
             return null;
         }
 
-        public static IEnumerable<Transform> GetAllDescendents(this Transform transform, Func<Transform, bool> query = null)
+        public static IEnumerable<Transform> GetAllDescendants(this Transform transform, Func<Transform, bool> query = null)
         {
             if (query == null || query(transform)) {
                 yield return transform;
@@ -134,13 +134,28 @@ namespace stoogebag.Extensions
 
             for (int i = 0; i < transform.childCount; i++)
             {
-                var result = GetAllDescendents(transform.GetChild(i), query);
+                var result = GetAllDescendants(transform.GetChild(i), query);
                 foreach (var t in result)
                 {
                     yield return t;
                 }
             }
         }
+
+        public static IEnumerable<T> GetComponentsInDescendants<T>(this MonoBehaviour component, bool includeInactive = false) where T : MonoBehaviour
+        {
+            var transform = component.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var result = GetAllDescendants(transform.GetChild(i));
+                foreach (var t in result)
+                {
+                    if(t.TryGetComponent<T>(out var c))
+                    yield return c;
+                }
+            }
+        }
+
 
         
 
