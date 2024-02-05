@@ -27,7 +27,8 @@
         "GUID:c240c7a8153142ad92a23143a68f0c23",
         "Plugins",
         "RootMotion",
-        "UniTask"
+        "UniTask",
+        "DOTween.Modules"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
