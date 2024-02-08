@@ -21,7 +21,16 @@ namespace stoogebag.Extensions
             }
             me.Clear();
         }
-        
+
+        public static void DestroyAllImmediateAndClear(this List<GameObject> me)
+        {
+            foreach (var go in me)
+            {
+                UnityEngine.GameObject.DestroyImmediate(go);
+            }
+            me.Clear();
+        }
+
         public static void ForAllChildrenRecursive(this GameObject go, Action<GameObject> action) {
             if (go == null) return;
             foreach (var trans in go.GetComponentsInChildren<Transform>(true)) {
@@ -152,6 +161,20 @@ namespace stoogebag.Extensions
                 {
                     if(t.TryGetComponent<T>(out var c))
                     yield return c;
+                }
+            }
+        }
+
+        public static IEnumerable<T> GetComponentsInDescendants<T>(this GameObject go, bool includeInactive = false) where T : Component
+        {
+            var transform = go.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var result = GetAllDescendants(transform.GetChild(i));
+                foreach (var t in result)
+                {
+                    if(t.TryGetComponent<T>(out var c))
+                        yield return c;
                 }
             }
         }
