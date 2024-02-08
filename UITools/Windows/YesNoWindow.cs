@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine.UI;
 
@@ -19,7 +20,7 @@ namespace stoogebag.UITools.Windows
             _validateNo = validateNo ?? (() =>true) ;
         }
 
-        public override async Task Activate()
+        public override async UniTask Activate()
         {
             await base.Activate();
 
@@ -47,7 +48,7 @@ namespace stoogebag.UITools.Windows
         private Func<bool> _validateYes;
         private Func<bool> _validateNo;
 
-        public override async Task Deactivate()
+        public override async UniTask Deactivate()
         {
             _disposable.Clear();
             await base.Deactivate();

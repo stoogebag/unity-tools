@@ -1,6 +1,7 @@
 ﻿#if DOTWEEN
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -33,7 +34,7 @@ namespace stoogebag.UITools.Windows
             _originalColor = _panel.color;
         }
 
-        public async Task<bool> Activate()
+        public async UniTask<bool> Activate()
         {
             print("activating.");
             Init();
@@ -55,7 +56,7 @@ namespace stoogebag.UITools.Windows
             return false;
         }
 
-        public async Task<bool> Deactivate()
+        public async UniTask<bool> Deactivate()
         {
             
             print("deactivating.");

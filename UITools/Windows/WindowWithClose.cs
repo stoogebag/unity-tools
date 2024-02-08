@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
 using UniRx;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ namespace stoogebag.UITools.Windows
             Close = gameObject.FirstOrDefault<Button>("Close");
         }
 
-        public override async Task Activate()
+        public override async UniTask Activate()
         {
             await base.Activate();
             if(Close == null) Close = gameObject.FirstOrDefault<Button>("Close");
@@ -23,7 +24,7 @@ namespace stoogebag.UITools.Windows
             Close.OnClickAsObservable().Subscribe(a => Deactivate()).AddTo(_disposable);
         }
 
-        public override async Task Deactivate()
+        public override async UniTask Deactivate()
         {
             _disposable.Clear();
             await base.Deactivate();

@@ -1,5 +1,6 @@
 #if DOTWEEN
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
@@ -44,7 +45,7 @@ namespace stoogebag.UITools.Windows
             BakePositions();
         }
 
-        public async Task<bool> Activate()
+        public async UniTask<bool> Activate()
         {
             gameObject.SetActive(true);
 
@@ -58,7 +59,7 @@ namespace stoogebag.UITools.Windows
             return true;
         }
 
-        public async Task<bool> Deactivate()
+        public async UniTask<bool> Deactivate()
         {
             if (AnimateOnClose)
             {

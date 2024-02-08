@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using stoogebag.UITools.Windows;
 
@@ -11,16 +12,16 @@ public class ActivateChildren : MonoBehaviour,IWindowAnimation
 
 
     //todo: make this robust in case of some cancellations?
-    public async Task<bool> Activate()
+    public async UniTask<bool> Activate()
     {
-        await Task.WhenAll(WindowsToActivate.Select(t => t.Activate()).ToArray());
+        await UniTask.WhenAll(Enumerable.Select(WindowsToActivate, t => t.Activate()).ToArray());
 
         return true;
     }
 
-    public async Task<bool> Deactivate()
+    public async UniTask<bool> Deactivate()
     {
-        await Task.WhenAll(WindowsToActivate.Select(t => t.Deactivate()).ToArray());
+        await UniTask.WhenAll(WindowsToActivate.Select(t => t.Deactivate()).ToArray());
 
         return true;
     }

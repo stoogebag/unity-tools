@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
@@ -49,8 +50,9 @@ namespace stoogebag.UITools.Windows
             }
         }
     
+        [Button]
         //todo: make this sealed, and fire onActivate and onActivationComplete instead
-        public virtual async Task Activate()
+        public virtual async UniTask Activate()
         {
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
             Active = ActiveState.Activating;
@@ -70,7 +72,9 @@ namespace stoogebag.UITools.Windows
                 OnActivated?.Invoke();
             }
         }
-        public virtual async Task Deactivate()
+        
+        [Button]
+        public virtual async UniTask Deactivate()
         {
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
             Active = ActiveState.Deactivating;

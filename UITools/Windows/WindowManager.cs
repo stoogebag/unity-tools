@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using stoogebag;
@@ -45,22 +46,22 @@ namespace stoogebag.UITools.Windows
             Instance._windows.Remove(name);
         }
 
-        public static async Task Open(string windowName, bool exclusive = false)
+        public static async UniTask Open(string windowName, bool exclusive = false)
         {
             if (exclusive) CloseAll();
             await GetWindow(windowName).Activate();
         }
-        public static async Task Close(string windowName)
+        public static async UniTask Close(string windowName)
         {
             await GetWindow(windowName).Deactivate();
         }
 
         public static Window GetWindow(string name) => Instance._windows[name];
 
-        public static async Task CloseAll()
+        public static async UniTask CloseAll()
         {
-            var tasks = Instance._windows.Values.Select(t => t.Deactivate()).ToArray();
-            await Task.WhenAll(tasks);
+            var tasks = Enumerable.Select(Instance._windows.Values, t => t.Deactivate()).ToArray();
+            await UniTask.WhenAll(tasks);
         }
     }
 }
