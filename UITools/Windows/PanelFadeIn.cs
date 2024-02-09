@@ -43,7 +43,7 @@ namespace stoogebag.UITools.Windows
             _panel.color = _originalColor.WithAlpha(0);
             currentTween = _panel.DOColor(_originalColor, time).SetEase(ease);
             
-            await DoTweenExtensions.AsyncWaitForCompletion(currentTween);
+            await currentTween.AsyncWaitForCompletion();
             
             
             if (currentTween.IsComplete())
@@ -67,7 +67,7 @@ namespace stoogebag.UITools.Windows
                 currentTween?.Kill(false);
                 currentTween = _panel.DOColor(_originalColor.WithAlpha(0), time).SetEase(ease);
                 
-                await DoTweenExtensions.AsyncWaitForCompletion(currentTween);
+                await currentTween.AsyncWaitForCompletion();
                 if (currentTween.IsComplete())
                 {
                     gameObject.SetActive(false);

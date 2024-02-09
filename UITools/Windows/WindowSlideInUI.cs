@@ -44,7 +44,7 @@ namespace stoogebag.UITools.Windows
             rect.anchoredPosition = _offScreenPos;
         
         
-            await DoTweenExtensions.AsyncWaitForCompletion(rect.DOAnchorPos3D(_originalPos, time, true).SetEase(ease));
+            await rect.DOAnchorPos3D(_originalPos, time, true).SetEase(ease).AsyncWaitForCompletion();
 
             return true;
         }
@@ -54,7 +54,7 @@ namespace stoogebag.UITools.Windows
             if (AnimateOnClose)
             {
                 var rect = GetComponent<RectTransform>();
-                await DoTweenExtensions.AsyncWaitForCompletion(rect.DOAnchorPos3D(_offScreenPos, time).SetEase(ease));
+                await rect.DOAnchorPos3D(_offScreenPos, time).SetEase(ease).AsyncWaitForCompletion();
                 gameObject.SetActive(false);
                 ResetPosition();
             }

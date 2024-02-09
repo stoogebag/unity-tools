@@ -54,7 +54,7 @@ namespace stoogebag.UITools.Windows
 
             var tween = useLocalPosition ?  transform.DOLocalMove(_originalPos, time).SetEase(ease) : transform.DOMove(_originalPos, time).SetEase(ease);
             
-            await DoTweenExtensions.AsyncWaitForCompletion(tween);
+            await tween.AsyncWaitForCompletion();
 
             return true;
         }
@@ -66,7 +66,7 @@ namespace stoogebag.UITools.Windows
                 var tween = useLocalPosition
                     ? transform.DOLocalMove(_offScreenPos, time).SetEase(ease)
                     : transform.DOMove(_offScreenPos, time).SetEase(ease);
-                    await DoTweenExtensions.AsyncWaitForCompletion(tween);
+                    await tween.AsyncWaitForCompletion();
                 gameObject.SetActive(false);
                 ResetPosition();
             }

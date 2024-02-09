@@ -44,7 +44,7 @@ namespace stoogebag.UITools.Windows
 
             currentTween = canvasGroup.DOFade(1f, time).SetEase(ease);
             
-            await DoTweenExtensions.AsyncWaitForCompletion(currentTween);
+            await currentTween.AsyncWaitForCompletion();
             
             
             if (currentTween.IsComplete())
@@ -68,7 +68,7 @@ namespace stoogebag.UITools.Windows
                 currentTween?.Kill(false);
                 currentTween = canvasGroup.DOFade(0, time).SetEase(ease);
                 
-                await DoTweenExtensions.AsyncWaitForCompletion(currentTween);
+                await currentTween.AsyncWaitForCompletion();
                 if (currentTween.IsComplete())
                 {
                     gameObject.SetActive(false);
