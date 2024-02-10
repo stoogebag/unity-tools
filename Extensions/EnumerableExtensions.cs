@@ -94,5 +94,11 @@ namespace stoogebag.Extensions
         {
             return me.Where(t => t != null);
         }
+
+        public static IEnumerable<T> One<T>(this T t)
+        {
+            yield return t;
+        }
+
     }
 }
