@@ -165,6 +165,19 @@ namespace stoogebag.Extensions
             }
         }
 
+        // public static IEnumerable<T> GetComponentsInDescendants<T>(this GameObject go, bool includeInactive = false) where T : MonoBehaviour
+        // {
+        //     var transform = go.transform;
+        //     for (int i = 0; i < transform.childCount; i++)
+        //     {
+        //         var result = GetAllDescendants(transform.GetChild(i),t=>t.gameObject.activeInHierarchy != includeInactive);
+        //         foreach (var t in result)
+        //         {
+        //             if(t.TryGetComponent<T>(out var c))
+        //                 yield return c;
+        //         }
+        //     }
+        // }
         public static IEnumerable<T> GetComponentsInDescendants<T>(this GameObject go, bool includeInactive = false) where T : Component
         {
             var transform = go.transform;
@@ -177,6 +190,15 @@ namespace stoogebag.Extensions
                         yield return c;
                 }
             }
+        }
+        public static T GetComponentInDescendants<T>(this GameObject go, bool includeInactive = false) where T : MonoBehaviour
+        {
+            return go.GetComponentsInDescendants<T>(includeInactive).FirstOrDefault();
+        }
+        
+        public static T GetComponentInDescendants<T>(this MonoBehaviour mb, bool includeInactive = false) where T : MonoBehaviour
+        {
+            return mb.gameObject.GetComponentsInDescendants<T>(includeInactive).FirstOrDefault();
         }
 
 

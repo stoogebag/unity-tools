@@ -23,7 +23,7 @@ namespace stoogebag.UITools.Windows
         private bool AnimateOnClose = true;
         
         private CanvasGroup canvasGroup;
-        private Tweener currentTween;
+        private Tweener currentTween { get; set; }
 
         private void Init() //very annoying
         {
@@ -36,16 +36,15 @@ namespace stoogebag.UITools.Windows
 
         public async UniTask<bool> Activate()
         {
-            print("activating.");
+            //print("activating.");
             Init();
             gameObject.SetActive(true);
             
             //canvasGroup.a = _originalColor.WithAlpha(0);
 
-            currentTween = canvasGroup.DOFade(1f, time).SetEase(ease);
+            currentTween = canvasGroup.DOFade(1f, time).SetEase(ease).SetAutoKill(false);
             
             await currentTween.AsyncWaitForCompletion();
-            
             
             if (currentTween.IsComplete())
             {
@@ -59,14 +58,13 @@ namespace stoogebag.UITools.Windows
 
         public async UniTask<bool> Deactivate()
         {
-            
-            print("deactivating.");
+            //print("deactivating.");
             Init();
             if (AnimateOnClose)
             {
 
                 currentTween?.Kill(false);
-                currentTween = canvasGroup.DOFade(0, time).SetEase(ease);
+                currentTween = canvasGroup.DOFade(0, time).SetEase(ease).SetAutoKill(false);
                 
                 await currentTween.AsyncWaitForCompletion();
                 if (currentTween.IsComplete())
