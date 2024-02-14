@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
@@ -9,7 +10,7 @@ namespace stoogebag.UITools.Windows
 {
     public class Window : MonoBehaviour
     {
-        private IWindowAnimation _anim;
+        private IWindowAnimation[] _anims;
 
         public event Action OnActivated;
         public event Action OnDeactivated;
@@ -42,11 +43,11 @@ namespace stoogebag.UITools.Windows
         }
 
 
-        public IWindowAnimation Anim {
+        public IWindowAnimation[] Animations {
             get
             {
-                if (_anim == null) _anim = GetComponent<IWindowAnimation>();
-                return _anim;
+                if (_anims == null) _anims = GetComponents<IWindowAnimation>();
+                return _anims;
             }
         }
     
@@ -59,14 +60,15 @@ namespace stoogebag.UITools.Windows
 
             gameObject.SetActive(true);
 
-            if (Anim == null)
+            if (Animations?.Any() != true)
             {
                 Active = ActiveState.Active;
                 OnActivated?.Invoke();
                 return;
             }
-            var x = await Anim.Activate();
-            if (x)
+
+            var x = await UniTask.WhenAll(Animations.Select(async t => await t.Activate()));
+            if (x.All(t=>t))
             {
                 Active = ActiveState.Active;
                 OnActivated?.Invoke();
@@ -79,21 +81,20 @@ namespace stoogebag.UITools.Windows
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
             Active = ActiveState.Deactivating;
             
-            if (Anim == null)
+            if (Animations?.Any() != true)
             {
                 Active = ActiveState.Inactive;
                 OnDeactivated?.Invoke();
                 return;
             }
-            
-            var x = await Anim.Deactivate();
-            if (x)
+
+            var x = await UniTask.WhenAll(Animations.Select(async t => await t.Deactivate()));
+            if (x.All(t=>t))
             {
                 Active = ActiveState.Inactive;
                 OnDeactivated?.Invoke();
 
                 gameObject.SetActive(false);
-
             }
         }
 

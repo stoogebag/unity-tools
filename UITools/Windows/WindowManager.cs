@@ -13,9 +13,12 @@ namespace stoogebag.UITools.Windows
     {
         private Dictionary<string,Window> _windows = new Dictionary<string, Window>();
 
+        [SerializeField]
+        private List<Window> _windowsList = new List<Window>();
+        
         // tests
         [Button]
-        public void OpenWindow()
+        void OpenWindowTest()
         {
             var yn = GetWindow("YesNo") as YesNoWindow;
             yn.Bind(()=> {print("yeay");});
@@ -23,14 +26,19 @@ namespace stoogebag.UITools.Windows
             Open("YesNo");
         }
     
-        [Button] public void CloseWindow()
+        [Button] void CloseWindowTest()
         {
             Close("Panel");
         }
 
         private void Start()
         {
-            foreach (var w in Resources.FindObjectsOfTypeAll<Window>())
+            // foreach (var w in Resources.FindObjectsOfTypeAll<Window>()) 
+            // {
+            //     Register(w);
+            // }
+            
+            foreach (var w in _windowsList)//now im using subwindows, ill manually add
             {
                 Register(w);
             }
