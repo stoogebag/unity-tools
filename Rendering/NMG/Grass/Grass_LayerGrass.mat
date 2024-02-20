@@ -24,13 +24,13 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _NoiseATexture:
-        m_Texture: {fileID: 2800000, guid: 642db278b0d7dc743a0403fe111c1c59, type: 3}
-        m_Scale: {x: 20, y: 20}
+        m_Texture: {fileID: 2800000, guid: 824d72c60f4e8734f98abe7a0ff5caac, type: 3}
+        m_Scale: {x: 29.23, y: 17.02}
         m_Offset: {x: 1, y: 1}
     - _NoiseBTexture:
-        m_Texture: {fileID: 2800000, guid: f39c06c8cdf96dc4d8a066b45d2fe22c, type: 3}
-        m_Scale: {x: 197, y: 146}
-        m_Offset: {x: 5.2, y: 20}
+        m_Texture: {fileID: 2800000, guid: 0005ca4fd08c54e4eab843b2b2c8e97b, type: 3}
+        m_Scale: {x: 87, y: 83}
+        m_Offset: {x: 9.05, y: 23.4}
     - _WindTexture1:
         m_Texture: {fileID: 2800000, guid: 824d72c60f4e8734f98abe7a0ff5caac, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -41,11 +41,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _NoiseABoost: 0.048
-    - _NoiseAScale: 0.6
-    - _NoiseBBoost: -0.097
-    - _NoiseBScale: 1
-    - _WindAmplitude: 0.02
+    - _NoiseABoost: 1
+    - _NoiseAScale: 0.97
+    - _NoiseBBoost: -0.18
+    - _NoiseBScale: 1.05
+    - _WindAmplitude: 0.002
     - _WindFrequency: 0.1
     m_Colors:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
