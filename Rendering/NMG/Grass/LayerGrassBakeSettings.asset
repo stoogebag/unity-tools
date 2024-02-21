@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76ed548a3171184388353a49f9c118f, type: 3}
   m_Name: LayerGrassBakeSettings
   m_EditorClassIdentifier: 
-  sourceMesh: {fileID: 7597250498009937990, guid: 9f8b4aeeabffb544a88b87859a4f21df,
+  sourceMesh: {fileID: 4905513351962380570, guid: 9f8b4aeeabffb544a88b87859a4f21df,
     type: 3}
   sourceSubMeshIndex: 0
   scale: {x: 1, y: 1, z: 1}
