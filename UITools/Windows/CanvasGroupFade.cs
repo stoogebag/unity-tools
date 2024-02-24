@@ -17,6 +17,11 @@ namespace stoogebag.UITools.Windows
     
         [SerializeField] 
         private Ease ease = Ease.Linear;
+        
+        [SerializeField] 
+        private float delay = 0.1f;
+
+        
         [SerializeField] 
         private float time = 0.5f;
         [SerializeField]
@@ -42,6 +47,7 @@ namespace stoogebag.UITools.Windows
             
             //canvasGroup.a = _originalColor.WithAlpha(0);
 
+            await UniTask.WaitForSeconds(delay);
             currentTween = canvasGroup.DOFade(1f, time).SetEase(ease).SetAutoKill(false);
             
             await currentTween.AsyncWaitForCompletion();
@@ -64,6 +70,7 @@ namespace stoogebag.UITools.Windows
             {
 
                 currentTween?.Kill(false);
+                await UniTask.WaitForSeconds(delay);
                 currentTween = canvasGroup.DOFade(0, time).SetEase(ease).SetAutoKill(false);
                 
                 await currentTween.AsyncWaitForCompletion();
