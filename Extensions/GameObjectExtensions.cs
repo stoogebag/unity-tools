@@ -365,8 +365,9 @@ namespace stoogebag.Extensions
             var current = go.transform;
             while (true)
             {
-                t = current.gameObject.GetComponent<T>();
-                if (t != null) return true;
+                var found = current.gameObject.TryGetComponent<T>(out t);
+                
+                if(found) return true;
                 
                 current = current.parent;
                 if (current == null) return false;
