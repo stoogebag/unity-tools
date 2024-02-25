@@ -71,7 +71,7 @@ namespace stoogebag._2dConvos
 
             var randomEyes = gameObject.GetOrAddComponent<RandomEyes2D>();
 
-            var allChildren = gameObject.transform.GetAllDescendents();
+            var allChildren = gameObject.transform.GetAllDescendants();
 
             var eyelids = allChildren.Where(t => t.name.Contains(eyeLidString));
             var movingEyes = allChildren.Where(t => t.name == movingEyeString + "R" || t.name == movingEyeString + "L");
