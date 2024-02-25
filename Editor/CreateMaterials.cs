@@ -4,8 +4,8 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using System.Linq;
-using stoogebag.Extensions;
 using stoogebag.Editor;
+using stoogebag.Extensions;
 
 public class CreateMaterials : ScriptableWizard
 {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using stoogebag.Editor;
-using stoogebag.Extensions;
 using UnityEditor;
 using UnityEngine;
 
