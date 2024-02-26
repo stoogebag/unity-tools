@@ -183,7 +183,7 @@ namespace stoogebag.Extensions
             var transform = go.transform;
             for (int i = 0; i < transform.childCount; i++)
             {
-                var result = GetAllDescendants(transform.GetChild(i),t=>t.gameObject.activeInHierarchy != includeInactive);
+                var result = GetAllDescendants(transform.GetChild(i),t=>t.gameObject.activeInHierarchy || includeInactive);
                 foreach (var t in result)
                 {
                     if(t.TryGetComponent<T>(out var c))
