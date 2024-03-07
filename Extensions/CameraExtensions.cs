@@ -25,10 +25,15 @@ namespace stoogebag.Extensions
             return cam.ScreenToWorldPoint(UnityEngine.Input.mousePosition.WithZ(distance));
         }
 
-        public static RaycastHit Raycast(this Camera cam, Vector3 screenPos, LayerMask layers, float distance = 100)
+        public static RaycastHit Raycast(this Camera cam, Vector3 screenPos, LayerMask layers, float distance = 100, bool drawDebug = false)
         {
             var ray = cam.ScreenPointToRay(screenPos);
-        
+
+            if (drawDebug)
+            {
+                Debug.DrawRay(ray.origin, ray.direction * distance, Color.red, 1f);
+            }
+            
             if (Physics.Raycast(ray, out var hit, distance, layers))
             {
                 return hit;
@@ -51,7 +56,7 @@ namespace stoogebag.Extensions
                 return false;
             }
         }
-    
+        
     
     }
 }
