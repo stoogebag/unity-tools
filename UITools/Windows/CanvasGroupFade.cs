@@ -19,13 +19,16 @@ namespace stoogebag.UITools.Windows
         private Ease ease = Ease.Linear;
         
         [SerializeField] 
-        private float delay = 0.1f;
+        private float activateDelay = 0.1f;
+
+        [SerializeField] 
+        private float deactivateDelay = 0.1f;
 
         
         [SerializeField] 
-        private float time = 0.5f;
-        [SerializeField]
-        private bool AnimateOnClose = true;
+        private float activateTime = 0.5f;
+        [SerializeField] 
+        private float deactivateTime = 0.5f;
         
         private CanvasGroup canvasGroup;
         private Tweener currentTween { get; set; }
@@ -47,8 +50,8 @@ namespace stoogebag.UITools.Windows
             
             //canvasGroup.a = _originalColor.WithAlpha(0);
 
-            await UniTask.WaitForSeconds(delay);
-            currentTween = canvasGroup.DOFade(1f, time).SetEase(ease).SetAutoKill(false);
+            await UniTask.WaitForSeconds(activateDelay);
+            currentTween = canvasGroup.DOFade(1f, activateTime).SetEase(ease).SetAutoKill(false);
             
             await currentTween.AsyncWaitForCompletion();
             
@@ -66,27 +69,18 @@ namespace stoogebag.UITools.Windows
         {
             //print("deactivating.");
             Init();
-            if (AnimateOnClose)
-            {
+            currentTween?.Kill(false);
+            await UniTask.WaitForSeconds(deactivateDelay);
+            currentTween = canvasGroup.DOFade(0, deactivateTime).SetEase(ease).SetAutoKill(false);
 
-                currentTween?.Kill(false);
-                await UniTask.WaitForSeconds(delay);
-                currentTween = canvasGroup.DOFade(0, time).SetEase(ease).SetAutoKill(false);
-                
-                await currentTween.AsyncWaitForCompletion();
-                if (currentTween.IsComplete())
-                {
-                    gameObject.SetActive(false);
-                    return true;
-                }
-
-                return false;
-            }
-            else
+            await currentTween.AsyncWaitForCompletion();
+            if (currentTween.IsComplete())
             {
                 gameObject.SetActive(false);
                 return true;
             }
+
+            return false;
         }
 
     }
