@@ -56,7 +56,14 @@ public class CreateMaterials : ScriptableWizard
                 var matName =  name + "_" + (UseChildNames ? child.name + "_" : "") + count;
                 var path = folderPath + "/" + matName + ".mat";
 
+                
+                if (renderer.sharedMaterial.name != "Lit")
+                 {
+                     return;
+                 }
+                
                 var mat = new Material(Shader.Find(ShaderName));
+
 
                 if (RandomiseColours) mat.SetColor("_BaseColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
 
