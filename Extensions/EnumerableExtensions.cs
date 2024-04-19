@@ -100,5 +100,15 @@ namespace stoogebag.Extensions
             yield return t;
         }
 
+        public static IEnumerable<T> Repeat<T>(this T t, int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                yield return t;
+            }
+        }
+
+
+
     }
 }
