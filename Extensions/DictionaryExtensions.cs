@@ -29,9 +29,6 @@ namespace stoogebag.Extensions
             if (distanceFunc == null) return default;
             return dic.MinItem(t => distanceFunc(t.Key, key)).Value;
         }
-
-
-
     }
 
     public abstract class UnitySerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver

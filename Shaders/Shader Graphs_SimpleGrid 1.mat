@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_SimpleGrid
+  m_Name: Shader Graphs_SimpleGrid 1
   m_Shader: {fileID: -6465566751694194690, guid: c562c4ffa9c5466449618b89f5087350,
     type: 3}
   m_Parent: {fileID: 0}
@@ -44,14 +44,14 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ZTest: 0
-    - _thickness: 0.9
+    - _thickness: 0.7
     m_Colors:
     - _CameraPos: {r: 0, g: 0, b: 0, a: 0}
     - _FillColor: {r: 0, g: 0, b: 0, a: 0}
     - _Look: {r: 0, g: 0, b: 1, a: 0}
     - _Origin: {r: 0, g: 0, b: 0, a: 0}
     - _Right: {r: 1, g: 0, b: 0, a: 0}
-    - _Spacing: {r: 1, g: 1, b: 0, a: 0}
+    - _Spacing: {r: 10, g: 10, b: 0, a: 0}
     - _WireColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &1346187314425152439
