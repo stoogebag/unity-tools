@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace stoogebag.Extensions
 {
@@ -11,6 +14,10 @@ namespace stoogebag.Extensions
             Debug.DrawLine(ray.origin, ray.origin + ray.direction.normalized* distance, color);
         }
         
+        public static void LogList<T>(this IEnumerable<T> list, Func<T,string> toString = null)
+        {
+            Debug.Log($"[{string.Join(", ", list.Select(t=>toString?.Invoke(t) ?? t.ToString()))}]");
+        }
         
     }
 }

@@ -39,5 +39,11 @@ namespace stoogebag.Extensions
             return (a % b + b) % b;
         }
         
+        public static void AddToStart<T>(this List<T> list, T item)
+        {
+            list.Insert(0, item);
+        }
+        
+        
     }
 }
