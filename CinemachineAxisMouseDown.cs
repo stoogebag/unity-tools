@@ -4,20 +4,49 @@ using UnityEngine;
 #if CINEMACHINE
 using Cinemachine;
  
-public class CinemachineAxisMouseDown : MonoBehaviour {
+public class CinemachineAxisMouseDown : MonoBehaviour
+{
+
+    public enum MouseButtonType
+    {
+        Left,
+        Right, 
+        Both
+    }
+    
+    public MouseButtonType MouseButton;
+
+    bool IsMouseButtonDown()
+    {
+        if(MouseButton == MouseButtonType.Left && Input.GetMouseButton(0))
+        {
+            return true;
+        }
+        if(MouseButton == MouseButtonType.Right && Input.GetMouseButton(1))
+        {
+            return true;
+        }
+        if(MouseButton == MouseButtonType.Both && (Input.GetMouseButton(0) || Input.GetMouseButton(1)))
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
     void Start(){
         CinemachineCore.GetInputAxis = GetAxisCustom;
     }
     public float GetAxisCustom(string axisName){
         if(axisName == "Mouse X"){
-            if (Input.GetMouseButton(0)){
+            if (IsMouseButtonDown()){
                 return UnityEngine.Input.GetAxis("Mouse X");
             } else{
                 return 0;
             }
         }
         else if (axisName == "Mouse Y"){
-            if (Input.GetMouseButton(0)){
+            if (IsMouseButtonDown()){
                 return UnityEngine.Input.GetAxis("Mouse Y");
             } else{
                 return 0;

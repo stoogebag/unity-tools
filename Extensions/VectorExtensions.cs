@@ -9,11 +9,12 @@ namespace stoogebag.Extensions
         {
             return new Vector2(v.x, v.y);
         }
-        
+
         public static Vector2 ToVector2XZ(this Vector3 v)
         {
             return new Vector2(v.x, v.z);
         }
+
         public static float DistanceToSquared(this Vector3 v, Vector3 w)
         {
             return (w - v).sqrMagnitude;
@@ -63,6 +64,7 @@ namespace stoogebag.Extensions
         {
             return new Vector3(v.x, v.y, z);
         }
+
         public static Vector4 WithW(this Vector3 v, float w)
         {
             return new Vector4(v.x, v.y, v.z, w);
@@ -71,52 +73,64 @@ namespace stoogebag.Extensions
         public static Vector2 Rounded(this Vector2 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-            return new Vector2((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow);
+            return new Vector2((float)Math.Round(v.x * pow) / pow, (float)Math.Round(v.y * pow) / pow);
         }
+
         public static Vector3 Rounded(this Vector3 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-            return new Vector3((float)Math.Round(v.x*pow)/pow, (float)Math.Round(v.y*pow)/pow,(float)Math.Round(v.z*pow)/pow);
+            return new Vector3((float)Math.Round(v.x * pow) / pow, (float)Math.Round(v.y * pow) / pow,
+                (float)Math.Round(v.z * pow) / pow);
         }
+
         public static Vector3Int RoundedToInt(this Vector3 v)
         {
-            return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y),Mathf.RoundToInt(v.z));
+            return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
         }
+
         public static Vector2 Floor(this Vector2 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-            return new Vector2((float)Math.Floor(v.x*pow)/pow, (float)Math.Floor(v.y*pow)/pow);
+            return new Vector2((float)Math.Floor(v.x * pow) / pow, (float)Math.Floor(v.y * pow) / pow);
         }
+
         public static Vector3 Floor(this Vector3 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-                
-            return new Vector3((float)Math.Floor(v.x*pow)/pow, (float)Math.Floor(v.y*pow)/pow,(float)Math.Floor(v.z*pow)/pow);
+
+            return new Vector3((float)Math.Floor(v.x * pow) / pow, (float)Math.Floor(v.y * pow) / pow,
+                (float)Math.Floor(v.z * pow) / pow);
         }
+
         public static Vector2 Ceiling(this Vector2 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-            return new Vector2((float)Math.Ceiling(v.x*pow)/pow, (float)Math.Ceiling(v.y*pow)/pow);
+            return new Vector2((float)Math.Ceiling(v.x * pow) / pow, (float)Math.Ceiling(v.y * pow) / pow);
         }
+
         public static Vector3 Ceiling(this Vector3 v, int decimalPlaces = 0)
         {
             var pow = (float)Math.Pow(10, decimalPlaces);
-                
-            return new Vector3((float)Math.Ceiling(v.x*pow)/pow, (float)Math.Ceiling(v.y*pow)/pow,(float)Math.Ceiling(v.z*pow)/pow);
+
+            return new Vector3((float)Math.Ceiling(v.x * pow) / pow, (float)Math.Ceiling(v.y * pow) / pow,
+                (float)Math.Ceiling(v.z * pow) / pow);
         }
 
         public static float Dot(this Vector3 v, Vector3 u)
         {
-            return Vector3.Dot(v,u);
+            return Vector3.Dot(v, u);
         }
+
         public static float Dot(this Vector2 v, Vector2 u)
         {
-            return Vector2.Dot(v,u);
+            return Vector2.Dot(v, u);
         }
+
         public static bool EqualsApprox(this Vector2 v, Vector2 u, float eps = 0.001f)
         {
             return v.DistanceTo(u) <= eps;
         }
+
         public static bool EqualsApprox(this Vector3 v, Vector3 u, float eps = 0.001f)
         {
             return v.DistanceTo(u) <= eps;
@@ -130,13 +144,14 @@ namespace stoogebag.Extensions
         {
             return new Vector3(1f / v.x, 1f / v.y, 1f / v.z);
         }
+
         /// <summary>
         /// scales pointwise
         /// </summary>
         /// <returns></returns>
         public static Vector3 ScaleByVector(this Vector3 v, Vector3 w)
         {
-            return new Vector3(v.x*w.x,  v.y*w.y, v.z*w.z);
+            return new Vector3(v.x * w.x, v.y * w.y, v.z * w.z);
         }
 
         /// <summary>
@@ -145,7 +160,7 @@ namespace stoogebag.Extensions
         /// <returns></returns>
         public static Vector2 Scale(this Vector2 v, float x, float y)
         {
-            return new Vector2(v.x*x,  v.y*y);
+            return new Vector2(v.x * x, v.y * y);
         }
 
 
@@ -153,12 +168,13 @@ namespace stoogebag.Extensions
         {
             return new Vector2((float)Math.Cos(thetaInRadians) * r, (float)Math.Sin(thetaInRadians) * r);
         }
+
         public static Vector2 FromPolarDegrees(float r, float theta)
         {
             return FromPolar(r, theta * (float)Math.PI / 180f);
         }
-        
-        
+
+
         public static (float, Vector3) ProjectToLine(this Vector3 v, Vector3 point, Vector3 direction)
         {
             //gets the projection of v onto the line defined by point and direction
@@ -168,8 +184,8 @@ namespace stoogebag.Extensions
             Debug.DrawLine(point, proj, Color.red);
             return (t, proj);
         }
-        
-        
+
+
         /// <summary>
         /// Transform a given vector to be relative to target transform.
         /// Eg: Use to perform movement relative to camera's view direction.
@@ -182,6 +198,31 @@ namespace stoogebag.Extensions
                 forward = Vector3.ProjectOnPlane(forward, Vector3.up);
 
             return Quaternion.LookRotation(forward) * vector3;
+        }
+
+        //https://discussions.unity.com/t/point-inside-mesh/220234/5
+        public static bool IsInsideMesh(this Vector3 point, MeshCollider mesh)
+        {
+            Physics.queriesHitBackfaces = true;
+
+            var _hitsUp = new RaycastHit[1];
+            var _hitsDown = new RaycastHit[1];
+
+            var upRay = new Ray(point, Vector3.up);
+            var downRay = new Ray(point, Vector3.down);
+            
+            if(!mesh.Raycast(upRay, out var hitUp, 1000f))
+                return false;
+            
+            if(!mesh.Raycast(downRay, out var hitDown, 1000f))
+                return false;
+            
+            Physics.queriesHitBackfaces = false;
+
+            if(hitUp.normal.y > 0 && hitDown.normal.y < 0)
+                return true;
+            
+            return false;
         }
     }
 }
