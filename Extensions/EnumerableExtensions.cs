@@ -108,6 +108,10 @@ namespace stoogebag.Extensions
             }
         }
 
+        public static HashSet<T> ToHashSet<X,T>(this IEnumerable<X> me, Func<X,T> predicate)
+        {
+            return new HashSet<T>(me.Select(predicate));
+        }
 
 
     }

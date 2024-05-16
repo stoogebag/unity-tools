@@ -65,6 +65,12 @@ namespace stoogebag.Extensions
             return new Vector3(v.x, v.y, z);
         }
 
+        
+        public static Vector3 With(this Vector3 original, float? x = null, float? y = null, float? z = null)
+        {
+            return new Vector3(x ?? original.x, y ?? original.y, z ?? original.z);
+        }
+        
         public static Vector4 WithW(this Vector3 v, float w)
         {
             return new Vector4(v.x, v.y, v.z, w);
