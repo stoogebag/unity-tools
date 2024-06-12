@@ -19,7 +19,7 @@ namespace stoogebag.Common
 		{
 			var dir = transform.TransformDirection(startDirection);
 			if (dir == Vector3.zero) dir = transform.forward;
-			rb.velocity += dir * startSpeed;
+			rb.linearVelocity += dir * startSpeed;
 		}
 	
 		// Update is called once per frame
