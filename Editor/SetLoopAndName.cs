@@ -7,6 +7,7 @@ using UnityEditor;
 using Sirenix.Utilities;
 using UnityEditor.Animations;
 using System.Linq;
+using stoogebag.Extensions;
 using UnityEngine.WSA;
 
 public class SetLoopAndName : MonoBehaviour
@@ -86,6 +87,49 @@ public class SetLoopAndName : MonoBehaviour
         //AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(animClipToChange);
         //        settings.loopTime = true;
         //        AnimationUtility.SetAnimationClipSettings(animClipToChange, settings);
+    }
+
+    [MenuItem("Assets/create single material")]
+    static void SingleMaterial()
+    {
+        var selection = Selection.gameObjects;
+
+        var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        var name = Selection.activeGameObject.name;
+        var path = "Assets/" + name + ".mat";
+        AssetDatabase.CreateAsset(mat, path);
+        mat = (Material)AssetDatabase.LoadAssetAtPath(path, typeof(Material)); //needed?
+        
+        foreach (var go in selection)
+        {
+            if (go == null) return;
+
+
+            go.ForAllChildrenRecursive(child =>
+            {
+                if (child.TryGetComponent<MeshRenderer>(out var renderer))
+                {
+                    renderer.sharedMaterial = mat;
+                }
+                else if (child.TryGetComponent<SkinnedMeshRenderer>(out var skinnedRenderer))
+                {
+                    // var folderPath = Folder + (createSubfolder ? "/" + go.name : "");
+                    // var matName = name + "_" + (UseChildNames ? child.name + "_" : "") + count;
+                    // var path = folderPath + "/" + matName + ".mat";
+                    //
+                    // var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                    //
+                    // if (RandomiseColours) mat.SetColor("_BaseColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
+                    //
+                    // AssetDatabase.CreateAsset(mat, path);
+                    //
+                    // skinnedRenderer.material = (Material)AssetDatabase.LoadAssetAtPath(path, typeof(Material));
+
+                    //todo!
+                    
+                }
+            });
+        }
     }
 
 

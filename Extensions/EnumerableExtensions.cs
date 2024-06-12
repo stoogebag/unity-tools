@@ -113,6 +113,20 @@ namespace stoogebag.Extensions
             return new HashSet<T>(me.Select(predicate));
         }
 
+        public static IEnumerable<T> GetAllDescendants<T>(this IEnumerable<T> source, Func<T,IEnumerable<T>> childrenFunc)
+        {
+            if (source == null) yield break;
+            foreach (var s in source)
+            {
+                yield return s;
+                foreach (var t in GetAllDescendants(childrenFunc(s), childrenFunc))
+                {
+                    if (t == null) continue;
+                    yield return t;
+                }
+            }
+        }
+
 
     }
 }
