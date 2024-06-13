@@ -57,7 +57,9 @@ public class CreateMaterials : ScriptableWizard
                 var path = folderPath + "/" + matName + ".mat";
 
                 
-                if (renderer.sharedMaterial.name != "Lit")
+                if (renderer.sharedMaterial.name != "Lit" && 
+                    renderer.sharedMaterial.name != "Universal Render Pipeline/Lit" &&
+                    renderer.sharedMaterial.name != "Default-Material")
                  {
                      return;
                  }
