@@ -1,3 +1,4 @@
+#if UNITASK
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -50,3 +51,5 @@ public class UIPopup : MonoBehaviour
     }
 
 }
+
+#endif

@@ -1,3 +1,4 @@
+#if CINEMACHINE
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,3 +26,5 @@ public class DialogueMB : MonoBehaviour
         print("face it genius, i've been played.");
     }
 }
+
+#endif

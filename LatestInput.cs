@@ -1,3 +1,4 @@
+#if INCONTROL_EXISTS
 using System.Collections;
 using System.Collections.Generic;
 using InControl;
@@ -28,3 +29,5 @@ public class LatestInput : Singleton<LatestInput>
         }
     }
 }
+
+#endif

@@ -1,3 +1,5 @@
+#if TIMELINE
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using stoogebag;
@@ -40,7 +42,7 @@ public class UIManager : Singleton<UIManager>
     public void DialogueStart(DialogueMB line)
     {
         
-         print($"dialogue  start");
+        print($"dialogue  start");
         // DialogueBox.Instance.Displayed = true;
         // DialogueBox.Instance.SetDialogue(line.Lines[0]);
         // line.Speaker.GetAudioSource().clip = line.Clip;
@@ -56,6 +58,8 @@ public class UIManager : Singleton<UIManager>
     public static void Show(CanvasGroup panel)
     {
      
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }
+
+#endif

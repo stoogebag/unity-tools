@@ -1,3 +1,4 @@
+#if CINEMACHINE
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,3 +58,5 @@ public enum DialogueTypes
     Series, //this is a dialogue stream.
     Random, //this is a random dialogue line chosen from the list.
 }
+#endif
+

@@ -1,7 +1,7 @@
+#if CINEMACHINE
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using BehaviorDesigner.Runtime.Tasks.Unity.UnityGameObject;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
@@ -93,3 +93,4 @@ public struct PosRot
         }
     }
 }
+#endif

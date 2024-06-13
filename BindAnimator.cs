@@ -1,3 +1,5 @@
+#if ANIMANCER
+
 using System.Collections;
 using System.Collections.Generic;
 using Animancer;
@@ -21,7 +23,7 @@ public class BindAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animator.SetFloat("Speed", _rigidbody.velocity.magnitude);
+        animator.SetFloat("Speed", _rigidbody.linearVelocity.magnitude);
     }
 
     public AnimationClip TestClip;
@@ -34,3 +36,4 @@ public class BindAnimator : MonoBehaviour
 
 
 }
+#endif

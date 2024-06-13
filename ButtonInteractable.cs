@@ -1,3 +1,4 @@
+#if UI_SHAPES_KIT
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -124,3 +125,5 @@ public class ButtonInteractable : PointOfInterest, IInteractable
     [SerializeField] private float CancelAnimationDuration = 1f;
 
 }
+
+#endif

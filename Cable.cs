@@ -9,8 +9,8 @@ public class Cable : MonoBehaviour
 
 
     public Renderer renderer;
-    public Color UnpoweredColor => ColorsManager.Instance.UnpoweredColor;
-    public Color PoweredColor => ColorsManager.Instance.PoweredColor;
+    public Color UnpoweredColor = Color.gray;
+    public Color PoweredColor = Color.yellow;
 
     public static float PowerupDuration = 0.5f;
     

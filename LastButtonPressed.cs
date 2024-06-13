@@ -1,3 +1,4 @@
+#if INCONTROL_EXISTS
 using System.Collections;
 using System.Collections.Generic;
 using InControl;
@@ -20,3 +21,5 @@ public class LastButtonPressed : MonoBehaviour
         if(InputManager.ActiveDevice.Action4.WasPressed) print($"pressed 4");
     }
 }
+
+#endif

@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -88,3 +89,5 @@ public class Door : MonoBehaviour, IInteractable
         throw new NotImplementedException();
     }
 }
+
+#endif

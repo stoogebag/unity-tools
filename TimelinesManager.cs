@@ -1,3 +1,4 @@
+#if TIMELINE
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,3 +30,5 @@ public enum TimelineType
     Cutscene,
     GameState,
 }
+
+#endif

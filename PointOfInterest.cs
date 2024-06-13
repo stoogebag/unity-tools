@@ -1,3 +1,4 @@
+#if CINEMACHINE
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -56,3 +57,5 @@ public class PointOfInterest : MonoBehaviour, IExaminable
 }
 
 
+
+#endif

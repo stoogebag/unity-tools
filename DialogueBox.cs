@@ -1,3 +1,4 @@
+#if CINEMACHINE
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,3 +35,5 @@ public class DialogueBox : Singleton<DialogueBox>
         OnLineChanged?.Invoke(line);
     }
 }
+
+#endif
