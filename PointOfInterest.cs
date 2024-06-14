@@ -1,7 +1,7 @@
 #if CINEMACHINE
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using stoogebag.UITools.Windows;
 using UnityEngine;
 

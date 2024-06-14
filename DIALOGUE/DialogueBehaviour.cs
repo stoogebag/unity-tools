@@ -2,7 +2,6 @@
 using System;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
-using UnityEngine.Timeline;
 using Application = UnityEngine.Application;
 
 //NOTE! These clips current need to have a GAP between them or things will glitch out with the pause!

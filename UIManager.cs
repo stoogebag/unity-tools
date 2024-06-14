@@ -23,20 +23,20 @@ public class UIManager : Singleton<UIManager>
         //InteractText.gameObject.TryGetComponentInAncestor<Window>(out var ittWindow);
         
         InteractWindow.Deactivate();
-        Player.Instance.ObserveEveryValueChanged(t => t.CurrentExaminable).Subscribe(t =>
-        {
-            if (t == null)
-            {
-                InteractWindow.Deactivate();
-            }
-            else
-            {
-                InteractText.text = t.InteractText;
-                InteractWindow.Activate();
-
-            }
-            
-        }).AddTo(this);
+        // Player.Instance.ObserveEveryValueChanged(t => t.CurrentExaminable).Subscribe(t =>
+        // {
+        //     if (t == null)
+        //     {
+        //         InteractWindow.Deactivate();
+        //     }
+        //     else
+        //     {
+        //         InteractText.text = t.InteractText;
+        //         InteractWindow.Activate();
+        //
+        //     }
+        //     
+        // }).AddTo(this);
     }
 
     public void DialogueStart(DialogueMB line)

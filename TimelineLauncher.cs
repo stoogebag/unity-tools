@@ -1,3 +1,4 @@
+#if CINEMACHINE
 #if TIMELINE
 using System.Collections;
 using System.Collections.Generic;
@@ -77,4 +78,5 @@ public class TimelineLauncher : MonoBehaviour
     }
 }
 
+#endif
 #endif

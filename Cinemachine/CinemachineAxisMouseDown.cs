@@ -1,8 +1,9 @@
+
+#if CINEMACHINE
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
-#if CINEMACHINE
-using Cinemachine;
  
 public class CinemachineAxisMouseDown : MonoBehaviour
 {

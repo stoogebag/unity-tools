@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;

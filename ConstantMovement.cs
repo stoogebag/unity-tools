@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class ConstantMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+        public Vector3 speed = new Vector3(10, 10, 10);
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //print("hissds");
-        transform.position = transform.position + new Vector3(20, 10, 03) * Time.fixedDeltaTime;
+        transform.position = transform.position + speed * Time.fixedDeltaTime;
     }
 }

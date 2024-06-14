@@ -30,7 +30,9 @@
         "UniTask",
         "UniTask.DOTween",
         "Cinemachine",
-        "DOTween.Modules"
+        "DOTween.Modules",
+        "Unity.Cinemachine",
+        "Unity.Timeline"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
