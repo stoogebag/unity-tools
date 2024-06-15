@@ -41,6 +41,7 @@ public class CreateMaterials : ScriptableWizard
 
         if (go == null) return;
 
+        try{
 
         var name = Selection.activeGameObject.name;
         //var path = Folder + "/" + name;
@@ -95,6 +96,11 @@ public class CreateMaterials : ScriptableWizard
 
 
         });        
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
 
 }

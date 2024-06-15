@@ -6,7 +6,7 @@ using BehaviorDesigner.Runtime;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class EnemyAgent : MonoBehaviour, ISoundListener
+public class EnemyAgent : MonoBehaviour//, ISoundListener
 {
     public PatrolRoute PatrolRoute;
     private BehaviorTree _tree;
@@ -37,26 +37,26 @@ public class EnemyAgent : MonoBehaviour, ISoundListener
     private SharedVector3 _poi = new SharedVector3();
     
     
-    public void TryHearSound(SoundEmission sound, Vector3 position, float loudness )
-    {
-        //todo: check if sound is loud enough to be heard or somthing
-        
-        var dir = (position - transform.position).normalized;
-        _lookTarget.Value = transform.position + dir;
-        
-        var distance = (position - transform.position).magnitude;
-        var apparentLoudness = HearingSensitivity * loudness / (distance * distance);
-
-        Debug.Log($"{this.name} heard {sound.name} at volume {apparentLoudness}.");
-        
-        _poi.Value = position;
-        _tree.SetVariable("PointOfInterest", _poi);
-        _tree.SetVariable("PointOfInterest", _poi);
-        _tree.SendEvent("HeardSound");
-        
-        
-        
-    }
+    // public void TryHearSound(SoundEmission sound, Vector3 position, float loudness )
+    // {
+    //     //todo: check if sound is loud enough to be heard or somthing
+    //     
+    //     var dir = (position - transform.position).normalized;
+    //     _lookTarget.Value = transform.position + dir;
+    //     
+    //     var distance = (position - transform.position).magnitude;
+    //     var apparentLoudness = HearingSensitivity * loudness / (distance * distance);
+    //
+    //     Debug.Log($"{this.name} heard {sound.name} at volume {apparentLoudness}.");
+    //     
+    //     _poi.Value = position;
+    //     _tree.SetVariable("PointOfInterest", _poi);
+    //     _tree.SetVariable("PointOfInterest", _poi);
+    //     _tree.SendEvent("HeardSound");
+    //     
+    //     
+    //     
+    // }
 
     public float HearingSensitivity { get; } = 1f;
 

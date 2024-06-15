@@ -11,13 +11,14 @@ using Sirenix.Utilities;
 using stoogebag._2dConvos;
 using stoogebag.Extensions;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering;
 
 public class FaceAnimatedMixamoRig : MonoBehaviour
 {
     //[SerializeField] private GameObject FaceSprites;
 
-    [SerializeField] private List<GameObject> RigPrefabs;
+    [SerializeField] private List<GameObject> FaceRigPrefabs;
     
     [SerializeField]
     List<SalsaRigging> _faceRigs = new List<SalsaRigging>();
@@ -44,7 +45,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
 
         var source = RigContainer.AddComponent<AudioSource>();
         
-        foreach (var prefab in RigPrefabs)
+        foreach (var prefab in FaceRigPrefabs)
         {
             var sprites = Instantiate(prefab, RigContainer.transform);
             sprites.name = prefab.name;
@@ -79,26 +80,78 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     [Button]
     void RigBody()
     {
-        var fbbik = gameObject.ReplaceOrAddComponent<FullBodyBipedIK>();
-        var grounder = gameObject.ReplaceOrAddComponent<GrounderFBBIK>();
-        _animator = gameObject.ReplaceOrAddComponent<Animator>();
+        var fbbik = gameObject.TryGetOrAddComponent<FullBodyBipedIK>();
+        var grounder = gameObject.TryGetOrAddComponent<GrounderFBBIK>();
+        var aim = gameObject.TryGetOrAddComponent<AimIK>();
+        var lookIK = gameObject.TryGetOrAddComponent<LookAtIK>();
+        _animator = gameObject.TryGetOrAddComponent<Animator>();
 
         _animator.runtimeAnimatorController = animatorController;
         _rigidBody = GetComponentInParent<Rigidbody>();
+
+        //targets for hands and look, at least.
+        var look = GetOrCreateIKTarget("look");
+        var body = GetOrCreateIKTarget("body");
+        
+        fbbik.solver.leftHandEffector.target = GetOrCreateIKTarget("leftHand");
+        fbbik.solver.leftFootEffector.target = GetOrCreateIKTarget("leftFoot");
+        fbbik.solver.rightHandEffector.target = GetOrCreateIKTarget("rightHand");
+        fbbik.solver.rightFootEffector.target = GetOrCreateIKTarget("rightFoot");
+
+        lookIK.solver.target = look;
+        //aim.solver.target = 
+        
+        fbbik.solver.bodyEffector.target = body;
     }
 
+    [SerializeField]
+    private Transform IKTargetsContainer;
+    
+    Transform GetOrCreateIKTarget(string name)
+    {
+        var target = IKTargetsContainer.Find(name);
+        if (target == null)
+        {
+            var go = new GameObject(name);
+            target = go.transform;
+            target.SetParent(IKTargetsContainer.transform);
+        }
+
+        return target;
+    }
 
     private void Update()
     {
-        if(_rigidBody == null) _rigidBody = GetComponentInParent<Rigidbody>();
+        float speed;
         if(_animator == null) _animator = GetComponent<Animator>();
+        if (AgentType == AgentTypes.RigidBody)
+        {
+            if(_rigidBody == null) _rigidBody = GetComponentInParent<Rigidbody>();
+            speed = _rigidBody.linearVelocity.magnitude;
+        }
+        else if (AgentType == AgentTypes.Navmesh)
+        {
+            if(_navMeshAgent == null) _navMeshAgent = GetComponentInParent<NavMeshAgent>();
+            speed = _navMeshAgent.velocity.magnitude;
+        }
+        else
+        {
+            speed = 0;
+        }
         //if(_cc == null) _cc = GetComponentInAncestor<MainCharacterControllerInControl>();
-        _animator.SetFloat("Speed",_rigidBody.velocity.magnitude, 0.1f,Time.deltaTime);
-        
+        _animator.SetFloat("Speed",speed, 0.1f,Time.deltaTime);
         _animator.SetBool("Crouched", Crouch);
-        
     }
     public bool Crouch { get; set; }
+
+    public AgentTypes AgentType;
+    private NavMeshAgent _navMeshAgent;
+
+    public enum AgentTypes
+    {
+        Navmesh,
+        RigidBody,
+    }
 }
   
 
