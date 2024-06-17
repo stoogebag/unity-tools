@@ -127,7 +127,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
         if (AgentType == AgentTypes.RigidBody)
         {
             if(_rigidBody == null) _rigidBody = GetComponentInParent<Rigidbody>();
-            speed = _rigidBody.linearVelocity.magnitude;
+            speed = _rigidBody.velocity.magnitude;
         }
         else if (AgentType == AgentTypes.Navmesh)
         {

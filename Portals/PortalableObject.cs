@@ -102,9 +102,9 @@ namespace stoogebag.Portals
             transform.rotation = outTransform.rotation * relativeRot;
 
             // Update velocity of rigidbody.
-            Vector3 relativeVel = inTransform.InverseTransformDirection(rigidbody.linearVelocity);
+            Vector3 relativeVel = inTransform.InverseTransformDirection(rigidbody.velocity);
             relativeVel = halfTurn * relativeVel;
-            rigidbody.linearVelocity = outTransform.TransformDirection(relativeVel);
+            rigidbody.velocity = outTransform.TransformDirection(relativeVel);
 
             // Swap portal references.
             var tmp = inPortal;
