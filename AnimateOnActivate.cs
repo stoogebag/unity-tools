@@ -1,4 +1,4 @@
-#if CINEMACHINE
+#if CINEMACHINE && UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;

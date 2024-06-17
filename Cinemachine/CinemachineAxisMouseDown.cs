@@ -2,7 +2,12 @@
 #if CINEMACHINE
 using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY6
 using Unity.Cinemachine;
+#else 
+using Cinemachine;
+#endif
 using UnityEngine;
  
 public class CinemachineAxisMouseDown : MonoBehaviour

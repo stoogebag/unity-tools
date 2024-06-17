@@ -1,7 +1,13 @@
+#if UNITASK
 #if CINEMACHINE
 using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY6
 using Unity.Cinemachine;
+#else 
+using Cinemachine;
+#endif
 using stoogebag.UITools.Windows;
 using UnityEngine;
 
@@ -58,4 +64,5 @@ public class PointOfInterest : MonoBehaviour, IExaminable
 
 
 
+#endif
 #endif
