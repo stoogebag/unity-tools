@@ -12,7 +12,7 @@ public class PatrolRoute : MonoBehaviour
     public SharedGameObjectList PatrolPoints;
     
     [Button]
-    void BindPoints()
+    public void BindPoints()
     {
         PatrolPoints = new List<GameObject>();
         foreach (Transform child in transform)
