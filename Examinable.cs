@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
@@ -18,8 +19,17 @@ public class Examinable : MonoBehaviour
     
     string InteractText { get; }
 
-    public void Unfocus(IInteractor interactor){}
-    public void Focus(IInteractor interactor){}
+    public void Unfocus(IInteractor interactor)
+    {
+        GetComponentInChildren<UIPopup>(true).Disable().Forget();
+    }
+
+    public void Focus(IInteractor interactor)
+    {
+        GetComponentInChildren<UIPopup>(true).ShowText(popupName).Forget();
+    }
     
     public void TryExamine(IInteractor interactor){}
+
+    public string popupName = "name!";
 }

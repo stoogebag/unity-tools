@@ -19,6 +19,7 @@ public class UIPopup : MonoBehaviour
     [Button]
     public async UniTask Activate()
     {
+        if (gameObject.activeSelf) return;
         gameObject.SetActive(true);
         await _canvasGroup.DOFade(1, FadeInTime).ToUniTask();
     }
@@ -27,6 +28,7 @@ public class UIPopup : MonoBehaviour
     [Button]
     public async UniTask Disable()
     {
+        if (!gameObject.activeSelf) return;
         await _canvasGroup.DOFade(0, FadeOutTime).ToUniTask();
         gameObject.SetActive(false);
     }
@@ -45,11 +47,25 @@ public class UIPopup : MonoBehaviour
     public async void Bark(string message, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
     {
         gameObject.FirstOrDefault<TextMeshProUGUI>().text = message;
-        await _canvasGroup.DOFade(1, FadeInTime).ToUniTask();
+        
+        await Activate();
         await UniTask.WaitForSeconds(lingerTime);
-        await _canvasGroup.DOFade(0, FadeOutTime).ToUniTask();
+        await Disable();
     }
 
+    public async UniTask StartBark(DialogueLine line)
+    {
+        gameObject.FirstOrDefault<TextMeshProUGUI>().text = line.Text;
+        await Activate();
+    }
+    public async UniTask ShowText(string message)
+    {
+        gameObject.FirstOrDefault<TextMeshProUGUI>().text = message;
+        await Activate();
+    }
+
+    
+    
 }
 
 #endif

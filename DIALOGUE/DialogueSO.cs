@@ -51,17 +51,14 @@ public class DialogueSO : ScriptableObject
 //     void Play();
 // }
 
-[Serializable]
-public class DialogueLine
-{
-    [ShowInInspector] public AudioClip Clip;
-    public string Text;
-}
+// [Serializable]
+// public class Dialogue
+// {
+//     public List<DialogueLine> Lines;
+//     
+//     public DialogueTypes 
+// }
 
-public enum DialogueTypes
-{
-    Series, //this is a dialogue stream.
-    Random, //this is a random dialogue line chosen from the list.
-}
+
 #endif
 
