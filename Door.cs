@@ -6,10 +6,12 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable
+[RequireComponent(typeof(Interactable))]
+public class Door : MonoBehaviour
 {
     public float OpenTime = 0.5f;
     public float CloseTime = .3f;
@@ -73,8 +75,16 @@ public class Door : MonoBehaviour, IInteractable
         throw new NotImplementedException();
     }
 
+    public string requiredKey;
+    
+    [Button]
     public void OnTryInteract(IInteractor interactor)
     {
+        if (requiredKey != null)
+        {
+           if( !interactor.HasKey(requiredKey)) return;
+        }
+        
         if (inMotion) return;
         if (IsOpen) Close();
         else Open();

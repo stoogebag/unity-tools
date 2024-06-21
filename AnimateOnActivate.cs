@@ -7,7 +7,8 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-public class AnimateOnActivate : PointOfInterest, IInteractable
+[RequireComponent(typeof(Interactable))]
+public class AnimateOnActivate : PointOfInterest
 {
     private DelayedBool Active;
 

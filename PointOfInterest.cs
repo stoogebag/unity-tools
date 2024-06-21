@@ -11,7 +11,8 @@ using Cinemachine;
 using stoogebag.UITools.Windows;
 using UnityEngine;
 
-public class PointOfInterest : MonoBehaviour, IExaminable
+[RequireComponent(typeof(Examinable))]
+public class PointOfInterest : MonoBehaviour 
 {
     public Window UseText;
     public Window BackText;
@@ -39,10 +40,12 @@ public class PointOfInterest : MonoBehaviour, IExaminable
 
     public void OnUnfocus(IInteractor interactor)
     {
+        print($"unfocused off {gameObject.name}");
     }
 
     public void OnFocus(IInteractor interactor)
     {
+        print($"focused on {gameObject.name}");
     }
 
 
