@@ -35,7 +35,8 @@
         "Unity.Timeline",
         "",
         "GUID:5de53c85d2eeb2548a924d2249f5ad9a",
-        "BehaviourDesigner.Runtime"
+        "BehaviourDesigner.Runtime",
+        "GUID:c677688ef3042284595272795d5b252d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

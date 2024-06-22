@@ -13,17 +13,19 @@ public class Interactable : Examinable
     public IObservable<IInteractor> OnInteractionCancelledObservable =>
         Observable.FromEvent<IInteractor>(h => OnInteractionCancelled += h, h => OnInteractionCancelled -= h); 
     
-    void OnTryInteract(IInteractor interactor)
+    public void TryInteract(IInteractor interactor)
     {
-        Interaction(interactor);        
+        Interact(interactor);        
     }
     void InteractionCancelled(IInteractor interactor){} //todo
 
-    void Interaction(IInteractor interactor)
+    void Interact(IInteractor interactor)
     {
         OnInteraction?.Invoke(interactor);
+        print("interacted!");
+        
     }
-    
+
 }
 
 public interface IInteractor

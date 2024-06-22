@@ -5,34 +5,14 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
+using stoogebag.UITools.Windows;
 using TMPro;
 using UnityEngine;
 
-public class UIPopup : MonoBehaviour
+public class UIPopup : Window
 {
-    [SerializeField]
-    private CanvasGroup _canvasGroup;
-    [SerializeField] private float FadeInTime = 0.3f;
-    [SerializeField] private float FadeOutTime = 0.3f;
-
-    
-    [Button]
-    public async UniTask Activate()
-    {
-        if (gameObject.activeSelf) return;
-        gameObject.SetActive(true);
-        await _canvasGroup.DOFade(1, FadeInTime).ToUniTask();
-    }
     
     
-    [Button]
-    public async UniTask Disable()
-    {
-        if (!gameObject.activeSelf) return;
-        await _canvasGroup.DOFade(0, FadeOutTime).ToUniTask();
-        gameObject.SetActive(false);
-    }
-
     public void SetText(string t)
     {
         gameObject.FirstOrDefault<TextMeshProUGUI>().text = t;
@@ -50,7 +30,7 @@ public class UIPopup : MonoBehaviour
         
         await Activate();
         await UniTask.WaitForSeconds(lingerTime);
-        await Disable();
+        await Deactivate();
     }
 
     public async UniTask StartBark(DialogueLine line)

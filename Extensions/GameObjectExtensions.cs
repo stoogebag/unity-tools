@@ -374,5 +374,22 @@ namespace stoogebag.Extensions
             }
         }
         
+        public static T GetComponentInAncestor<T>(this GameObject go)  where T : Component
+        {
+            var current = go.transform;
+            while (true)
+            {
+                var found = current.gameObject.TryGetComponent<T>(out var t);
+                
+                if(found) return t;
+                
+                current = current.parent;
+                if (current == null) return null;
+            }
+        }
+        
+        
     }
 }
+
+

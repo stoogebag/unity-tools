@@ -1,5 +1,6 @@
 ﻿#if CINEMACHINE
 using Cysharp.Threading.Tasks;
+using stoogebag.Extensions;
 using UnityEngine;
 
 public class DialogueSpeaker : MonoBehaviour
@@ -9,7 +10,9 @@ public class DialogueSpeaker : MonoBehaviour
     //todo sprite, or something
     public async UniTask Play(DialogueLine dialogueLine)
     {
-        print("i am playing a dialogue");
+        await AudioSource.PlayOneShotAsync(dialogueLine.Clip);
     }
+
+    public AudioSource AudioSource;
 }
 #endif

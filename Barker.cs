@@ -39,7 +39,7 @@ public class Barker : MonoBehaviour
         }
         else await UniTask.WaitForSeconds(2);
 
-        await _uiPopup.Disable();
+        await _uiPopup.Deactivate();
     }
     
     

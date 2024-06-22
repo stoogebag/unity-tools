@@ -35,8 +35,7 @@ namespace stoogebag.UITools.Windows
 
         private void Init() //very annoying
         {
-            if (canvasGroup != null) return;
-            canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
 
             var win = GetComponent<Window>();
             canvasGroup.alpha = win.Active == ActiveState.Active ? 1 : 0;
@@ -57,6 +56,7 @@ namespace stoogebag.UITools.Windows
             
             if (currentTween.IsComplete())
             {
+                currentTween.Kill();
                 return true;
                 // gameObject.SetActive(false);
                 // ResetColor();
@@ -76,6 +76,7 @@ namespace stoogebag.UITools.Windows
             await currentTween.AsyncWaitForCompletion();
             if (currentTween.IsComplete())
             {
+                currentTween.Kill();
                 gameObject.SetActive(false);
                 return true;
             }

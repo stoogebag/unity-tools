@@ -14,22 +14,31 @@ public class Examinable : MonoBehaviour
         Observable.FromEvent<IInteractor>(h => OnUnfocus += h, h => OnUnfocus -= h); 
 
     
-    public Transform transform { get; }
-    public GameObject gameObject { get; }
     
     string InteractText { get; }
 
+    private void Start()
+    {
+    }
+
     public void Unfocus(IInteractor interactor)
     {
-        GetComponentInChildren<UIPopup>(true).Disable().Forget();
+        GetComponentInChildren<UIPopup>(true)?.Deactivate().Forget();
     }
 
     public void Focus(IInteractor interactor)
     {
-        GetComponentInChildren<UIPopup>(true).ShowText(popupName).Forget();
+        GetComponentInChildren<UIPopup>(true)?.ShowText(popupName).Forget();
     }
-    
-    public void TryExamine(IInteractor interactor){}
+
+    public void TryExamine(IInteractor interactor)
+    {
+        DialogueManager.Instance.PlayNarration(interactor, ExamineDialogue);
+    }
 
     public string popupName = "name!";
+    
+    [SerializeField]
+    DialogueMB ExamineDialogue;
+
 }

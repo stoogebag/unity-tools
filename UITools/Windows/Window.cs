@@ -30,7 +30,7 @@ namespace stoogebag.UITools.Windows
         protected CompositeDisposable _disposable = new CompositeDisposable();
     
         [SerializeField]
-        private bool InitialiseOnStart = true;
+        private bool InitialiseOnStart = false;
 
         protected virtual void Start()
         {
@@ -55,7 +55,10 @@ namespace stoogebag.UITools.Windows
         //todo: make this sealed, and fire onActivate and onActivationComplete instead
         public virtual async UniTask Activate()
         {
+            //print($"activating {gameObject.name}");
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
+            
+            //if (Active == ActiveState.Deactivating) await UniTask.WaitUntil(() => Active != ActiveState.Deactivating); //todo:make an actual cancel!
             Active = ActiveState.Activating;
 
             gameObject.SetActive(true);
@@ -78,7 +81,11 @@ namespace stoogebag.UITools.Windows
         [Button]
         public virtual async UniTask Deactivate()
         {
+            //print($"deactivating {gameObject.name}");
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
+
+            //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
+            
             Active = ActiveState.Deactivating;
             
             if (Animations?.Any() != true)
