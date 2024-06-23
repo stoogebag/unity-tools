@@ -151,6 +151,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     {
         Navmesh,
         RigidBody,
+        Other,
     }
 }
   
