@@ -32,7 +32,7 @@ namespace stoogebag._2dConvos
         private SpriteRenderer[] invisibleOnBlink;
 
         [Button]
-        public void Rig(AudioSource source = null)
+        public void Rig(AudioSource source = null, float eyeRangeOfMotion = .01f)
         {
             if(TrimWhitespace) gameObject.StripWhitespaceFromChildNames();
 
@@ -140,6 +140,8 @@ namespace stoogebag._2dConvos
             {
                 t.parent = mouth.transform;
             }
+            
+            GetComponent<RandomEyes2D>().SetRangeOfMotion(eyeRangeOfMotion);
 
         }
 

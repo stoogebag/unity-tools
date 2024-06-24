@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using stoogebag.UITools.Windows;
 using TMPro;
 using UniRx;
@@ -10,6 +11,10 @@ using UnityEngine.UI;
 
 public class UIPanelsList : Window
 {
+    public event Action<bool> OnFinished;
+    public IObservable<bool> FinishedObservable => Observable.FromEvent<bool>(h => OnFinished += h, h => OnFinished -= h);
+    
+    
     public List<Window> Windows = new List<Window>();
 
     public Button NextButton;
@@ -28,11 +33,11 @@ public class UIPanelsList : Window
         _disposable.Clear();
         OpenWindow(0);
         
-        NextButton.OnClickAsObservable().Subscribe(_ =>
+        NextButton?.OnClickAsObservable().Subscribe(_ =>
         {
             if (currentWindow == Windows.Count - 1)
             {
-                Close();
+                Close(true);
             }
             else
             {
@@ -40,11 +45,11 @@ public class UIPanelsList : Window
             }
         }).AddTo(_disposable);
         
-        CloseButton.OnClickAsObservable().Subscribe(_ =>
+        CloseButton?.OnClickAsObservable().Subscribe(_ =>
         {
-            Close();
+            Close(false);
         }).AddTo(_disposable);
-        PreviousButton.OnClickAsObservable().Subscribe(_ =>
+        PreviousButton?.OnClickAsObservable().Subscribe(_ =>
         {
             OpenWindow(currentWindow - 1);
         }).AddTo(_disposable);
@@ -52,15 +57,18 @@ public class UIPanelsList : Window
 
     private async void OpenWindow(int i)
     {
+        if(currentWindow == i) return;
         await Windows[currentWindow].Deactivate();
         currentWindow = i;
         RefreshButtons();
         await Windows[currentWindow].Activate();
     }
 
-    private void Close()
+    private async UniTask Close(bool finished)
     {
-        Deactivate();
+        await Deactivate();
+        
+        OnFinished?.Invoke(finished);
     }
 
 
@@ -70,11 +78,11 @@ public class UIPanelsList : Window
         // set up next button changing text etc
         if (currentWindow == Windows.Count - 1)
         {
-            NextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Close";
+            NextButton.GetComponentInChildren<TextMeshProUGUI>().text = LastNextText;
         }
         else
         {
-            NextButton.GetComponentInChildren<TextMeshProUGUI>().text = "Next";
+            NextButton.GetComponentInChildren<TextMeshProUGUI>().text = NextText;
         }
         
         SetEnabled(PreviousButton, currentWindow > 0);
@@ -83,6 +91,11 @@ public class UIPanelsList : Window
 
     private void SetEnabled(Button button, bool b)
     {
+        if (button == null) return;
         button.enabled = b;
     }
+
+    [SerializeField] private string PrevText = "back";
+    [SerializeField] private string NextText = "next";
+    [SerializeField] private string LastNextText = "Finish";
 }

@@ -66,6 +66,8 @@ namespace stoogebag.UITools.Windows
             if (Animations?.Any() != true)
             {
                 Active = ActiveState.Active;
+                
+                gameObject.SetActive(true);
                 OnActivated?.Invoke();
                 return;
             }
@@ -91,6 +93,8 @@ namespace stoogebag.UITools.Windows
             if (Animations?.Any() != true)
             {
                 Active = ActiveState.Inactive;
+                
+                gameObject.SetActive(false);
                 OnDeactivated?.Invoke();
                 return;
             }

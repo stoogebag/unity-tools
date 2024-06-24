@@ -28,12 +28,16 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     [SerializeField] private string ParentGOName = "mixamorig:Head";
     
     [SerializeField] private bool ClearRigs = true;
+    [SerializeField] private float EyeRangeOfMotion = .01f;
 
     [SerializeField] private RuntimeAnimatorController animatorController;
+    
+    
     
     [Button]
     void RigFaces()
     {
+        RigContainer = gameObject.FirstOrDefault("SALSA FACE RIGS");
         if (ClearRigs)
         {
             if(RigContainer != null) DestroyImmediate(RigContainer);
@@ -52,7 +56,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
            
             var rigger = sprites.AddComponent<SalsaRigging>();
             rigger.gameObject.TrimChildNames();
-            rigger.Rig(source);
+            rigger.Rig(source, EyeRangeOfMotion);
 
             _faceRigs.Add(rigger);
         }
@@ -99,7 +103,16 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
         fbbik.solver.rightFootEffector.target = GetOrCreateIKTarget("rightFoot");
 
         lookIK.solver.target = look;
-        //aim.solver.target = 
+        
+        var head =  gameObject.FirstOrDefault("mixamorig:Head").transform;
+        var spine = gameObject.FirstOrDefault("mixamorig:Spine").transform;
+        var spine1 = gameObject.FirstOrDefault("mixamorig:Spine1").transform;
+        var spine2 = gameObject.FirstOrDefault("mixamorig:Spine2").transform;
+        var neck = gameObject.FirstOrDefault("mixamorig:Neck").transform;
+        var hips = gameObject.FirstOrDefault("mixamorig:Hips").transform;
+
+
+        lookIK.solver.SetChain(new []{spine, spine1,spine2,neck}, head, null, hips);
         
         fbbik.solver.bodyEffector.target = body;
     }
@@ -120,7 +133,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
         return target;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         float speed;
         if(_animator == null) _animator = GetComponent<Animator>();
