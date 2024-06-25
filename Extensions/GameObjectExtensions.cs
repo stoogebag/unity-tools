@@ -85,7 +85,7 @@ namespace stoogebag.Extensions
         }
         public static GameObject FirstOrDefault(this GameObject go, string name = null) // 
         {
-            return go.transform.FirstOrDefault(name).gameObject;
+            return go.transform.FirstOrDefault(name)?.gameObject;
         }
 
         public static T GetChild<T>(this MonoBehaviour component, string name = null) where T: Component

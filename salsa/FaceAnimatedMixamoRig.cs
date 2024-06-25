@@ -37,7 +37,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     [Button]
     void RigFaces()
     {
-        RigContainer = gameObject.FirstOrDefault("SALSA FACE RIGS");
+        RigContainer = gameObject.FirstOrDefault("SALSA FACE RIGS"); 
         if (ClearRigs)
         {
             if(RigContainer != null) DestroyImmediate(RigContainer);
@@ -62,6 +62,12 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
         }
         
         SetEmotion(_faceRigs.First().name);
+    }
+
+    [Button]
+    void RigRagdoll()
+    {
+        
     }
 
 

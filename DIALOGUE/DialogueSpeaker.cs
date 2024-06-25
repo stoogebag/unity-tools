@@ -1,5 +1,6 @@
 ﻿#if CINEMACHINE
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
 
@@ -13,6 +14,12 @@ public class DialogueSpeaker : MonoBehaviour
         await AudioSource.PlayOneShotAsync(dialogueLine.Clip);
     }
 
+    [Button]
+    void Bind()
+    {
+        AudioSource = GetComponentInChildren<AudioSource>();
+    }
+    
     public AudioSource AudioSource;
 }
 #endif
