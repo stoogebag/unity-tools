@@ -15,7 +15,7 @@ using UnityEngine;
 
 public class DialogueMB : MonoBehaviour
 {
-    public Speaker Speaker;
+    public DialogueSpeaker Speaker;
 
     public CinemachineVirtualCamera cam;
 
@@ -23,6 +23,14 @@ public class DialogueMB : MonoBehaviour
     public RandomSelectionType SelectionType = new RandomSelectionType();
     public DialogueTypes DialogueType;
 
+
+    private void Start()
+    {
+        foreach (var dialogueLine in Lines)
+        {
+            if(dialogueLine.Speaker == null) dialogueLine.Speaker = Speaker;
+        }
+    }
 
     public void Stop()
     {

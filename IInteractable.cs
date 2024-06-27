@@ -22,7 +22,7 @@ public class Interactable : Examinable
     void Interact(IInteractor interactor)
     {
         OnInteraction?.Invoke(interactor);
-        print("interacted!");
+        print($"interacted! with {gameObject.name}");
         
     }
 

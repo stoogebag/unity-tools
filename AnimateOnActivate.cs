@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 
 [RequireComponent(typeof(Interactable))]
@@ -27,6 +28,9 @@ public class AnimateOnActivate : PointOfInterest
         inactivePosRot = new PosRot(inactivePose.transform, true);
         activePosRot = new PosRot(activePose.transform, true);
 
+        print("!");
+        GetComponent<Interactable>().OnInteractionObservable.Subscribe(OnTryInteract);
+        
 
         Func<Tween> ATFunc = () =>
         {
@@ -56,6 +60,9 @@ public class AnimateOnActivate : PointOfInterest
 
     public void OnTryInteract(IInteractor interactor)
     {
+        
+        var canInteract = GetComponent<ICondition>()?.GetValue() ?? true;
+        if (!canInteract) return;
         SetActiveState(!Active.Value.Value);
     }
 
@@ -93,5 +100,11 @@ public struct PosRot
             Rotation = transform.rotation;
         }
     }
+}
+
+
+public interface ICondition
+{
+    public bool GetValue();
 }
 #endif

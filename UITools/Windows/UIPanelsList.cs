@@ -33,6 +33,12 @@ public class UIPanelsList : Window
         _disposable.Clear();
         OpenWindow(0);
         
+        foreach (var window in Windows)
+        {
+            if (window.gameObject.activeSelf) window.Active = ActiveState.Active;
+            else window.Active = ActiveState.Inactive;
+        }
+        
         NextButton?.OnClickAsObservable().Subscribe(_ =>
         {
             if (currentWindow == Windows.Count - 1)

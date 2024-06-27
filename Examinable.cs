@@ -1,20 +1,22 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using stoogebag.Extensions;
 using UniRx;
 using UnityEngine;
 
 public class Examinable : MonoBehaviour
 {
     public event Action<IInteractor> OnFocus;
+
     public IObservable<IInteractor> OnFocusObservable =>
-        Observable.FromEvent<IInteractor>(h => OnFocus += h, h => OnFocus -= h); 
+        Observable.FromEvent<IInteractor>(h => OnFocus += h, h => OnFocus -= h);
 
     public event Action<IInteractor> OnUnfocus;
-    public IObservable<IInteractor> OnUnfocusObservable =>
-        Observable.FromEvent<IInteractor>(h => OnUnfocus += h, h => OnUnfocus -= h); 
 
-    
-    
+    public IObservable<IInteractor> OnUnfocusObservable =>
+        Observable.FromEvent<IInteractor>(h => OnUnfocus += h, h => OnUnfocus -= h);
+
+
     string InteractText { get; }
 
     private void Start()
@@ -37,8 +39,15 @@ public class Examinable : MonoBehaviour
     }
 
     public string popupName = "name!";
-    
-    [SerializeField]
-    DialogueMB ExamineDialogue;
+    private DialogueMB _examineDialogue;
 
+    DialogueMB ExamineDialogue
+    {
+        get
+        {
+            if (_examineDialogue == null) 
+                _examineDialogue = gameObject.FirstOrDefault<DialogueMB>("ExamineDialogue");
+            return _examineDialogue;
+        }
+    }
 }
