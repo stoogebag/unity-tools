@@ -26,7 +26,7 @@
         "GUID:347a20883bb61d74abf78fec0515bb21",
         "GUID:c240c7a8153142ad92a23143a68f0c23",
         "Plugins",
-        "GUID:6d4810c931e638d489b58e9b332f3fb9",
+        "RootMotion",
         "UniTask",
         "UniTask.DOTween",
         "Cinemachine",
@@ -36,7 +36,9 @@
         "",
         "GUID:5de53c85d2eeb2548a924d2249f5ad9a",
         "BehaviourDesigner.Runtime",
-        "GUID:c677688ef3042284595272795d5b252d"
+        "RayFireAssembly",
+        "Micosmo.SensorToolkit",
+        "Micosmo.SensorToolkit.Integrations"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

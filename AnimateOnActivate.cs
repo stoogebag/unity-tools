@@ -28,7 +28,6 @@ public class AnimateOnActivate : PointOfInterest
         inactivePosRot = new PosRot(inactivePose.transform, true);
         activePosRot = new PosRot(activePose.transform, true);
 
-        print("!");
         GetComponent<Interactable>().OnInteractionObservable.Subscribe(OnTryInteract);
         
 
