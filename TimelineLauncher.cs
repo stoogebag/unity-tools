@@ -10,7 +10,7 @@ public class TimelineLauncher : MonoBehaviour
 {
     public DialogueBehaviour CurrentClip;
 
-    
+    //bc: deprecated.
 
     private void Awake()
     {

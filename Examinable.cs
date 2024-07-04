@@ -35,7 +35,7 @@ public class Examinable : MonoBehaviour
 
     public void TryExamine(IInteractor interactor)
     {
-        DialogueManager.Instance.PlayNarration(interactor, ExamineDialogue);
+        DialogueManager.Instance?.PlayNarration(interactor, ExamineDialogue);
     }
 
     public string popupName = "name!";

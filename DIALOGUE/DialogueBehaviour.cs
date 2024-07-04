@@ -1,7 +1,7 @@
-#if TIMELINE
 using System;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
+using UnityEngine.Timeline;
 using Application = UnityEngine.Application;
 
 //NOTE! These clips current need to have a GAP between them or things will glitch out with the pause!
@@ -32,7 +32,7 @@ public class DialogueBehaviour : PlayableBehaviour
            && info.weight > 0f)
         {
             if(Application.isPlaying){
-                //		UIManager.Instance.DialogueStart(Line);
+                //UIManager.Instance.DialogueStart(Line);
                 Launcher.CurrentClip = this;
 
                 if(hasToPause)
@@ -62,4 +62,3 @@ public class DialogueBehaviour : PlayableBehaviour
         clipPlayed = false;
     }
 }
-#endif
