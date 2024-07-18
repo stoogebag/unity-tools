@@ -3,7 +3,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if UNITY6
+#if NEW_CINEMACHINE
+
 using Unity.Cinemachine;
 #else 
 using Cinemachine;

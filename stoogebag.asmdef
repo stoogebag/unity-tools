@@ -39,7 +39,11 @@
         "RayFireAssembly",
         "Micosmo.SensorToolkit",
         "Micosmo.SensorToolkit.Integrations",
-        "GUID:a8ffdbcf527bc48df962e130f02cdd7e"
+        "VInspector",
+        "UltimateEditorEnhancer-Editor",
+        "",
+        "com.whisper.unity",
+        "VIDE"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

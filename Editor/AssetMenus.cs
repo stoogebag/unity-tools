@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using stoogebag.Editor;
+using stoogebag.Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -97,6 +98,33 @@ public class AssetMenus
     }
 
     public static string RootString = "mixamorig:Reference";
+
+
+    
+    
+
+    [MenuItem("GameObject/stooge/Add Collider to all meshes")]
+    static void AddCollider()
+    {
+        var gos = Selection.gameObjects;
+
+        foreach (var gameObject in gos)
+        {
+            Debug.Log(gameObject.name);
+            
+            gameObject.ForAllChildrenRecursive(child =>
+            {
+                if (child.TryGetComponent<MeshFilter>(out var filter))
+                {
+                    if (!child.TryGetComponent<MeshCollider>(out var collider))
+                    {
+                        child.AddComponent<MeshCollider>();
+                    }
+                }
+            });
+            
+        }
+    }
 
 
 

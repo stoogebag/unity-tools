@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.Playables;
 
 namespace stoogebag.Extensions
@@ -16,9 +17,13 @@ namespace stoogebag.Extensions
 
         public static async UniTask PlayAndAwait(this PlayableDirector director)
         {
+            if(!director.gameObject.activeSelf) director.gameObject.SetActive(true);
             director.Play();
             
-            await UniTask.WaitWhile(() => director.state == PlayState.Playing);
+            await UniTask.WaitWhile(() =>
+            {
+                return director.state == PlayState.Playing;
+            });
             //endAction?.Invoke();
         }
 

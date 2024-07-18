@@ -4,6 +4,10 @@ using DG.Tweening;
 using UniRx;
 using UnityEngine;
 
+
+//delayedbool lets you set a bool, but it only registers the change in value as reactiveProperty Value after a tween has finished.
+//todo: make it a unitask?
+//todo: make it extend boolReactiveProperty instead of having its own Value prop?
 public class DelayedBool
 {
     private Tween onTrue;
@@ -11,7 +15,6 @@ public class DelayedBool
     
     private Func<Tween> onTrueFunc { get; set; }
     protected Func<Tween> onFalseFunc { get; set; }
-    
 
     private BoolReactiveProperty UnderlyingValue = new BoolReactiveProperty();
     public BoolReactiveProperty Value = new BoolReactiveProperty();

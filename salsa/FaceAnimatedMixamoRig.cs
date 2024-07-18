@@ -37,14 +37,14 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
     [Button]
     void RigFaces()
     {
-        RigContainer = gameObject.FirstOrDefault("SALSA FACE RIGS"); 
+        RigContainer = gameObject.FirstOrDefault<GameObject>(t=>t.StartsWith("SALSA FACE RIGS")); 
         if (ClearRigs)
         {
             if(RigContainer != null) DestroyImmediate(RigContainer);
         }
 
         var headBone = this.GetChild(ParentGOName);
-        if(RigContainer == null) RigContainer = new GameObject("SALSA FACE RIGS");
+        if(RigContainer == null) RigContainer = new GameObject($"SALSA FACE RIGS ({gameObject.name})");
         RigContainer.transform.SetParent(headBone.transform);
 
         var source = RigContainer.AddComponent<AudioSource>();
@@ -145,7 +145,7 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
         if(_animator == null) _animator = GetComponent<Animator>();
         if (AgentType == AgentTypes.RigidBody)
         {
-            if(_rigidBody == null) _rigidBody = GetComponentInParent<Rigidbody>();
+            if(_rigidBody == null) _rigidBody = gameObject.GetComponentInAncestor<Rigidbody>();
             speed = _rigidBody.velocity.magnitude;
         }
         else if (AgentType == AgentTypes.Navmesh)

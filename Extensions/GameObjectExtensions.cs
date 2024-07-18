@@ -107,14 +107,29 @@ namespace stoogebag.Extensions
             return component.gameObject.GetComponentsInChildren<T>(includeInactive).Select(t => t.gameObject);
         }
 
-        public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition) // 
+        public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition) where T:Object
         {
-            return go.transform.FirstOrDefault(t =>
+            var result = go.transform.FirstOrDefault(t =>
             {
                 if(!nameCondition(t.name)) return false;
                 if (t.gameObject.TryGetComponent<T>(out var x)) return true;
                 return false;
-            }).GetComponent<T>();
+            });
+            if (result == null) return null;
+            if (result.TryGetComponent<T>(out var t)) return t;
+            return null;
+        }
+        public static T FirstOrDefault<T>(this GameObject go, Func<GameObject,bool> condition) where T:Object
+        {
+            var result = go.FirstOrDefault<T>(t =>
+            {
+                if(!condition(t)) return false;
+                if (t.gameObject.TryGetComponent<T>(out var x)) return true;
+                return false;
+            });
+            if (result == null) return null;
+            //if (result.TryGetComponent<T>(out var t)) return t;
+            return null;
         }
         
         public static Transform FirstOrDefault(this Transform transform, Func<Transform, bool> query)
@@ -388,7 +403,30 @@ namespace stoogebag.Extensions
             }
         }
         
+        public static IEnumerable<GameObject> GetAncestors(this GameObject go)
+        {
+            var current = go.transform;
+            while (true)
+            {
+                yield return current.gameObject;
+                current = current.parent;
+                if (current == null) yield break;
+            }
+        }
         
+        public static T FindObjectOfTypeInActiveScene<T>() where T: Component
+        {
+            var objs = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+            foreach (var obj in objs)
+            {
+                var t = obj.GetComponentInChildren<T>();
+                if (t != null) return t;
+            }
+
+            return null;
+        }
+
+
     }
 }
 

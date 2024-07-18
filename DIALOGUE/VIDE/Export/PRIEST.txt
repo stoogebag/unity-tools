@@ -1,0 +1,146 @@
+Edit the dialogue on the go.
+You can edit and add comments, edit the tags, and set node type.
+Do not attempt to add more nodes: the number of nodes must match when importing the text file.
+Do not modify the IDs.
+Do not add or remove empty lines.
+Do not restructure the data.
+
+Dialogue name: PRIEST
+---------------------------------
+#NODEID#
+0
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Well hello my child.
+---------------------------------
+#NODEID#
+1
+#TAG#
+
+#ISPLAYER#
+True
+---
+#COMMENT#
+What is this place?
+#COMMENT#
+Are you a black Irish priest?
+#COMMENT#
+Listen... can I have some money?
+---------------------------------
+#NODEID#
+2
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Sure it's obviously a church.
+---------------------------------
+#NODEID#
+3
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Have you never seen a church?
+---------------------------------
+#NODEID#
+4
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+It's a very fancy suit you've got on. Some kind of big shot?
+---------------------------------
+#NODEID#
+5
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+So I am. You know they have black people in Ireland.
+---------------------------------
+#NODEID#
+6
+#TAG#
+
+#ISPLAYER#
+True
+---
+#COMMENT#
+At your age with your accent?
+---------------------------------
+#NODEID#
+7
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Well, I won't lie to you, I was the first.
+---------------------------------
+#NODEID#
+8
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Now, you don't look like you'd be wanting for money.
+---------------------------------
+#NODEID#
+9
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+In fact, you look rich as all shite.
+---------------------------------
+#NODEID#
+10
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+If you'll excuse me language.
+#COMMENT#
+So why on earth should I be giving you money? When I'm living out here, in a, in a, in a facking church with no, no people in it.
+---------------------------------
+#NODEID#
+11
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Comment...
+---------------------------------
+#NODEID#
+12
+#TAG#
+
+#ISPLAYER#
+False
+---
+#COMMENT#
+Comment...
+---------------------------------
+#END#

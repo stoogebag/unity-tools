@@ -36,6 +36,15 @@ namespace stoogebag.Extensions
         //         }
         //     );
         // }
+        
+        
+        public static IObservable<Tuple<TSource, TSource>>
+            PairWithPrevious<TSource>(this IObservable<TSource> source)
+        {
+            return source.Scan(
+                Tuple.Create(default(TSource), default(TSource)),
+                (acc, current) => Tuple.Create(acc.Item2, current));
+        }
 
         public static IDisposable SubscribeAsync<T>(this IObservable<T> source, Func<T, Task> onNext,
             Action<Exception> onError = null, Action onComplete = null)

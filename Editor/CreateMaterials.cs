@@ -9,8 +9,9 @@ using stoogebag.Extensions;
 
 public class CreateMaterials : ScriptableWizard
 {
-    [SerializeField] string Folder = "Assets/Materials";
-    [SerializeField] string ShaderName = "Universal Render Pipeline/Lit";
+    [SerializeField] string Folder = "Assets/Assets/ART/MATERIALS";
+    //[SerializeField] string ShaderName = "Universal Render Pipeline/Lit";
+    [SerializeField] string ShaderName = "Lux URP/Toon & Outline HLSL";
 
     [SerializeField] private Shader Shader;// = Shader.Find(ShaderName);
     
@@ -55,10 +56,15 @@ public class CreateMaterials : ScriptableWizard
                 count++;
                 var folderPath = Folder + (createSubfolder ? "/" + go.name : "");
                 var matName =  name + "_" + (UseChildNames ? child.name + "_" : "") + count;
+                
+                matName = string.Join("_", child.GetAncestors().Select(t => t.name).Reverse().ToArray());
+                
                 var path = folderPath + "/" + matName + ".mat";
 
                 
-                if (renderer.sharedMaterial.name != "Lit" && 
+                
+                if (renderer.sharedMaterial != null &&
+                    renderer.sharedMaterial.name != "Lit" && 
                     renderer.sharedMaterial.name != "Universal Render Pipeline/Lit" &&
                     renderer.sharedMaterial.name != "Default-Material")
                  {
@@ -83,7 +89,7 @@ public class CreateMaterials : ScriptableWizard
                 var matName = name + "_" + (UseChildNames ? child.name + "_" : "") + count;
                 var path = folderPath + "/" + matName + ".mat";
 
-                var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                var mat = new Material(Shader.Find(ShaderName));
 
                 if (RandomiseColours) mat.SetColor("_BaseColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
 
