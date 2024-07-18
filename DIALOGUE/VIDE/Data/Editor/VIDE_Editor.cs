@@ -13,9 +13,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
-using Whisper;
 using stoogebag.Extensions;
+
+#if WHISPER
+using Whisper;
 using Whisper.Utils;
+#endif
 using Random = UnityEngine.Random;
 
 public class VIDE_Editor : EditorWindow
@@ -4692,7 +4695,8 @@ public class VIDE_Editor : EditorWindow
 
     private async Task Transcribe(AudioClip clip, int id, int index)
     {
-    
+#if WHISPER
+
         var manager = GameObjectExtensions.FindObjectOfTypeInActiveScene<WhisperManager>();
         if (manager == null) return;
 
@@ -4704,6 +4708,7 @@ public class VIDE_Editor : EditorWindow
             Debug.Log("no output text!");
 
         db.playerDiags[id].comment[index].text = res.Result.Trim(' ');
+#endif
     }
 
     void DragOtherNodes(Vector2 mPos)

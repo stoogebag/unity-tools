@@ -1,3 +1,5 @@
+#if WHISPER
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,3 +23,4 @@ public class SimpleExaminableWithDialogue : MonoBehaviour
         }).DisposeWith(this);
     }
 }
+#endif

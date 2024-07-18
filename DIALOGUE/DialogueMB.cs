@@ -22,8 +22,11 @@ using Cinemachine;
 using UnityEngine;
 
 #if UNITY_EDITOR
+#if WHISPER
 using Whisper;
 #endif
+#endif
+
 public class DialogueMB : MonoBehaviour
 {
     public DialogueSpeaker Speaker;
@@ -138,9 +141,12 @@ public class DialogueLine
         
     }
 
+    
     [ButtonGroup, Button(SdfIconType.Pencil, "")]
     public async void Transcribe()
     {
+#if WHISPER
+
         var manager = GameObjectExtensions.FindObjectOfTypeInActiveScene<WhisperManager>();
         if (manager == null) return;
 
@@ -152,6 +158,10 @@ public class DialogueLine
             Debug.Log("no output text!");
 
         Text = res.Result.Trim(' ');
+#else
+        Debug.Log("Whisper is not installed!");
+#endif
+        
     }
 
     
