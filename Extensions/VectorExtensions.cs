@@ -236,6 +236,10 @@ namespace stoogebag.Extensions
         {
             return new Vector3(v.x * w.x, v.y * w.y, v.z * w.z);
         }
+        public static Vector3 MultiplyPointwise(this Vector3 v, float x, float y, float z)
+        {
+            return new Vector3(v.x * x, v.y * y, v.z * z);
+        }
         
     }
 }

@@ -1,3 +1,4 @@
+#if SPLINES 
 using System;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -752,3 +753,4 @@ using UnityEditor;
             return eased;
         }
     }
+    #endif

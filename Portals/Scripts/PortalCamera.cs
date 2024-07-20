@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using RenderPipeline = UnityEngine.Rendering.RenderPipelineManager;
 
-namespace stoogebag.Portals
-{
-    public class PortalCamera : MonoBehaviour
+public class PortalCamera : MonoBehaviour
     {
     
         [SerializeField]
@@ -123,4 +122,4 @@ namespace stoogebag.Portals
         // public float nm11scale = 1;
         // public float nm22scale = 1;
     }
-}
+
