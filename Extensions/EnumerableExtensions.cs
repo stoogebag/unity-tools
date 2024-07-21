@@ -127,6 +127,15 @@ namespace stoogebag.Extensions
             }
         }
 
+        public static IEnumerable<T> ToEnumerable<T>(this T source, params T[] others)
+        {
+            yield return source;
+            for (var i = 0; i < others.Length; i++)
+            {
+                yield return others[i];
+            }
+        }
+
 
     }
 }
