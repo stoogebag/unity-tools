@@ -43,7 +43,8 @@
         "UltimateEditorEnhancer-Editor",
         "",
         "com.whisper.unity",
-        "VIDE"
+        "VIDE",
+        "Unity.Splines"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

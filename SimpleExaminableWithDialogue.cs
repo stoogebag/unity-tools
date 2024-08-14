@@ -10,13 +10,18 @@ using UnityEngine;
 [RequireComponent(typeof(DialogueMB))]
 public class SimpleExaminableWithDialogue : MonoBehaviour
 {
+    
+    public static event Action<(IInteractor,DialogueMB)> OnExamine;
+    public static IObservable<(IInteractor, DialogueMB)> OnExamineObservable => Observable.FromEvent<(IInteractor,DialogueMB)>(h => OnExamine += h, h => OnExamine -= h);
+
+
     private void Start()
     {
         GetComponent<Examinable>().OnExamineObservable.Subscribe(interactor =>
         {
             var dialogue = GetComponentInChildren<DialogueMB>();
-            GameManager.Instance.PlayDialogue(interactor, dialogue);
-
+            //GameManager.Instance.PlayDialogue(interactor, dialogue);
+            OnExamine?.Invoke((interactor, dialogue));
 
         }).DisposeWith(this);
     }
