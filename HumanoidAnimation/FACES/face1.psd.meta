@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9cec875c20cd4ec49811dc4b248e8e48
+guid: 7934b4dee0ed2724a885e7c2e249dca9
 importerOverride:
   nativeImporterType: 2089858483
   scriptedImporterType:
@@ -461,6 +461,8 @@ ScriptedImporter:
   paperDollMode: 0
   keepDupilcateSpriteName: 1
   skeletonAssetReferenceID: 
+  pipeline: {instanceID: 0}
+  pipelineVersion: 
   padding: 4
   spriteSizeExpand: 0
   spriteCategoryList:
