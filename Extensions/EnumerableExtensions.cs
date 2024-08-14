@@ -28,6 +28,11 @@ namespace stoogebag.Extensions
 
         }
 
+        public static T MaxItem<T>(this IEnumerable<T> me, Func<T, float> valuation)
+        {
+            return MinItem(me, t => -valuation(t));
+        }
+        
         public static void DestroyAndClear<T>(this List<T> list) where T : Object
         {
             foreach (var o in list)
@@ -117,6 +122,21 @@ namespace stoogebag.Extensions
         {
             if (source == null) yield break;
             foreach (var s in source)
+            {
+                yield return s;
+                foreach (var t in GetAllDescendants(childrenFunc(s), childrenFunc))
+                {
+                    if (t == null) continue;
+                    yield return t;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> GetAllDescendants<T>(this T source, Func<T,IEnumerable<T>> childrenFunc, bool excludeOriginal = true)
+        {
+            if (source == null) yield break;
+            if (!excludeOriginal) yield return source;
+            foreach (var s in childrenFunc(source))
             {
                 yield return s;
                 foreach (var t in GetAllDescendants(childrenFunc(s), childrenFunc))

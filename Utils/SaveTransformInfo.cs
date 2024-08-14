@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using stoogebag.Extensions;
 using UnityEngine;
 
 public class SaveTransformInfo : MonoBehaviour
@@ -56,5 +57,13 @@ public struct TransformInfo
         t.position = Position;
         t.rotation = Rotation;
         t.localScale = Scale;
+    }
+
+    public bool EqualsTransform(Transform originalTransform)
+    {
+        if (!Position.EqualsApprox(originalTransform.position)) return false;
+        if (!Rotation.Equals(originalTransform.rotation)) return false;
+        if (!Scale.EqualsApprox(originalTransform.localScale)) return false;
+        return true;
     }
 }

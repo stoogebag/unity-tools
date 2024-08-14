@@ -10,7 +10,7 @@ public class PortalCamera : MonoBehaviour
     {
     
         [SerializeField]
-        private List<PortalPair> portals = new List<PortalPair>();
+        private List<Portal> portals = new List<Portal>();
 
     
         [SerializeField]
@@ -25,7 +25,7 @@ public class PortalCamera : MonoBehaviour
         private void Awake()
         {
             mainCamera = GetComponent<Camera>();
-            portals = FindObjectsOfType<PortalPair>().ToList();
+            portals = FindObjectsOfType<Portal>().ToList();
 
         }
 
@@ -50,19 +50,19 @@ public class PortalCamera : MonoBehaviour
             //     return;
             // }
 
-            foreach (var pair in portals)
+            foreach (var p in portals)
             {
             
-                for (var j = 0; j < pair.Portals.Length; j++)
+                //for (var j = 0; j < pair.Portals.Length; j++)
                 {
-                    if (pair.Portals[j].Renderer.isVisible)
+                    if (p.Renderer.isVisible)
                     {
-                        portalCamera.targetTexture = pair.tempTextures[j];
+                        portalCamera.targetTexture = p.RenderTex;
                         //portalCamera.targetTexture.activeTextureColorSpace;
                         for (int i = iterations - 1; i >= 0; --i)
                         {
                             //print($"{j}, {i}");
-                            RenderCamera(pair.Portals[j], pair.Portals[(j+1) % pair.Portals.Length], i, SRC);
+                            RenderCamera(p, p.OtherPortal, i, SRC);
                         }
                     }
                 }
