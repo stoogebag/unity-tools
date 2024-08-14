@@ -1,3 +1,4 @@
+
 using System;
 using System.Linq;
 using System.Threading;
@@ -13,7 +14,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+#if WHISPER
 using Whisper;
+#endif
 
 [Serializable]
 public class DialogueBehaviour : PlayableBehaviour
@@ -146,6 +149,8 @@ public class DialogueBehaviour : PlayableBehaviour
 	[ButtonGroup, Button(SdfIconType.Pencil, "")]
 	public async void Transcribe()
 	{
+#if WHISPER
+		
 		var manager = GameObjectExtensions.FindObjectOfTypeInActiveScene<WhisperManager>();
 		if (manager == null) return;
 
@@ -157,6 +162,12 @@ public class DialogueBehaviour : PlayableBehaviour
 			Debug.Log("no output text!");
 
 		dialogueLine = res.Result.Trim(' ');
+#else
+		Debug.Log("whispter not installed, or directive not set!.");
+#endif
+
+
+
 	}
 
 	

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UniRx;
-using VInspector;
+using UnityEngine.Rendering;
+
+//using VInspector;
 
 public class SceneLoadManager : Singleton<SceneLoadManager>
 {
