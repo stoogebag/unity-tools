@@ -21,7 +21,7 @@ public class DialogueTrigger :MonoBehaviour
             await RunDialogue();
         });
         uiManager =        FindObjectOfType<VIDEUIManagerStooge>(true);
-        
+        block = false;
     }
 
     [Button]
@@ -44,7 +44,7 @@ public class DialogueTrigger :MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
        //         if(block) return;
-                uiManager.CallNext();
+                if(VD.isActive) uiManager.CallNext();
                 Block();
             }
 

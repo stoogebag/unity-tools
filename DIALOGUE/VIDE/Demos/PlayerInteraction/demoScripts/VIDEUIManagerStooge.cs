@@ -278,7 +278,12 @@ public class VIDEUIManagerStooge : MonoBehaviour
             if (cond == "HasMoney" && !HasMoney) continue; 
             if (cond == "HasCoffee" && !HasCoffee) continue;
             if (cond == "HasPhoneCharged" && !HasPhoneCharged) continue;
-            
+
+            if (cond == "!HasMoney" && HasMoney) continue; 
+            if (cond == "!HasCoffee" && HasCoffee) continue;
+            if (cond == "!HasPhoneCharged" && HasPhoneCharged) continue;
+
+
             
             
             

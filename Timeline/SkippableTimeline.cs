@@ -16,7 +16,7 @@ public class SkippableTimeline : MonoBehaviour
     
     public void TryPlay()
     {
-        
+
     }
 
     private Playable Playable => Director.playableGraph.GetRootPlayable(0); //cache this? who cares for now
