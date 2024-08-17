@@ -43,7 +43,7 @@ public class DialogueTrigger :MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-       //         if(block) return;
+                if(block) return;
                 if(VD.isActive) uiManager.CallNext();
                 Block();
             }
