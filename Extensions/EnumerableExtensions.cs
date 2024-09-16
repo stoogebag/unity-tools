@@ -12,7 +12,7 @@ namespace stoogebag.Extensions
     {
         public static T MinItem<T>(this IEnumerable<T> me, Func<T, float> valuation)
         {
-            T minItem = me.First();
+            T minItem = me.FirstOrDefault();
             var min = float.MaxValue;
             foreach (var t in me)
             {
