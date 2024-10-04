@@ -11,7 +11,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
+using stoogebag.UITools.Windows;
 using TMPro;
 using UniRx;
 using UnityEngine.UI;
@@ -25,9 +27,9 @@ public class VIDEUIManagerStooge : MonoBehaviour
     #region VARS
 
     //These are the references to UI components and containers in the scene
-    public GameObject dialogueContainer;
-    public GameObject NPC_Container;
-    public GameObject playerContainer;
+    public Window dialogueContainer;
+    public Window NPC_Container;
+    public Window playerContainer;
     public GameObject itemPopUp;
 
     public TextMeshProUGUI NPC_Text;
@@ -37,8 +39,11 @@ public class VIDEUIManagerStooge : MonoBehaviour
     public Image playerSprite;
     public Text playerLabel;
 
-    public int distance = 100;
-    public int offset = 100;
+    public int distanceBetweenOptionButtons = 100;
+    public int initialOptionButtonY = 100;
+    
+    //use this if you want to have them spawn bottom to top for example
+    public bool reverseOptionButtonOrder = false;
 
     public AudioSource NPC_audioSource;
     public AudioSource player_audioSource;
@@ -108,7 +113,7 @@ public class VIDEUIManagerStooge : MonoBehaviour
 
         VD.BeginDialogue(dialogue); //Begins dialogue, will call the first OnNodeChange
 
-        dialogueContainer.SetActive(true); //Let's make our dialogue container visible
+        dialogueContainer.Activate().Forget(); //Let's make our dialogue container visible
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -186,8 +191,6 @@ public class VIDEUIManagerStooge : MonoBehaviour
             Destroy(op.gameObject);
         currentChoices = new List<Button>();
         NPC_Text.text = "";
-        NPC_Container.SetActive(false);
-        playerContainer.SetActive(false);
         playerSprite.sprite = null;
         NPCSprite.sprite = null;
 
@@ -212,7 +215,8 @@ public class VIDEUIManagerStooge : MonoBehaviour
             //     playerLabel.text = player?.playerName ?? "null player";
 
             //Sets the player container on
-            playerContainer.SetActive(true);
+            playerContainer.Activate();
+            NPC_Container.Deactivate();
         }
         else //If it's an NPC Node, let's just update NPC's text and sprite
         {
@@ -252,7 +256,8 @@ public class VIDEUIManagerStooge : MonoBehaviour
                 NPC_label.text = VD.assigned.alias;
 
             //Sets the NPC container on
-            NPC_Container.SetActive(true);
+            playerContainer.Deactivate();
+            NPC_Container.Activate();
         }
     }
 
@@ -268,12 +273,13 @@ public class VIDEUIManagerStooge : MonoBehaviour
         
         //Create the choices. The prefab comes from a dummy gameobject in the scene
         //This is a generic way of doing it. You could instead have a fixed number of choices referenced.
-        var y = offset;
+        var y = initialOptionButtonY;
         
         for (int i = choices.Length-1; i >= 0; i--)
         {
-
-            var cond = nodeData.extraData[i];
+            var index = reverseOptionButtonOrder ? choices.Length - 1 - i : i;
+            
+            var cond = nodeData.extraData[index];
 
             if (cond == "HasMoney" && !HasMoney) continue; 
             if (cond == "HasCoffee" && !HasCoffee) continue;
@@ -281,11 +287,10 @@ public class VIDEUIManagerStooge : MonoBehaviour
 
             if (cond == "!HasMoney" && HasMoney) continue; 
             if (cond == "!HasCoffee" && HasCoffee) continue;
-            if (cond == "!HasPhoneCharged" && HasPhoneCharged) continue;
-
-
+            if (cond == "!HasPhoneCharged" && HasPhoneCharged) continue; 
             
-            
+            //todo:deal with these conditions properly!!
+
             
             GameObject newOp = Instantiate(playerChoicePrefab.gameObject, playerChoicePrefab.transform.position,
                 Quaternion.identity,playerChoicePrefab.transform.parent ) as GameObject;
@@ -298,14 +303,14 @@ public class VIDEUIManagerStooge : MonoBehaviour
             
             newOp.GetComponent<RectTransform>().anchoredPosition = new Vector2(100, (y));
 
-            y += distance;
+            y += distanceBetweenOptionButtons;
             newOp.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-            newOp.GetComponentInChildren<TextMeshProUGUI>().text = choices[i];
+            newOp.GetComponentInChildren<TextMeshProUGUI>().text = choices[index];
             newOp.SetActive(true);
+            //newOp.GetComponent<Window>().Activate().Forget(); todo:implement this!
 
             var button = newOp.GetComponent<Button>();
 
-            var index = i;
             button.OnClickAsObservable().Subscribe(t =>
             {
                 
@@ -332,7 +337,7 @@ public class VIDEUIManagerStooge : MonoBehaviour
         VD.OnActionNode -= ActionHandler;
         VD.OnNodeChange -= UpdateUI;
         VD.OnEnd -= EndDialogue;
-        dialogueContainer.SetActive(false);
+        dialogueContainer.Deactivate();
         VD.EndDialogue();
 
         
@@ -352,7 +357,7 @@ public class VIDEUIManagerStooge : MonoBehaviour
         VD.OnNodeChange -= UpdateUI;
         VD.OnEnd -= EndDialogue;
         if (dialogueContainer != null)
-            dialogueContainer.SetActive(false);
+            dialogueContainer.Deactivate();
         VD.EndDialogue();
         
         Cursor.lockState = CursorLockMode.None;
