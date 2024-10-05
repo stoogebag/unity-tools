@@ -416,7 +416,7 @@ public partial class PuzzGrid : MonoBehaviour
     {
         var gp = new GridActionSetGroup(this);
 
-        foreach (var entity in Entities)
+        foreach (var entity in Entities.Where(t=>t.gameObject.activeSelf))
         {
             var grav = entity.GetGravityMoves();
             if (grav == null) continue;
