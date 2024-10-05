@@ -44,7 +44,8 @@
         "",
         "com.whisper.unity",
         "VIDE",
-        "Unity.Splines"
+        "Unity.Splines",
+        "HoudiniEngineUnity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
