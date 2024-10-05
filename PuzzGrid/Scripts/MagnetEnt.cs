@@ -8,7 +8,7 @@ public class MagnetEnt : MonoBehaviour, IGridEntityComponent
 {
     public GridEntity Entity { get; set; }
 
-    public GridActionSet GetSettlementMoves(GridActionSetGroup set) => null;
+    public GridActionSet GetSettlementMoves(GridActionSummary set) => null;
 
     public GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set)
     {
@@ -42,7 +42,7 @@ public class MagnetEnt : MonoBehaviour, IGridEntityComponent
 
 public interface IGridEntityComponent
 {
-    public GridActionSet GetSettlementMoves(GridActionSetGroup set);
+    public GridActionSet GetSettlementMoves(GridActionSummary set);
     public GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets);
 
     GridEntity Entity { get; set; }
