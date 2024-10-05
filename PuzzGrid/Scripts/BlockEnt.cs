@@ -18,7 +18,23 @@ public class BlockEnt : GridEntity, IPushesButton
     }
     
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) => null;
+    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) {
+     
+        GridActionSet result = null;
+        
+        foreach (var gridEntityComponent in _components)
+        {
+            var se = gridEntityComponent.GetSettlementMoves(actionSummary);
+            if (se != null)
+            {
+                if (result == null) result = se;
+                else result.Actions.AddRange(se.Actions);
+            }
+        }
+
+        return result;
+        
+    }
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets)
     {
