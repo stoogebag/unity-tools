@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using stoogebag.UITools.Windows;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -86,7 +87,7 @@ public partial class PuzzGrid
         if (Paused) return;
         print("pause");
         Paused = true;
-        await UIManager.Open("PauseMenuPanel");
+        await WindowManager.Open("PauseMenuPanel");
         
         Time.timeScale = 0;
         
@@ -99,7 +100,7 @@ public partial class PuzzGrid
     public async UniTask Unpause()
     {
         Time.timeScale = 1;
-        await UIManager.Close("PauseMenuPanel");
+        await WindowManager.Close("PauseMenuPanel");
         Paused = false;
     }
 
@@ -107,26 +108,26 @@ public partial class PuzzGrid
     {
         Paused = true;
         StageWon = true;
-        UIManager.Open("WinPanel");
+        WindowManager.Open("WinPanel");
     }
     public void Lost(string message)
     {
         StageLost = true;
         StageWon = false;
-        UIManager.Open("LosePanel");
+        WindowManager.Open("LosePanel");
     }
     
     public void UnWon()
     {
         Paused = false;
         StageWon = false;
-        UIManager.Close("WinPanel");
+        WindowManager.Close("WinPanel");
     }
 
     public void UnLost()
     {
         StageLost = false;
-        UIManager.Close("LosePanel");
+        WindowManager.Close("LosePanel");
     }
 
 

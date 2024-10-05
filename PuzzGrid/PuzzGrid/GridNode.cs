@@ -138,12 +138,18 @@
 //
 // }
 //
-public enum Direction
+
+namespace stoogebag.PuzzGrid
 {
-    up,
-    down,
-    left,
-    right,
-    north,
-    south,
- }
+
+
+    public enum Direction
+    {
+        up,
+        down,
+        left,
+        right,
+        north,
+        south,
+    }
+}

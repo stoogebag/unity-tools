@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
+using stoogebag.PuzzGrid;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
