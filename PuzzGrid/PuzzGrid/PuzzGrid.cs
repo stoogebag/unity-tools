@@ -429,7 +429,7 @@ public partial class PuzzGrid : MonoBehaviour
 
     public static float GridSpacing()
     {
-        return 10f * 0.01f;
+        return 10f ;
     }
 
     public Vector3 GetDirectionVector(Vector3 direction)

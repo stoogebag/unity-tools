@@ -14,7 +14,7 @@ public class BlockEnt : GridEntity, IPushesButton
     {
         //return null;
         
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity, false, default));
     }
     
 

@@ -114,7 +114,13 @@ public class GridInputManager : Singleton<GridInputManager>
         }
         else if (a == actions.Pause)
         {
-            Grid.PauseUnpause();
+                    
+            //VERY NAUGHTY!
+            //for ldjam
+            //fix.
+            gameObject.SetActive(false);
+
+//            Grid.PauseUnpause();
         }
         else if (a == actions.Grow)
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class Cable : MonoBehaviour
@@ -12,32 +13,36 @@ public class Cable : MonoBehaviour
     public Color UnpoweredColor = Color.gray;
     public Color PoweredColor = Color.yellow;
 
-    public static float PowerupDuration = 0.5f;
+    public static float PowerUpDuration = 0.5f;
+    public static float PowerDownDuration = 0.1f;
     
     public void Toggle()
     {
         
     }
 
+    [Button]
     public void Power()
     {
         Powered = PoweredState.Powering;
         
-        renderer.material.DOColor(PoweredColor, PowerupDuration).OnComplete(() => { OnPowered(); });
+        renderer.material.DOColor(PoweredColor, PowerUpDuration).OnComplete(() => { OnPowered(); });
     }
 
     private void OnPowered()
     {
         Powered = PoweredState.Powered;
-        Child.OnParentPowered();
+        if(Child != null)
+            Child.OnParentPowered();
     }
 
 
+    [Button]
     public void UnPower()
     {
         Powered = PoweredState.Unpowering;
         OnUnpowered();
-        renderer.material.DOColor(UnpoweredColor, PowerupDuration).OnComplete(()=>
+        renderer.material.DOColor(UnpoweredColor, PowerDownDuration).OnComplete(()=>
         {
         });
     }
@@ -45,7 +50,7 @@ public class Cable : MonoBehaviour
     private void OnUnpowered()
     {
         Powered = PoweredState.Unpowered;
-        Child.OnParentUnpowered();
+        if(Child != null) Child.OnParentUnpowered();
     }
 
 }

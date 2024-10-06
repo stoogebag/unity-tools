@@ -2,15 +2,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 
-
-public class AnimateOnActivate : Activateable
+[RequireComponent(typeof(Interactable))]
+public class AnimateOnInteract : PointOfInterest
 {
     private DelayedBool Active;
 
@@ -29,6 +28,7 @@ public class AnimateOnActivate : Activateable
         inactivePosRot = new PosRot(inactivePose.transform, true);
         activePosRot = new PosRot(activePose.transform, true);
 
+        GetComponent<Interactable>().OnInteractionObservable.Subscribe(OnTryInteract);
         
 
         Func<Tween> ATFunc = () =>
@@ -57,47 +57,28 @@ public class AnimateOnActivate : Activateable
     }
 
 
+    public void OnTryInteract(IInteractor interactor)
+    {
+        
+        var canInteract = GetComponent<ICondition>()?.GetValue() ?? true;
+        if (!canInteract) return;
+        SetActiveState(!Active.Value.Value);
+    }
+
     [Button]
     public async UniTask SetActiveState(bool b)
     {
         await Active.SetValueAwaitable(b);
     }
 
-
-    public override void OnParentPowered()
+    public void OnInteractionCancelled(IInteractor interactor)
     {
-        Active.SetValue(Cables.All(t=>t.Powered == PoweredState.Powered));
+        
     }
 
-    public override void OnParentUnpowered()
+    public void OnInteraction(IInteractor interactor)
     {
-        Active.SetValue(Cables.All(t=>t.Powered == PoweredState.Powered));
     }
 }
 
-public struct PosRot
-{
-    public Vector3 Position;
-    public Quaternion Rotation;
-
-    public PosRot(Transform transform, bool useLocal = false)
-    {
-        if (useLocal)
-        {
-            Position = transform.localPosition;
-            Rotation = transform.localRotation;
-        }
-        else
-        {
-            Position = transform.position;
-            Rotation = transform.rotation;
-        }
-    }
-}
-
-
-public interface ICondition
-{
-    public bool GetValue();
-}
 #endif

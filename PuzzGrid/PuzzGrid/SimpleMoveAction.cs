@@ -13,27 +13,34 @@ public class SimpleMoveAction : GridAction, IPushAction
     public PushForce Force { get; }
     public Vector3 MovementVec { get; }
 
+    public Quaternion OriginalOrientation;
+
 
     static int _idCounter = 0;
     private bool _aborted;
 
-    public SimpleMoveAction(GridEntity ent, Vector3 movementVec, PushForce force, bool isPlatformPush = false)
+    public SimpleMoveAction(GridEntity ent, Vector3 movementVec, PushForce force, bool isPlatformPush = false,
+        bool turn = false, Quaternion originalOrientation = default)
     {
         PlatformPush = isPlatformPush;
         Force = force;
         Ent = ent;
         MovementVec = movementVec;
         ID = _idCounter++; //todo: consider if this is a good idea. will they always be ordered by creation time?
+        Turn = turn;
+        OriginalOrientation = originalOrientation;
     }
+
+    public bool Turn { get; set; }
 
     public bool PlatformPush { get; set; }
 
 
-    public static GridActionSet GetMove(GridEntity ent, Vector3 dir, PushForce force)
+    public static GridActionSet GetMove(GridEntity ent, Vector3 dir, PushForce force, bool turn, Quaternion originalOrientation)
     {
         return new GridActionSet(ent.PuzzGrid)
         {
-            Actions = new SimpleMoveAction(ent, ent.PuzzGrid.GetDirectionVector(dir), force).One().ToList<GridAction>(),
+            Actions = new SimpleMoveAction(ent, ent.PuzzGrid.GetDirectionVector(dir), force, turn:turn, originalOrientation:originalOrientation).One().ToList<GridAction>(),
         };
     }
 
@@ -313,7 +320,7 @@ public class SimpleMoveAction : GridAction, IPushAction
         }
 
         if (vec == Vector3.zero) return null;
-        var newMove = new SimpleMoveAction(Ent, vec, Force, PlatformPush);
+        var newMove = new SimpleMoveAction(Ent, vec, Force, PlatformPush, Turn, OriginalOrientation);
         return newMove;
     }
 
@@ -344,7 +351,12 @@ public class SimpleMoveAction : GridAction, IPushAction
         //     }
         // }
 
+        if (Turn)
+        {
+            Ent.transform.LookAt(Ent.transform.position + MovementVec, Vector3.up);
+        }
         Ent.transform.position += MovementVec;
+
 
         // foreach (var ent in Ent.NodeEnts)
         // {
@@ -368,6 +380,13 @@ public class SimpleMoveAction : GridAction, IPushAction
 
         Ent.transform.position -= MovementVec;
 
+        
+        if (Turn)
+        {
+            Ent.transform.rotation = OriginalOrientation;
+        }
+        
+        
         // foreach (var ent in Ent.NodeEnts)
         // {
         //     ent.CurrentNode.EntityExited(ent, this);
@@ -410,7 +429,7 @@ public class SimpleMoveAction : GridAction, IPushAction
         Ent.transform.position += MovementVec;
         await Ent.transform.DOMove(Ent.transform.position-MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
     }
-    
+
 }
 
 public interface IPushAction
