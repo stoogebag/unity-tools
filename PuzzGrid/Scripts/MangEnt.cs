@@ -15,7 +15,7 @@ public class MangEnt : GridEntity, IPushesButton
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity));
     }
 
 
@@ -80,6 +80,8 @@ public class MangEnt : GridEntity, IPushesButton
     public  GridActionSet GetWalkMove(Vector3 dir)
     {
         var direction = InvertX ? new Vector3(-dir.x, dir.y, dir.z) : dir;
+        
+        
         return SimpleMoveAction.GetMove(this, direction, GetWalkForce());
         return null;
         

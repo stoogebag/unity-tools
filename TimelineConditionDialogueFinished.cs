@@ -15,3 +15,4 @@ public class TimelineConditionDialogueFinished : TimelineConditionProvider
         //return !running;
     }
 }
+//         block = false;

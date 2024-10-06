@@ -131,7 +131,7 @@ public class GridInputManager : Singleton<GridInputManager>
         Grid.MoveQueue.AddAction(async () =>
         {
             var multiplier = (Input.GetKey(KeyCode.LeftControl) ? 1 : 10) ;
-            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.localScale.x));
+            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.lossyScale.x));
             var gp = new GridActionSetGroup(Grid) { ActionSets = sets.ToList() };
 
             await Grid.AddActionSetGroup(gp);

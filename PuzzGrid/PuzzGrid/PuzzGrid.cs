@@ -55,6 +55,7 @@ public partial class PuzzGrid : MonoBehaviour
         // if (Input.GetKeyDown(KeyCode.Minus))
         //     PrevLevel();
     }
+    
 
     public async UniTask AddActionSetGroup(GridActionSetGroup actionSetGroup)
     {
@@ -428,7 +429,11 @@ public partial class PuzzGrid : MonoBehaviour
 
     public static float GridSpacing()
     {
-        return 10f;
+        return 10f * 0.01f;
     }
 
+    public Vector3 GetDirectionVector(Vector3 direction)
+    {
+        return transform.TransformDirection(direction);
+    }
 }

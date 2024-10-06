@@ -33,7 +33,7 @@ public class SimpleMoveAction : GridAction, IPushAction
     {
         return new GridActionSet(ent.PuzzGrid)
         {
-            Actions = new SimpleMoveAction(ent, dir, force).One().ToList<GridAction>(),
+            Actions = new SimpleMoveAction(ent, ent.PuzzGrid.GetDirectionVector(dir), force).One().ToList<GridAction>(),
         };
     }
 
