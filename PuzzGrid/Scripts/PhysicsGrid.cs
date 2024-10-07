@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class PhysicsGrid : MonoBehaviour
 {
-    public ActionQueue MoveQueue { get; set; } = new ActionQueue();
+    public ActionQueue MoveQueue { get; set; }
 
     // Start is called before the first frame update
     void Start()
