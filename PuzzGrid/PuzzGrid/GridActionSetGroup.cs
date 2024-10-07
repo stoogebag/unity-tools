@@ -17,6 +17,10 @@ public class GridActionSetGroup
         return new GridActionSetGroup(grid) { ActionSets = sets.ToList() };
     }
 
+    public static GridActionSetGroup Empty(PuzzGrid grid)
+    {
+        return GridActionSetGroup.Create(grid, new List<GridActionSet>());
+    }
 
     public PuzzGrid PuzzGrid;
 

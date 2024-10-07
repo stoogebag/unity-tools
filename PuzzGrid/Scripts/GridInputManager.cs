@@ -23,6 +23,11 @@ public class GridInputManager : Singleton<GridInputManager>
         AssignGrid();
     }
 
+    private void OnEnable()
+    {
+        Grid.AddActionSetGroup(GridActionSetGroup.Empty(Grid));
+    }
+
     private void AssignGrid()
     {
         Grid = FindObjectOfType<PuzzGrid>();

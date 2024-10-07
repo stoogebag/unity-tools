@@ -36,7 +36,7 @@ public class MangEnt : GridEntity, IPushesButton
                 else result.Actions.AddRange(se.Actions);
             }
         }
-
+        
         return result;
     }
 

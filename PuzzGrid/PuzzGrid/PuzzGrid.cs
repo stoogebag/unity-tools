@@ -178,8 +178,17 @@ public partial class PuzzGrid : MonoBehaviour
 
         if (winEnt != null)
         {
-            //if (FirstSharedNode(winEnt, mangEnt) != null) Won();
-            //else UnWon();
+            var winBox = winEnt.GetComponentInChildren<BoxCollider>();
+            var mangBox = mangEnt.GetComponentInChildren<BoxCollider>();
+            
+            if (winBox.bounds.Intersects(mangBox.bounds))
+            {
+                Won();
+            }
+            else
+            {
+                UnWon();
+            }
         }
     }
 
@@ -187,14 +196,6 @@ public partial class PuzzGrid : MonoBehaviour
     {
         if (mangEnt == null) mangEnt = FindObjectOfType<MangEnt>();
 
-        // if (mangEnt.GetAllNodes().Any(t => t.Y == LossY))
-        // {
-        //     Lost("drowned");
-        // }
-        // else
-        // {
-        //     UnLost();
-        // }
     }
 
     public int LossY = 11;

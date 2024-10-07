@@ -108,26 +108,26 @@ public partial class PuzzGrid
     {
         Paused = true;
         StageWon = true;
-        WindowManager.Open("WinPanel");
+        //WindowManager.Open("WinPanel");
     }
     public void Lost(string message)
     {
         StageLost = true;
         StageWon = false;
-        WindowManager.Open("LosePanel");
+        //WindowManager.Open("LosePanel");
     }
     
     public void UnWon()
     {
         Paused = false;
         StageWon = false;
-        WindowManager.Close("WinPanel");
+        //WindowManager.Close("WinPanel");
     }
 
     public void UnLost()
     {
         StageLost = false;
-        WindowManager.Close("LosePanel");
+        //WindowManager.Close("LosePanel");
     }
 
 
