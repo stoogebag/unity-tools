@@ -37,7 +37,7 @@ public partial class PuzzGrid : MonoBehaviour
     {
         // ResetGrid();
         MoveQueue = GetComponent<ActionQueue>();
-        Entities = FindObjectsByType<GridEntity>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
+        Entities = GetComponentsInChildren<GridEntity>().ToList();
     }
 
     private void Update()
@@ -435,6 +435,6 @@ public partial class PuzzGrid : MonoBehaviour
 
     public Vector3 GetDirectionVector(Vector3 direction)
     {
-        return transform.TransformDirection(direction);
+        return transform.TransformVector(direction);
     }
 }

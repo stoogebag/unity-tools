@@ -14,6 +14,7 @@ public class GridInputManager : Singleton<GridInputManager>
 
     private List<MangEnt> Movers;
 
+    [SerializeField]
     private PuzzGrid Grid;
     
     void Awake()
@@ -30,8 +31,7 @@ public class GridInputManager : Singleton<GridInputManager>
 
     private void AssignGrid()
     {
-        Grid = FindObjectOfType<PuzzGrid>();
-        Movers=FindObjectsOfType<MangEnt>(false).ToList();
+        Movers = Grid.GetComponentsInChildren<MangEnt>().ToList();
     }
 
     private void HandleBindings()
@@ -142,7 +142,7 @@ public class GridInputManager : Singleton<GridInputManager>
         Grid.MoveQueue.AddAction(async () =>
         {
             var multiplier = (Input.GetKey(KeyCode.LeftControl) ? 1 : 10) ;
-            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.lossyScale.x));
+            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier));
             var gp = new GridActionSetGroup(Grid) { ActionSets = sets.ToList() };
 
             await Grid.AddActionSetGroup(gp);
