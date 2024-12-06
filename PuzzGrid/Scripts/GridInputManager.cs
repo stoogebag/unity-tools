@@ -12,6 +12,8 @@ public class GridInputManager : Singleton<GridInputManager>
 {
     GridPlayerActions actions;
 
+    [SerializeField] private bool FindGridOnAwake;
+
     private List<MangEnt> Movers;
 
     [SerializeField]
@@ -26,11 +28,14 @@ public class GridInputManager : Singleton<GridInputManager>
 
     private void OnEnable()
     {
-        Grid.AddActionSetGroup(GridActionSetGroup.Empty(Grid));
+        //todo move this to after everything is initialised or something.
+        //Grid.AddActionSetGroup(GridActionSetGroup.Empty(Grid));
     }
 
     private void AssignGrid()
     {
+        if (FindGridOnAwake) Grid = FindObjectOfType<PuzzGrid>();
+
         Movers = Grid.GetComponentsInChildren<MangEnt>().ToList();
     }
 

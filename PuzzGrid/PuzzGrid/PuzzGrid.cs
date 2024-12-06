@@ -21,15 +21,13 @@ public partial class PuzzGrid : MonoBehaviour
 
     public event Action OnUndoFinished;
     public IObservable<Unit> OnUndoFinishedObservable() => Observable.FromEvent(x => OnUndoFinished += x, x => OnUndoFinished -= x);
+    
+    Guid guid = Guid.NewGuid();
+    public string PuzzleName;
 
-    
-    
-    
     public List<GridEntity> Entities { get; set; }
 
     private int CurrentTick = 0;
-
-
     public ActionQueue MoveQueue { get; set; }
 
 
