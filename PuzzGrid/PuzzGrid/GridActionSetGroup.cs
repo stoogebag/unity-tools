@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System.Collections.Generic;
 using System.Linq;
 
 public class GridActionSetGroup
@@ -83,3 +86,7 @@ public class GridActionSetGroup
         return ActionSets.Where(t => t.Approved).Select(t=>t.ResultActionSet);
     }
 }
+
+#endif
+#endif
+#endif

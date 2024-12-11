@@ -1,3 +1,4 @@
+#if UNIRX
 using System;
 using UniRx;
 using UnityEngine;
@@ -38,3 +39,5 @@ public interface IInteractor
     public GameObject gameObject { get; }
     bool HasKey(string key);
 }
+
+#endif

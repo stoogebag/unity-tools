@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITASK
+#if DOTWEEN
+using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
@@ -99,3 +101,5 @@ public class DelayedBool
         }
     }
 }
+#endif
+#endif

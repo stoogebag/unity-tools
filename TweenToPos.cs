@@ -1,3 +1,5 @@
+#if UNITASK
+#if DOTWEEN
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -21,3 +23,5 @@ public class TweenToPos : MonoBehaviour
     }
     
 }
+#endif
+#endif

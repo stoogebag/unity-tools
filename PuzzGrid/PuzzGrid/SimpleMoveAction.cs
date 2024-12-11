@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITASK
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -451,3 +453,4 @@ public class PuzzGridRaycastResult
     public Vector3 PortalOutDirection;
     public float HitDistance;
 }
+#endif

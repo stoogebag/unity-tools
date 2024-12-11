@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿#if UNIRX
+using UniRx;
 using UnityEngine;
 
 namespace stoogebag.Input
@@ -48,3 +49,4 @@ namespace stoogebag.Input
         void SetInput(InputSchemeBase input);
     }
 }
+#endif

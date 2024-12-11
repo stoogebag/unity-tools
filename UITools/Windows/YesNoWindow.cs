@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -59,3 +62,6 @@ namespace stoogebag.UITools.Windows
     
     }
 }
+#endif
+#endif
+#endif

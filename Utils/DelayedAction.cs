@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITASK
+#if DOTWEEN
+using System;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
@@ -74,3 +76,5 @@ public class DelayedAction
     //     }
     // }
 }
+#endif
+#endif

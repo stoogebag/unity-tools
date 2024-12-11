@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -436,3 +437,4 @@ public partial class PuzzGrid : MonoBehaviour
         return transform.TransformVector(direction);
     }
 }
+#endif

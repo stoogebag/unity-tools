@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -35,3 +38,6 @@ public class TimeMachineClip : PlayableAsset, ITimelineClipAsset
         return playable;
     }
 }
+#endif
+#endif
+#endif

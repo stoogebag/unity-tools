@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNIRX
+using System.Collections.Generic;
 using stoogebag.UITools.Temporary_Effects;
 using UniRx;
 using UnityEngine;
@@ -58,3 +59,4 @@ namespace stoogebag.UITools.Selection_and_Input
         }
     }
 }
+#endif

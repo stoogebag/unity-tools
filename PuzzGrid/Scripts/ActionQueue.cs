@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITASK
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
@@ -64,3 +65,4 @@ public class ActionQueue : MonoBehaviour
         _currentlyRunningTask = false;
     }
 }
+#endif

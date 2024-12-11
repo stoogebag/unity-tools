@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -132,3 +133,4 @@ public partial class PuzzGrid
 
 
 }
+#endif

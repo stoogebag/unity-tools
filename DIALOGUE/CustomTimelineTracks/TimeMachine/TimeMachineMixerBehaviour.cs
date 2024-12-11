@@ -1,3 +1,7 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,3 +77,8 @@ public class TimeMachineMixerBehaviour : PlayableBehaviour
         }
     }
 }
+
+
+#endif
+#endif
+#endif

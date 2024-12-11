@@ -1,3 +1,5 @@
+#if UNITASK
+#if UNIRX
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
@@ -36,3 +38,5 @@ namespace stoogebag.UITools.Windows
         }
     }
 }
+#endif
+#endif

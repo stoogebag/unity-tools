@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MiniJSON_VIDE;
 using System.IO;
+using UnityEngine.Rendering.VirtualTexturing;
 
 public class VIDE_Localization
 {

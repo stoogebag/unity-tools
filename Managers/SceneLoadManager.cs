@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,3 +128,6 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
        // SceneManager.activeSceneChanged += (s,t) => FadeToTransparent(1, Color.white).Forget();
     }
 }
+#endif
+#endif
+#endif

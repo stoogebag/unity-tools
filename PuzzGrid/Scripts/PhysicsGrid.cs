@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,3 +38,6 @@ public class PhysicsGrid : MonoBehaviour
         }
     }
 }
+#endif
+#endif
+#endif

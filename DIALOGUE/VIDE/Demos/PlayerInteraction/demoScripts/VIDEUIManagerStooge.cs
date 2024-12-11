@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 /*
  *  This is script is only meant to be demonstrate various ways of handling data to create a Dialogue/UI Manager
  *  VIDE doesn't focus on the actual interface, but rather on the system and the data handling
@@ -568,3 +571,6 @@ public class VIDEUIManagerStooge : MonoBehaviour
     //Utility note: If you're on MonoDevelop. Go to Tools > Options > General and enable code folding.
     //That way you can exapnd and collapse the regions and methods
 }
+#endif
+#endif
+#endif

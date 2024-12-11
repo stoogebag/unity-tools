@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if UNITASK
+using Cysharp.Threading.Tasks;
 
 public class Cooldown
 {
@@ -24,3 +25,5 @@ public class Cooldown
     private float CooldownInSeconds;
     private bool _active;
 }
+
+#endif

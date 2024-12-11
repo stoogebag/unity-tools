@@ -1,3 +1,7 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,3 +20,7 @@ public class TimelineConditionDialogueFinished : TimelineConditionProvider
     }
 }
 //         block = false;
+
+#endif
+#endif
+#endif

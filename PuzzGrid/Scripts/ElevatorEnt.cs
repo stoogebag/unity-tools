@@ -1,3 +1,4 @@
+#if UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,3 +51,4 @@ public interface IActivatesByParents
     //public List<IActivateable> Parents { get; } 
     //todo: figure out how best to deal with this and the inspector...
 }
+#endif 

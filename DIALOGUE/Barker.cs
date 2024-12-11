@@ -1,8 +1,10 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-#if UNITASK
 
 namespace stoogebag.DIALOGUE
 {
@@ -47,4 +49,5 @@ namespace stoogebag.DIALOGUE
     
     }
 }
+#endif
 #endif

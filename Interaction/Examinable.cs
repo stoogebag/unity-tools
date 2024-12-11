@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System;
 using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
 using UniRx;
@@ -74,3 +77,6 @@ public class Examinable : MonoBehaviour
         }
     }
 }
+#endif
+#endif
+#endif

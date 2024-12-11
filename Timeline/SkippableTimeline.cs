@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -80,3 +83,6 @@ namespace stoogebag
         }
     }
 }
+#endif
+#endif
+#endif

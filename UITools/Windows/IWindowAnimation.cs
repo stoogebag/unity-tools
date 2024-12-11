@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿#if UNITASK
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 
 namespace stoogebag.UITools.Windows
@@ -9,3 +10,4 @@ namespace stoogebag.UITools.Windows
         public UniTask<bool> Deactivate();
     }
 }
+#endif

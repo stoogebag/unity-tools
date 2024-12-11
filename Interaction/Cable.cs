@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#if DOTWEEN
+#if ODIN_INSPECTOR
+using System.Collections.Generic;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -69,3 +71,5 @@ public class Activateable : MonoBehaviour
     public virtual void OnParentUnpowered(){}
     public virtual void OnParentPowered(){}
 }
+#endif
+#endif

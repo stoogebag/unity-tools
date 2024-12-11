@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -205,3 +206,4 @@ public class GridInputManager : Singleton<GridInputManager>
     }
     
 }
+#endif

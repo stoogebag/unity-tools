@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -263,3 +266,6 @@ public enum Approvals
     Failed,
     Unevaluated,
 }
+#endif
+#endif
+#endif

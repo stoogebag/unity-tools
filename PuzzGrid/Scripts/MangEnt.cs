@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -111,3 +114,7 @@ public class MangEnt : GridEntity, IPushesButton
         return GridActionConsequences.ActionApproved; //unsure what to do as a default. i guess nothing.
     }
 }
+
+#endif
+#endif
+#endif

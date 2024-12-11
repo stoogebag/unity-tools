@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -23,3 +26,6 @@ public class DialogueTrack : TrackAsset
         return base.CreateTrackMixer(graph, go, inputCount);
     }
 }
+#endif
+#endif
+#endif

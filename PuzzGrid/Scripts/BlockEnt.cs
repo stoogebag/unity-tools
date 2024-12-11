@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -124,3 +125,4 @@ public class BlockEnt : GridEntity, IPushesButton
         return GridActionConsequences.ActionApproved;
     }
 }
+#endif
