@@ -1,4 +1,5 @@
 #if CINEMACHINE
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -177,4 +178,5 @@ public enum DialogueTypes
     Narration,//this is a random dialogue line chosen from the list.
 }
 
+#endif
 #endif

@@ -1,4 +1,5 @@
 #if INCONTROL_EXISTS
+#if UNIRX
 
 
 using System;
@@ -131,4 +132,5 @@ public class UICursor :  UIInteractorBase
 }
 
 
+#endif
 #endif

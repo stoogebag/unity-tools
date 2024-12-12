@@ -1,4 +1,6 @@
 #if ODIN_INSPECTOR
+#if UNIRX
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -86,4 +88,5 @@ public abstract class TimelineConditionProvider : MonoBehaviour
 {
     public abstract bool ConditionMet();
 }
+#endif
 #endif

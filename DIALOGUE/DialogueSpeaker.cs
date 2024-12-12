@@ -1,4 +1,4 @@
-﻿#if CINEMACHINE
+﻿#if UNITASK
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;

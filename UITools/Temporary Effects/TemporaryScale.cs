@@ -1,4 +1,5 @@
 ﻿#if DOTWEEN
+#if UNIRX
 
 using DG.Tweening;
 using stoogebag.Extensions;
@@ -33,4 +34,5 @@ namespace stoogebag.UITools.Temporary_Effects
     }
 }
 
+#endif
 #endif

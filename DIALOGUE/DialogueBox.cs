@@ -1,4 +1,6 @@
 #if CINEMACHINE
+#if UNITASK
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,4 +38,5 @@ public class DialogueBox : Singleton<DialogueBox>
     }
 }
 
+#endif
 #endif

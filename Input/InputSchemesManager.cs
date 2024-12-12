@@ -1,4 +1,5 @@
 #if INCONTROL_EXISTS
+#if UNIRX
 using System.Collections;
 using System.Collections.Generic;
 using stoogebag.Input;
@@ -12,4 +13,5 @@ public class InputSchemesManager : Singleton<InputSchemesManager>
     public List<ControllerBindings> AvailableControllerBindings;
     public Dictionary<string, InputSchemeBase> ConnectedInputs { get; } = new Dictionary<string, InputSchemeBase>();
 }
+#endif
 #endif

@@ -1,5 +1,6 @@
 ﻿
 #if INCONTROL_EXISTS
+#if UNIRX
 using System.Collections;
 using UnityEngine;
 using System;
@@ -130,4 +131,5 @@ public class ControllerInputs : InputSchemeBase
     }
 }
 
+#endif
 #endif

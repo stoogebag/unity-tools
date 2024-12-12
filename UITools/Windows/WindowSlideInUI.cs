@@ -1,4 +1,6 @@
 #if DOTWEEN
+#if UNIRX
+
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -75,4 +77,5 @@ namespace stoogebag.UITools.Windows
     }
 }
 
+#endif
 #endif

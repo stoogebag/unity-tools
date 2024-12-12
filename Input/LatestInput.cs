@@ -1,4 +1,6 @@
 #if INCONTROL_EXISTS
+#if UNIRX
+
 using System.Collections;
 using System.Collections.Generic;
 using InControl;
@@ -30,4 +32,5 @@ public class LatestInput : Singleton<LatestInput>
     }
 }
 
+#endif
 #endif

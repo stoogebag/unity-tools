@@ -1,4 +1,5 @@
-﻿#if DOTWEEN
+﻿#if UNIRX
+#if DOTWEEN
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -94,4 +95,5 @@ namespace stoogebag.UITools.Windows
     }
 }
 
+#endif
 #endif
