@@ -1,3 +1,4 @@
+#if UNIRX
 using System;
 using UniRx;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine;
 public class Interactable : Examinable
 {
     public event Action<IInteractor> OnInteraction;
+
+
+    public float InteractDistance = 5f;
 
     public IObservable<IInteractor> OnInteractionObservable =>
         Observable.FromEvent<IInteractor>(h => OnInteraction += h, h => OnInteraction -= h); 
@@ -15,6 +19,7 @@ public class Interactable : Examinable
     
     public void TryInteract(IInteractor interactor)
     {
+        if (InteractDistance < Vector3.Distance(interactor.transform.position, transform.position)) return;
         Interact(interactor);        
     }
     void InteractionCancelled(IInteractor interactor){} //todo
@@ -34,3 +39,5 @@ public interface IInteractor
     public GameObject gameObject { get; }
     bool HasKey(string key);
 }
+
+#endif

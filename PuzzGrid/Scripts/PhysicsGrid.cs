@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +12,7 @@ using UnityEngine;
 
 public class PhysicsGrid : MonoBehaviour
 {
-    public ActionQueue MoveQueue { get; set; } = new ActionQueue();
+    public ActionQueue MoveQueue { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -35,3 +38,6 @@ public class PhysicsGrid : MonoBehaviour
         }
     }
 }
+#endif
+#endif
+#endif

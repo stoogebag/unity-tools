@@ -1,3 +1,5 @@
+#if UNITASK
+#if ODIN_INSPECTOR
 
 using System;
 using System.Linq;
@@ -100,15 +102,18 @@ public class DialogueBehaviour : PlayableBehaviour
 	public int MaxClipLength = 30;
 #if UNITY_EDITOR
 	public static string Device => Microphone.devices.First(t => t.Contains("NVID"));
+	#if ODIN_INSPECTOR
 	[ButtonGroup , Button(SdfIconType.Record, "")]
+#endif
 	public void Record()
 	{
 		_clip = Microphone.Start(Device, false, MaxClipLength, 44100);
 		_recording = true;
 	}
     
-    
+#if ODIN_INSPECTOR
 	[ButtonGroup , Button(SdfIconType.Play, "")]
+#endif
 	public void Play()
 	{
 		if(Clip != null) PlayClip(Clip);
@@ -119,7 +124,9 @@ public class DialogueBehaviour : PlayableBehaviour
 		AudioUtilsRef.PlayClip(clip);
 	}
     
+	#if ODIN_INSPECTOR
 	[ButtonGroup , Button(SdfIconType.Save, "")]
+#endif
 	public void Save()
 	{
 		var guid = Guid.NewGuid();
@@ -145,8 +152,9 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	}
 	
-	
+#if ODIN_INSPECTOR
 	[ButtonGroup, Button(SdfIconType.Pencil, "")]
+#endif
 	public async void Transcribe()
 	{
 #if WHISPER
@@ -179,3 +187,5 @@ public class DialogueBehaviour : PlayableBehaviour
 	
 	
 }
+#endif
+#endif

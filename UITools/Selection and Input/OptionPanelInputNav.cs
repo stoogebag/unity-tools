@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using stoogebag.Input;
 using stoogebag.UITools.ElementBindingComponents;
 using UnityEngine;
@@ -57,3 +60,6 @@ namespace stoogebag.UITools.Selection_and_Input
         Horizontal,
     }
 }
+#endif
+#endif
+#endif

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using stoogebag.Extensions;
 using UnityEngine;
 
 //[RequireComponent(typeof(BoxCollider))]
@@ -12,7 +13,7 @@ public class Portal : MonoBehaviour
     private LayerMask placementMask;
 
 
-    //private List<PortalableObject> portalObjects = new List<PortalableObject>();
+    private HashSet<PortalableObject> portalObjects = new HashSet<PortalableObject>();
     private Collider wallCollider;
 
     // Components.
@@ -39,39 +40,46 @@ public class Portal : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        // for (int i = 0; i < portalObjects.Count; ++i)
-        // {
-        //     Vector3 objPos = transform.InverseTransformPoint(portalObjects[i].transform.position);
-        //
-        //     if (objPos.z > 0.0f)
-        //     {
-        //         portalObjects[i].Warp();
-        //     }
-        // }
+        //for (int i = 0; i < portalObjects.Count; ++i)
+        foreach (var portalableObject in portalObjects)
+        {
+            
+            Vector3 objPos = transform.InverseTransformPoint(portalableObject.transform.position);
+        
+            if (objPos.z > -0.8f)
+            {
+                print(this.gameObject.name);
+                portalableObject.Warp();
+                
+                portalObjects.Remove(portalableObject);
+                portalableObject.ExitPortal(wallCollider);
+                break;
+            }
+        }
     }
     //
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     var obj = other.GetComponent<PortalableObject>();
-    //     if (obj != null)
-    //     {
-    //         portalObjects.Add(obj);
-    //         obj.SetIsInPortal(this, OtherPortal, wallCollider);
-    //     }
-    // }
-    //
-    // private void OnTriggerExit(Collider other)
-    // {
-    //     var obj = other.GetComponent<PortalableObject>();
-    //
-    //     if(portalObjects.Contains(obj))
-    //     {
-    //         portalObjects.Remove(obj);
-    //         obj.ExitPortal(wallCollider);
-    //     }
-    // }
+    private void OnTriggerEnter(Collider other)
+    {
+        var obj = other.gameObject.GetComponentInAncestor<PortalableObject>();
+        if (obj != null)
+        {
+            if(portalObjects.Add(obj))
+                obj.SetIsInPortal(this, OtherPortal, wallCollider);
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        var obj = other.GetComponent<PortalableObject>();
+    
+        if(portalObjects.Contains(obj))
+        {
+            portalObjects.Remove(obj);
+            obj.ExitPortal(wallCollider);
+        }
+    }
     //
     // public bool PlacePortal(Collider wallCollider, Vector3 pos, Quaternion rot)
     // {

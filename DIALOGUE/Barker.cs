@@ -1,20 +1,22 @@
-﻿using Cysharp.Threading.Tasks;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-#if UNITASK
 
 namespace stoogebag.DIALOGUE
 {
     public class Barker : MonoBehaviour
     {
         private UIPopup _uiPopup;
-        private AudioSource _audioSource;
+        private DialogueSpeaker _speaker;
     
         private void Awake()
         {
-            _uiPopup = GetComponentInChildren<UIPopup>();
-            _audioSource = GetComponentInChildren<AudioSource>();
+            _uiPopup = GetComponentInChildren<UIPopup>(true);
+            _speaker = GetComponent<DialogueSpeaker>();
         }
 
         [Button]
@@ -36,8 +38,8 @@ namespace stoogebag.DIALOGUE
 
             if (line.Clip != null)
             {
-                _audioSource.PlayOneShot(line.Clip);
-                await UniTask.WaitUntil(() => !_audioSource.isPlaying);
+                await _speaker.Play(line);
+                //await UniTask.WaitUntil(() => !_audioSource.isPlaying);
             }
             else await UniTask.WaitForSeconds(2);
 
@@ -47,4 +49,5 @@ namespace stoogebag.DIALOGUE
     
     }
 }
+#endif
 #endif

@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,15 +22,13 @@ public partial class PuzzGrid : MonoBehaviour
 
     public event Action OnUndoFinished;
     public IObservable<Unit> OnUndoFinishedObservable() => Observable.FromEvent(x => OnUndoFinished += x, x => OnUndoFinished -= x);
+    
+    Guid guid = Guid.NewGuid();
+    public string PuzzleName;
 
-    
-    
-    
     public List<GridEntity> Entities { get; set; }
 
     private int CurrentTick = 0;
-
-
     public ActionQueue MoveQueue { get; set; }
 
 
@@ -37,7 +36,7 @@ public partial class PuzzGrid : MonoBehaviour
     {
         // ResetGrid();
         MoveQueue = GetComponent<ActionQueue>();
-        Entities = FindObjectsByType<GridEntity>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
+        Entities = GetComponentsInChildren<GridEntity>().ToList();
     }
 
     private void Update()
@@ -55,6 +54,7 @@ public partial class PuzzGrid : MonoBehaviour
         // if (Input.GetKeyDown(KeyCode.Minus))
         //     PrevLevel();
     }
+    
 
     public async UniTask AddActionSetGroup(GridActionSetGroup actionSetGroup)
     {
@@ -177,8 +177,17 @@ public partial class PuzzGrid : MonoBehaviour
 
         if (winEnt != null)
         {
-            //if (FirstSharedNode(winEnt, mangEnt) != null) Won();
-            //else UnWon();
+            var winBox = winEnt.GetComponentInChildren<BoxCollider>();
+            var mangBox = mangEnt.GetComponentInChildren<BoxCollider>();
+            
+            if (winBox.bounds.Intersects(mangBox.bounds))
+            {
+                Won();
+            }
+            else
+            {
+                UnWon();
+            }
         }
     }
 
@@ -186,14 +195,6 @@ public partial class PuzzGrid : MonoBehaviour
     {
         if (mangEnt == null) mangEnt = FindObjectOfType<MangEnt>();
 
-        // if (mangEnt.GetAllNodes().Any(t => t.Y == LossY))
-        // {
-        //     Lost("drowned");
-        // }
-        // else
-        // {
-        //     UnLost();
-        // }
     }
 
     public int LossY = 11;
@@ -416,7 +417,7 @@ public partial class PuzzGrid : MonoBehaviour
     {
         var gp = new GridActionSetGroup(this);
 
-        foreach (var entity in Entities)
+        foreach (var entity in Entities.Where(t=>t.gameObject.activeSelf))
         {
             var grav = entity.GetGravityMoves();
             if (grav == null) continue;
@@ -428,7 +429,12 @@ public partial class PuzzGrid : MonoBehaviour
 
     public static float GridSpacing()
     {
-        return 10f;
+        return 10f ;
     }
 
+    public Vector3 GetDirectionVector(Vector3 direction)
+    {
+        return transform.TransformVector(direction);
+    }
 }
+#endif

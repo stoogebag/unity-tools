@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -96,3 +99,6 @@ namespace stoogebag.Input
         }
     }
 }
+#endif
+#endif
+#endif

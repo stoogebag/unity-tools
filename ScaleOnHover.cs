@@ -1,3 +1,5 @@
+#if UNIRX
+#if DOTWEEN
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -52,3 +54,5 @@ public class ScaleOnHover : MonoBehaviour
         
     }
 }
+#endif
+#endif

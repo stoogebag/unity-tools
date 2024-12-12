@@ -1,4 +1,7 @@
-﻿using stoogebag.Extensions;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using stoogebag.Extensions;
 using TMPro;
 using UniRx;
 using UnityEngine.UI;
@@ -38,3 +41,7 @@ namespace stoogebag.UITools.Windows
         }
     }
 }
+
+#endif
+#endif
+#endif

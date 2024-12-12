@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -136,3 +137,4 @@ public interface IActivateable
     //event Action<bool> OnActiveChanged;
     //IObservable<bool> OnActiveChangedObservable { get; } //think about this. 
 }
+#endif

@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if DOTWEEN
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -78,3 +81,6 @@ public interface ICollides
 {
     
 }
+#endif
+#endif
+#endif

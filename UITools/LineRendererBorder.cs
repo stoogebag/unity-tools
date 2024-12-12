@@ -1,3 +1,5 @@
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -89,3 +91,5 @@ public class LineRendererBorder : MonoBehaviour
     
 
 }
+#endif
+#endif

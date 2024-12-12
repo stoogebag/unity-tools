@@ -1,3 +1,4 @@
+#if ODIN_INSPECTOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,3 +27,4 @@ public class TMPUGUIOutline : MonoBehaviour
         text.ForceMeshUpdate();
     }
 }
+#endif

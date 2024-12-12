@@ -4,7 +4,6 @@ using System.IO;
 using UnityEngine;
 
 using UnityEditor;
-using Sirenix.Utilities;
 using UnityEditor.Animations;
 using System.Linq;
 using stoogebag.Extensions;

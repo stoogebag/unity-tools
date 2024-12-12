@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNIRX
+using System;
 using System.Collections.Generic;
 using stoogebag.Input;
 using UniRx;
@@ -105,3 +106,4 @@ namespace stoogebag.UITools.Selection_and_Input
 
     }
 }
+#endif

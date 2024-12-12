@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using System.Threading.Tasks;
 using stoogebag.Input;
@@ -113,3 +116,7 @@ namespace stoogebag.Networking.MatchSetup
 
     }
 }
+
+#endif
+#endif
+#endif

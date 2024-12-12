@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -12,7 +13,10 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+#if ULTIMATE_EDITOR_ENHANCER
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
+#endif
 using stoogebag.Extensions;
 
 #if WHISPER
@@ -4316,9 +4320,12 @@ public class VIDE_Editor : EditorWindow
                 }
 
 
+                
                 if (GUILayout.Button("P", GUILayout.Width(20)))
                 {
+#if ULTIMATE_EDITOR_ENHANCER
                     AudioUtilsRef.PlayClip(db.playerDiags[id].comment[i].audios);
+#endif
                 }
                 
                 if (transcribe || GUILayout.Button("T", GUILayout.Width(20)))

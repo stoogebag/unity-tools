@@ -1,3 +1,5 @@
+#if HOUDINI
+#if ODIN_INSPECTOR
 using System.Collections;
 using System.Collections.Generic;
 using HoudiniEngineUnity;
@@ -46,3 +48,6 @@ public class HoudiniBaker : MonoBehaviour
 
 
 }
+
+#endif
+#endif

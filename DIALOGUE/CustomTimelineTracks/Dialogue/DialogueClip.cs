@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -29,3 +32,6 @@ public class DialogueClip : PlayableAsset, ITimelineClipAsset
     
     
 }
+#endif
+#endif
+#endif

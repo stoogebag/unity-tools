@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +18,7 @@ public class MangEnt : GridEntity, IPushesButton
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity, false, default));
     }
 
 
@@ -36,7 +39,7 @@ public class MangEnt : GridEntity, IPushesButton
                 else result.Actions.AddRange(se.Actions);
             }
         }
-
+        
         return result;
     }
 
@@ -80,7 +83,9 @@ public class MangEnt : GridEntity, IPushesButton
     public  GridActionSet GetWalkMove(Vector3 dir)
     {
         var direction = InvertX ? new Vector3(-dir.x, dir.y, dir.z) : dir;
-        return SimpleMoveAction.GetMove(this, direction, GetWalkForce());
+        
+        
+        return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), false, default);
         return null;
         
     }
@@ -109,3 +114,7 @@ public class MangEnt : GridEntity, IPushesButton
         return GridActionConsequences.ActionApproved; //unsure what to do as a default. i guess nothing.
     }
 }
+
+#endif
+#endif
+#endif

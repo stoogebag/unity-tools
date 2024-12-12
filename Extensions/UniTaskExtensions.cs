@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITASK
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
 namespace stoogebag.Extensions
@@ -19,3 +20,4 @@ namespace stoogebag.Extensions
         
     }
 }
+#endif

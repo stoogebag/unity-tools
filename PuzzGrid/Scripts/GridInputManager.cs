@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,8 +13,11 @@ public class GridInputManager : Singleton<GridInputManager>
 {
     GridPlayerActions actions;
 
+    [SerializeField] private bool FindGridOnAwake;
+
     private List<MangEnt> Movers;
 
+    [SerializeField]
     private PuzzGrid Grid;
     
     void Awake()
@@ -23,10 +27,17 @@ public class GridInputManager : Singleton<GridInputManager>
         AssignGrid();
     }
 
+    private void OnEnable()
+    {
+        //todo move this to after everything is initialised or something.
+        //Grid.AddActionSetGroup(GridActionSetGroup.Empty(Grid));
+    }
+
     private void AssignGrid()
     {
-        Grid = FindObjectOfType<PuzzGrid>();
-        Movers=FindObjectsOfType<MangEnt>(false).ToList();
+        if (FindGridOnAwake) Grid = FindObjectOfType<PuzzGrid>();
+
+        Movers = Grid.GetComponentsInChildren<MangEnt>().ToList();
     }
 
     private void HandleBindings()
@@ -114,7 +125,13 @@ public class GridInputManager : Singleton<GridInputManager>
         }
         else if (a == actions.Pause)
         {
-            Grid.PauseUnpause();
+                    
+            //VERY NAUGHTY!
+            //for ldjam
+            //fix.
+            gameObject.SetActive(false);
+
+//            Grid.PauseUnpause();
         }
         else if (a == actions.Grow)
         {
@@ -131,7 +148,7 @@ public class GridInputManager : Singleton<GridInputManager>
         Grid.MoveQueue.AddAction(async () =>
         {
             var multiplier = (Input.GetKey(KeyCode.LeftControl) ? 1 : 10) ;
-            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.localScale.x));
+            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier));
             var gp = new GridActionSetGroup(Grid) { ActionSets = sets.ToList() };
 
             await Grid.AddActionSetGroup(gp);
@@ -189,3 +206,4 @@ public class GridInputManager : Singleton<GridInputManager>
     }
     
 }
+#endif

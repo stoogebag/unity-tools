@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿#if UNIRX
+using UniRx;
 using UnityEngine;
 
 namespace stoogebag.UITools.Temporary_Effects
@@ -11,3 +12,4 @@ namespace stoogebag.UITools.Temporary_Effects
         public abstract void Deactivate();
     }
 }
+#endif

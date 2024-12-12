@@ -1,3 +1,5 @@
+#if UNITASK
+#if UNIRX
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -30,3 +32,5 @@ public class WinMenu : MonoBehaviour
         
     }
 }
+#endif
+#endif

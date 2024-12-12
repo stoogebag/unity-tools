@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System.Collections.Generic;
 using System.Linq;
 
 public class GridActionSetGroup
@@ -17,6 +20,10 @@ public class GridActionSetGroup
         return new GridActionSetGroup(grid) { ActionSets = sets.ToList() };
     }
 
+    public static GridActionSetGroup Empty(PuzzGrid grid)
+    {
+        return GridActionSetGroup.Create(grid, new List<GridActionSet>());
+    }
 
     public PuzzGrid PuzzGrid;
 
@@ -79,3 +86,7 @@ public class GridActionSetGroup
         return ActionSets.Where(t => t.Approved).Select(t=>t.ResultActionSet);
     }
 }
+
+#endif
+#endif
+#endif

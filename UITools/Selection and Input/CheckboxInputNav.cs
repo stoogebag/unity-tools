@@ -1,3 +1,4 @@
+#if UNIRX
 using System;
 using UniRx;
 using UnityEngine.UI;
@@ -31,3 +32,4 @@ namespace stoogebag.UITools.Selection_and_Input
         }
     }
 }
+#endif

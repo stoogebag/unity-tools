@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
@@ -25,3 +26,4 @@ public class CombineMeshes : MonoBehaviour
         transform.gameObject.SetActive(true);
     }
 }
+#endif

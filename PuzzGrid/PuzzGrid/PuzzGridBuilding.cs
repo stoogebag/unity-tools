@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,8 +37,8 @@ public partial class PuzzGrid : MonoBehaviour
         };
     }
 
-
-
-
-
 }
+
+#endif
+#endif
+#endif

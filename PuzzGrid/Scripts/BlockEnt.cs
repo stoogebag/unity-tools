@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,11 +15,27 @@ public class BlockEnt : GridEntity, IPushesButton
     {
         //return null;
         
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity, false, default));
     }
     
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) => null;
+    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) {
+     
+        GridActionSet result = null;
+        
+        foreach (var gridEntityComponent in _components)
+        {
+            var se = gridEntityComponent.GetSettlementMoves(actionSummary);
+            if (se != null)
+            {
+                if (result == null) result = se;
+                else result.Actions.AddRange(se.Actions);
+            }
+        }
+
+        return result;
+        
+    }
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets)
     {
@@ -108,3 +125,4 @@ public class BlockEnt : GridEntity, IPushesButton
         return GridActionConsequences.ActionApproved;
     }
 }
+#endif

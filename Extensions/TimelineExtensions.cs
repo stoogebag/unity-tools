@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -34,3 +35,4 @@ namespace stoogebag.Extensions
         
     }
 }
+#endif

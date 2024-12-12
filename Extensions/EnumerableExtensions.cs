@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+#if UNIRX
 using UniRx;
 using UniRx.Triggers;
+#endif
+
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -25,30 +29,33 @@ namespace stoogebag.Extensions
             }
 
             return minItem;
-
         }
 
         public static T MaxItem<T>(this IEnumerable<T> me, Func<T, float> valuation)
         {
             return MinItem(me, t => -valuation(t));
         }
-        
+
         public static void DestroyAndClear<T>(this List<T> list) where T : Object
         {
             foreach (var o in list)
             {
                 UnityEngine.Object.Destroy(o);
             }
+
             list.Clear();
         }
+
         public static void DestroyAndClearGameObjects<T>(this List<T> list) where T : Component
         {
             foreach (var o in list)
             {
                 UnityEngine.Object.Destroy(o.gameObject);
             }
+
             list.Clear();
         }
+
         public static void DestroyImmediateAndClearGameObjects<T>(this List<T> list) where T : Component
         {
             foreach (var o in list)
@@ -56,14 +63,17 @@ namespace stoogebag.Extensions
                 if (o == null) continue;
                 UnityEngine.Object.DestroyImmediate(o.gameObject);
             }
+
             list.Clear();
         }
 
+#if UNIRX
         public static void DisposeWith(this IDisposable d, Component component)
         {
             component.OnDestroyAsObservable().Subscribe(u => d.Dispose());
         }
-    
+
+#endif
         // Ensures that the capacity of this list is at least the given minimum 
         // value. If the currect capacity of the list is less than min, the
         // capacity is increased to twice the current capacity or to min, 
@@ -73,29 +83,28 @@ namespace stoogebag.Extensions
             if (list.Capacity < min) list.Capacity = min;
         }
 
-        
+
         public static void AddRange<T>(this HashSet<T> me, IEnumerable<T> e)
         {
             foreach (var t in e)
             {
                 me.Add(t);
             }
-
         }
 
         public static int IndexOfFirst<T>(this IEnumerable<T> me, Func<T, bool> condition)
         {
             int i = 0;
-            foreach(var x in me)
+            foreach (var x in me)
             {
                 if (condition(x)) return i;
                 i++;
             }
-            return -1;
 
+            return -1;
         }
 
-        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> me) where T: class
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> me) where T : class
         {
             return me.Where(t => t != null);
         }
@@ -113,12 +122,13 @@ namespace stoogebag.Extensions
             }
         }
 
-        public static HashSet<T> ToHashSet<X,T>(this IEnumerable<X> me, Func<X,T> predicate)
+        public static HashSet<T> ToHashSet<X, T>(this IEnumerable<X> me, Func<X, T> predicate)
         {
             return new HashSet<T>(me.Select(predicate));
         }
 
-        public static IEnumerable<T> GetAllDescendants<T>(this IEnumerable<T> source, Func<T,IEnumerable<T>> childrenFunc)
+        public static IEnumerable<T> GetAllDescendants<T>(this IEnumerable<T> source,
+            Func<T, IEnumerable<T>> childrenFunc)
         {
             if (source == null) yield break;
             foreach (var s in source)
@@ -131,8 +141,9 @@ namespace stoogebag.Extensions
                 }
             }
         }
-        
-        public static IEnumerable<T> GetAllDescendants<T>(this T source, Func<T,IEnumerable<T>> childrenFunc, bool excludeOriginal = true)
+
+        public static IEnumerable<T> GetAllDescendants<T>(this T source, Func<T, IEnumerable<T>> childrenFunc,
+            bool excludeOriginal = true)
         {
             if (source == null) yield break;
             if (!excludeOriginal) yield return source;
@@ -155,7 +166,5 @@ namespace stoogebag.Extensions
                 yield return others[i];
             }
         }
-
-
     }
 }

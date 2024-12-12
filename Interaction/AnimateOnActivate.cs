@@ -2,14 +2,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(Interactable))]
-public class AnimateOnActivate : PointOfInterest
+
+public class AnimateOnActivate : Activateable
 {
     private DelayedBool Active;
 
@@ -28,7 +29,6 @@ public class AnimateOnActivate : PointOfInterest
         inactivePosRot = new PosRot(inactivePose.transform, true);
         activePosRot = new PosRot(activePose.transform, true);
 
-        GetComponent<Interactable>().OnInteractionObservable.Subscribe(OnTryInteract);
         
 
         Func<Tween> ATFunc = () =>
@@ -57,27 +57,21 @@ public class AnimateOnActivate : PointOfInterest
     }
 
 
-    public void OnTryInteract(IInteractor interactor)
-    {
-        
-        var canInteract = GetComponent<ICondition>()?.GetValue() ?? true;
-        if (!canInteract) return;
-        SetActiveState(!Active.Value.Value);
-    }
-
     [Button]
     public async UniTask SetActiveState(bool b)
     {
         await Active.SetValueAwaitable(b);
     }
 
-    public void OnInteractionCancelled(IInteractor interactor)
+
+    public override void OnParentPowered()
     {
-        
+        Active.SetValue(Cables.All(t=>t.Powered == PoweredState.Powered));
     }
 
-    public void OnInteraction(IInteractor interactor)
+    public override void OnParentUnpowered()
     {
+        Active.SetValue(Cables.All(t=>t.Powered == PoweredState.Powered));
     }
 }
 

@@ -1,3 +1,4 @@
+#if DOTWEEN
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -34,3 +35,4 @@ public class HoverScale : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public Tween tween;
 }
+#endif

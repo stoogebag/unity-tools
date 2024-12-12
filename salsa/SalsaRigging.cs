@@ -71,14 +71,21 @@ namespace stoogebag._2dConvos
 
             var randomEyes = gameObject.GetOrAddComponent<RandomEyes2D>();
 
-            var allChildren = gameObject.transform.GetAllDescendants();
+            var allChildren = gameObject.transform.GetAllDescendants().ToList();
 
             var eyelids = allChildren.Where(t => t.name.Contains(eyeLidString));
             var movingEyes = allChildren.Where(t => t.name == movingEyeString + "R" || t.name == movingEyeString + "L");
             var disappearOnBlink =
                 allChildren.Where(t => t.name.Contains(eyeNoBlinkString) && !t.name.Contains(eyeLidString));
 
-            randomEyes.eyes = movingEyes.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
+            var eyeRenderers = movingEyes.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
+            randomEyes.eyes = new SpriteRenderer[eyeRenderers.Length];
+            for (var i = 0; i < eyeRenderers.Length; i++)
+            {
+                randomEyes.eyes[i] = eyeRenderers[i];
+            }
+            
+            
             randomEyes.eyeLids = eyelids.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
             invisibleOnBlink = disappearOnBlink.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
 
@@ -93,7 +100,6 @@ namespace stoogebag._2dConvos
                         if(randomEyes.eyes.Contains(sr)) continue;
                         if(randomEyes.eyeLids.Contains(sr)) continue;
                         if(invisibleOnBlink.Contains(sr)) continue;
-
                         
                         if(sr ==  mouthClosedObj) continue;
                         if(sr ==  mouthSmallObj) continue;

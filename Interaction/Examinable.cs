@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System;
 using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
 using UniRx;
@@ -27,11 +30,18 @@ public class Examinable : MonoBehaviour
     public IObservable<IInteractor> OnUnExamineObservable =>
         Observable.FromEvent<IInteractor>(h => OnUnExamine += h, h => OnUnExamine -= h);
     
+    public float FocusDistance = 10f;
+    public float ExamineDistance = 10f;
 
     string InteractText { get; }
 
     private void Start()
     {
+    }
+
+    public bool CanFocus(IInteractor interactor)
+    {
+        return interactor.transform.position.DistanceTo(transform.position) < FocusDistance;
     }
 
     public void Unfocus(IInteractor interactor)
@@ -67,3 +77,6 @@ public class Examinable : MonoBehaviour
         }
     }
 }
+#endif
+#endif
+#endif

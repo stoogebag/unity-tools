@@ -1,4 +1,7 @@
-﻿using System;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +27,9 @@ public abstract class GridEntity : MonoBehaviour
             entityComponent.BindGridEntity(this);
         }
 
+        
+        PuzzGrid = gameObject.GetComponentInAncestor<PuzzGrid>();
+        
         // foreach (var nodeEntity in NodeEnts)
         // {
         //     nodeEntity.GridEntity = this;
@@ -68,7 +74,7 @@ public abstract class GridEntity : MonoBehaviour
 
         Physics.SyncTransforms();
 
-        var buffer = 1f; //todo:careful if the object is mega small. maybe use bounds.size or stg.
+        var buffer = .01f; //todo:careful if the object is mega small. maybe use bounds.size or stg.
 
         foreach (var box in boxes)
         {
@@ -260,3 +266,6 @@ public enum Approvals
     Failed,
     Unevaluated,
 }
+#endif
+#endif
+#endif

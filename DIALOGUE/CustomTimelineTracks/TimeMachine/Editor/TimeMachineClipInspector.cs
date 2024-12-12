@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -79,3 +83,7 @@ public class TimeMachineClipInspector : Editor
 		serializedObject.ApplyModifiedProperties();
 	}
 }
+
+#endif
+#endif
+#endif

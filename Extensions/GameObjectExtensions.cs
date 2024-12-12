@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if UNIRX
 using UniRx;
 using UniRx.Triggers;
+#endif
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -251,6 +253,7 @@ namespace stoogebag.Extensions
         //     EditorUtility.IsPersistent(go.transform.root.gameObject) && !(go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)))
         // }
         //
+#if UNIRX
 
         public static IDisposable TemporarilyScaleDisposable(this Transform t, Vector3 scale)
         {
@@ -260,7 +263,7 @@ namespace stoogebag.Extensions
                 t.localScale = t.localScale.ScaleByVector(scale.Invert());
             });
         }
-
+#endif
 
         public static T GetOrAddComponent<T>(this GameObject go)  where T: Component
         {

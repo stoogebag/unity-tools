@@ -1,3 +1,4 @@
+#if DOTWEEN
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -29,3 +30,4 @@ public class TimeScaleManager : Singleton<TimeScaleManager>
         _tweener?.Kill();
     }
 }
+#endif

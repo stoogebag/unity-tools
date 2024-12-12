@@ -1,9 +1,11 @@
+#if ODIN_INSPECTOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using stoogebag;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -48,7 +50,7 @@ public class DialogueTrigger :MonoBehaviour
                 Block();
             }
 
-            //if (!VD.isActive) Running = false;
+            if (!VD.isActive) Running = false;
         }
         
     }
@@ -84,3 +86,4 @@ public abstract class TimelineConditionProvider : MonoBehaviour
 {
     public abstract bool ConditionMet();
 }
+#endif

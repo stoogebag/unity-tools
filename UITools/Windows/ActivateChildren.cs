@@ -1,3 +1,4 @@
+#if UNITASK
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,3 +27,4 @@ public class ActivateChildren : MonoBehaviour,IWindowAnimation
         return true;
     }
 }
+#endif

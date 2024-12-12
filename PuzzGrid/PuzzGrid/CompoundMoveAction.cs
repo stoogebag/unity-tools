@@ -1,4 +1,8 @@
-﻿ using System;
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+
+ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -289,3 +293,6 @@ public enum ForceStrength
     Weak,
     Strong,
 }
+#endif
+#endif
+#endif

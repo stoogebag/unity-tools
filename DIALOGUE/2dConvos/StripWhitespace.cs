@@ -1,3 +1,4 @@
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
@@ -25,3 +26,4 @@ namespace stoogebag
         
     }
 }
+#endif

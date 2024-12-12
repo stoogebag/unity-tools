@@ -1,3 +1,5 @@
+
+#if UNIRX
 using System;
 using stoogebag.Extensions;
 using UniRx;
@@ -24,3 +26,4 @@ public class MouseClick : MonoBehaviour
     
     
 }
+#endif

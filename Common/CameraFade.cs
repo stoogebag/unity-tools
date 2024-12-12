@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ODIN_INSPECTOR
+using System;
 using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -68,3 +69,4 @@ namespace stoogebag.Common
 
 	}
 }
+#endif

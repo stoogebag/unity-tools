@@ -1,3 +1,6 @@
+#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
 using System;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
@@ -60,3 +63,6 @@ public class TalkingHead : Window
     private Action _onClose;
 
 }
+#endif
+#endif
+#endif
