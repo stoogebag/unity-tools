@@ -87,6 +87,16 @@ namespace stoogebag.Extensions
                     onError,
                     onComplete);
         }
+        
+        
+        
+        /// <summary>
+        /// Subscribes to the observable with an action to handle the next value.
+        /// </summary>
+        public static IDisposable Subscribe<T>(this ReactiveProperty<T> source, Action<T> onNext)
+        {
+            return source.Subscribe(Observer.Create(onNext));
+        }
     }
 
 }

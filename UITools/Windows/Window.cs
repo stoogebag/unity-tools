@@ -1,5 +1,5 @@
-#if UNITASK
 #if ODIN_INSPECTOR
+#if UNITASK
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +26,7 @@ namespace stoogebag.UITools.Windows
         public void DeactivateTest()
         {
             Deactivate();
+            
         }
         
 
