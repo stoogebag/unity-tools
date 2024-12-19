@@ -35,9 +35,6 @@ public class Examinable : MonoBehaviour
 
     string InteractText { get; }
 
-    private void Start()
-    {
-    }
 
     public bool CanFocus(IInteractor interactor)
     {
@@ -55,6 +52,7 @@ public class Examinable : MonoBehaviour
         
         OnFocus?.Invoke(interactor);
         //GetComponentInChildren<UIPopup>(true)?.ShowText(popupName).Forget();
+        
     }
 
     public void TryExamine(IInteractor interactor)
