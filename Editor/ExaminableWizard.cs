@@ -7,7 +7,9 @@ using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEditor;
 using UnityEngine;
+#if WHISPER
 using Whisper;
+#endif
 
 public class ExaminableWizard : EditorWindow
 {
@@ -104,7 +106,7 @@ public class ExaminableWizard : EditorWindow
             {
                 if(   dmb.Lines[0].Clip != null) AudioUtilsRef.PlayClip(dmb.Lines[0].Clip);
             }
-
+#if WHISPER
             if (GUILayout.Button("transcribe") || _transcribe)
             {
                 
@@ -121,18 +123,13 @@ public class ExaminableWizard : EditorWindow
 
                 dmb.Lines[0].Text = res.Result.Trim(' ');
             }
-
+#endif
             
             
             
         }
     }
 
-    [Button]
-    void Test()
-    {
-        Debug.Log("Test");
-    }
 
     private void OnWizardCreate()
     {
