@@ -1,4 +1,5 @@
 #if UNITASK
+#if INCONTROL_EXISTS
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -206,4 +207,5 @@ public class GridInputManager : Singleton<GridInputManager>
     }
     
 }
+#endif
 #endif
