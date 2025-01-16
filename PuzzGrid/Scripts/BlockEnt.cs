@@ -1,4 +1,4 @@
-#if UNITASK
+#if UNITASK && ODIN_INSPECTOR && UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
