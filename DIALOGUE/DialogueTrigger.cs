@@ -24,7 +24,7 @@ public class DialogueTrigger :MonoBehaviour
             //GetComponentInChildren<PlayableDirector>().Play();
             await RunDialogue();
         });
-        uiManager =        FindObjectOfType<VIDEUIManagerStooge>(true);
+        uiManager =        FindObjectOfType<VIDEUIManagerTextAnimator>(true);
         block = false;
     }
 
@@ -32,7 +32,7 @@ public class DialogueTrigger :MonoBehaviour
     private async UniTask RunDialogue()
     {
         
-        VIDEUIManagerStooge uiManager = FindObjectOfType<VIDEUIManagerStooge>(true);
+        VIDEUIManagerTextAnimator uiManager = FindObjectOfType<VIDEUIManagerTextAnimator>(true);
         uiManager.NPC_audioSource = GetComponent<DialogueSpeaker>().AudioSource;
         
         await GetComponentInChildren<SkippableTimeline>().Play();
@@ -74,7 +74,7 @@ public class DialogueTrigger :MonoBehaviour
         }
     }
 
-    private VIDEUIManagerStooge uiManager;
+    private VIDEUIManagerTextAnimator uiManager;
 
     public bool Running;
 

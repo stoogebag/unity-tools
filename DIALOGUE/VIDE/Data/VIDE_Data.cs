@@ -938,7 +938,7 @@ namespace VIDE_Data
                         if (audioNames.Contains(name))
                             diags[currentDiag].playerNodes[i].comment[ii].audios = audios[audioNames.IndexOf(name)];
                         else if (name != "")
-                            Debug.LogError("'" + name + "' not found in any Resources folder!");
+                            Debug.LogWarning("'" + name + "' not found in any Resources folder!");
                     }
 
                     if (dict.ContainsKey("pd_" + i.ToString() + "_com_" + ii.ToString() + "extraD"))

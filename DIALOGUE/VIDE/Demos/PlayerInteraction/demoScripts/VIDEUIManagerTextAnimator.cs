@@ -1,0 +1,526 @@
+﻿#if UNITASK
+#if ODIN_INSPECTOR
+#if UNIRX
+/*
+ *  This is script is only meant to be demonstrate various ways of handling data to create a Dialogue/UI Manager
+ *  VIDE doesn't focus on the actual interface, but rather on the system and the data handling
+ *  This script is basically handling the node data from nodeData in its own, customized way
+ *  Creating a customized in-game Dialogue/UI manager is up to you
+ *  Of course, you can absolutely use this script as a start point by adding, modifying, optimizing, or simplifying it to your needs.
+ *  If you are experiencing strange behaviours or have any issues or questions, don't hesitate on contacting me at https://videdialogues.wordpress.com/contact/
+ *  Need help programming your own UI Manager? Check out the scripting tutorial: https://videdialogues.wordpress.com/tutorial/
+ */
+
+using System;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Febucci.UI;
+using Febucci.UI.Core;
+using stoogebag.Extensions;
+using stoogebag.UITools.Windows;
+using TMPro;
+using UniRx;
+using UnityEngine.UI;
+using VIDE_Data; //<--- Import to use easily call VD class
+
+public class VIDEUIManagerTextAnimator : MonoBehaviour
+{
+    //This script will handle everything related to dialogue interface
+    //It will use the VD class to load dialogues and retrieve node data
+
+    #region VARS
+
+    //These are the references to UI components and containers in the scene
+    public Window dialogueContainer;
+    public Window NPC_Container;
+    public Window playerContainer;
+    public GameObject itemPopUp;
+
+    public TextAnimator_TMP NPC_Text;
+    public TextAnimator_TMP NPC_label;
+    public Image NPCSprite;
+    public GameObject playerChoicePrefab;
+    public Image playerSprite;
+    public TextAnimator_TMP playerLabel;
+
+    public int distanceBetweenOptionButtons = 100;
+    public int initialOptionButtonY = 100;
+    
+    //use this if you want to have them spawn bottom to top for example
+    public bool reverseOptionButtonOrder = false;
+
+    public AudioSource NPC_audioSource;
+    public AudioSource player_audioSource;
+
+    bool dialoguePaused = false; //Custom variable to prevent the manager from calling VD.Next
+    bool animatingText
+    {
+        get
+        {
+            return typewriter != null && typewriter.isShowingText;
+        }
+    }
+
+    TypewriterCore typewriter;
+
+    //We'll be using this to store references of the current player choices
+    private List<Button> currentChoices = new List<Button>();
+
+    #endregion
+
+    #region MAIN
+
+    private void Start()
+    {
+        typewriter = NPC_Text.GetComponent<TypewriterCore>();
+    }
+
+    void Awake()
+    {
+        // VD.LoadDialogues(); //Load all dialogues to memory so that we dont spend time doing so later
+        //An alternative to this can be preloading dialogues from the VIDE_Assign component!
+
+        //Loads the saved state of VIDE_Assigns and dialogues.
+        // VD.LoadState("VIDEDEMOScene1", true);
+
+    }
+
+    public void Interact(VIDE_Assign dialogue)
+    {
+        //Sometimes, we might want to check the ExtraVariables and VAs before moving forward
+        //We might want to modify the dialogue or perhaps go to another node, or dont start the dialogue at all
+        //In such cases, the function will return true
+        var doNotInteract = PreConditions(dialogue);
+        if (doNotInteract) return;
+
+        if (!VD.isActive)
+        {
+            Begin(dialogue);
+        }
+        else
+        {
+            CallNext();
+        }
+    }
+
+    //This begins the conversation
+    void Begin(VIDE_Assign dialogue)
+    {
+        //Let's reset the NPC text variables
+
+        try
+        {
+            NPC_Text.SetText("");
+            NPC_label.SetText("");
+        }
+        catch (System.Exception e)
+        {
+            //this happens if its never been active. in which case who cares eh? TODO: potentially make this an if() instead of a try-catch
+            Debug.LogWarning("Error setting NPC text  " + e.Message);
+        }
+        //playerLabel.SetText("");
+
+        //First step is to call BeginDialogue, passing the required VIDE_Assign component 
+        //This will store the first Node data in VD.nodeData
+        //But before we do so, let's subscribe to certain events that will allow us to easily
+        //Handle the node-changes
+        VD.OnActionNode += ActionHandler;
+        VD.OnNodeChange += UpdateUI;
+        VD.OnEnd += EndDialogue; 
+        dialogueContainer.Activate().Forget(); //Let's make our dialogue container visible
+
+        VD.BeginDialogue(dialogue); //Begins dialogue, will call the first OnNodeChange
+
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    //Calls next node in the dialogue
+    public void CallNext()
+    {
+        //Let's not go forward if text is currently being animated, but let's speed it up.
+         if (animatingText)
+         {
+             CutTextAnim();
+             return;
+         }
+
+        if (!dialoguePaused) //Only if
+        {
+            VD.Next(); //We call the next node and populate nodeData with new data. Will fire OnNodeChange.
+        }
+        else
+        {
+            //Disable item popup and disable pause
+            if (itemPopUp.activeSelf)
+            {
+                dialoguePaused = false;
+                itemPopUp.SetActive(false);
+            }
+        }
+    }
+
+    //Input related stuff (scroll through player choices and update highlight)
+    void Update()
+    {
+        //Lets just store the Node Data variable for the sake of fewer words
+        var data = VD.nodeData;
+
+        if (VD.isActive) //If there is a dialogue active
+        {
+            //Scroll through Player dialogue options if dialogue is not paused and we are on a player node
+            //For player nodes, NodeData.commentIndex is the index of the picked choice
+            if (!data.pausedAction && data.isPlayer)
+            {
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    if (data.commentIndex < currentChoices.Count - 1)
+                        data.commentIndex++;
+                }
+
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    if (data.commentIndex > 0)
+                        data.commentIndex--;
+                }
+
+                //Color the Player options. Blue for the selected one
+                for (int i = 0; i < currentChoices.Count; i++)
+                {
+                    //  currentChoices[i].color = Color.white;
+                    //  if (i == data.commentIndex) currentChoices[i].color = Color.yellow;
+                }
+            }
+        }
+
+        //Note you could also use Unity's Navi system
+    }
+
+    //When we call VD.Next, nodeData will change. When it changes, OnNodeChange event will fire
+    //We subscribed our UpdateUI method to the event in the Begin method
+    //Here's where we update our UI
+    async void  UpdateUI(VD.NodeData data)
+    {
+        //Reset some variables
+        //Destroy the current choices
+        foreach (var op in currentChoices)
+            Destroy(op.gameObject);
+        currentChoices = new List<Button>();
+
+        try
+        {
+            NPC_Text.SetText("");
+        }
+        catch(Exception e)
+        {
+            Debug.LogWarning("Error setting NPC text: " + e.Message);
+        }
+
+        playerSprite.sprite = null;
+        NPCSprite.sprite = null;
+
+        //Look for dynamic text change in extraData
+        PostConditions(data);
+
+        //If this new Node is a Player Node, set the player choices offered by the node
+        if (data.isPlayer)
+        {
+            //Set node sprite if there's any, otherwise try to use default sprite
+            if (data.sprite != null)
+                playerSprite.sprite = data.sprite;
+            else if (VD.assigned.defaultPlayerSprite != null)
+                playerSprite.sprite = VD.assigned.defaultPlayerSprite;
+
+            
+            playerContainer.Activate();
+            NPC_Container.Deactivate();
+            
+            SetOptions(data);
+
+            //If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
+            // if (data.tag.Length > 0)
+            //     playerLabel.text = data.tag;
+            // else
+            //     playerLabel.text = player?.playerName ?? "null player";
+
+            //Sets the player container on
+        }
+        else //If it's an NPC Node, let's just update NPC's text and sprite
+        {
+            //Set node sprite if there's any, otherwise try to use default sprite
+            if (data.sprite != null)
+            {
+                //For NPC sprite, we'll first check if there's any "sprite" key
+                //Such key is being used to apply the sprite only when at a certain comment index
+                //Check CrazyCap dialogue for reference
+                if (data.extraVars.ContainsKey("sprite"))
+                {
+                    if (data.commentIndex == (int)data.extraVars["sprite"])
+                        NPCSprite.sprite = data.sprite;
+                    else
+                        NPCSprite.sprite = VD.assigned.defaultNPCSprite; //If not there yet, set default dialogue sprite
+                }
+                else //Otherwise use the node sprites
+                {
+                    NPCSprite.sprite = data.sprite;
+                }
+            } //or use the default sprite if there isnt a node sprite at all
+            else if (VD.assigned.defaultNPCSprite != null)
+                NPCSprite.sprite = VD.assigned.defaultNPCSprite;
+
+            
+            playerContainer.Deactivate().Forget();
+            NPC_Container.gameObject.SetActive(true);
+            await NPC_Container.Activate();//.Forget();
+            
+            var typewriter = NPC_Text.GetComponent<TypewriterCore>();
+            typewriter.ShowText(data.comments[data.commentIndex]);
+
+            
+            
+            var audio = data.audios[data.commentIndex];
+            if(audio != null) NPC_audioSource.PlayOneShot(audio);
+            
+            
+            //If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
+            if (data.tag.Length > 0)
+                NPC_label.SetText(data.tag);
+            else
+                NPC_label.SetText(VD.assigned.alias);
+
+        }
+    }
+
+
+    //This uses the returned string[] from nodeData.comments to create the UIs for each comment
+    //It first cleans, then it instantiates new choices
+    public void SetOptions(VD.NodeData nodeData)
+    {
+        var choices = nodeData.comments;
+        
+        //Create the choices. The prefab comes from a dummy gameobject in the scene
+        //This is a generic way of doing it. You could instead have a fixed number of choices referenced.
+        var y = initialOptionButtonY;
+        
+        for (int i = choices.Length-1; i >= 0; i--)
+        {
+            var index = reverseOptionButtonOrder ? choices.Length - 1 - i : i;
+            
+            var cond = nodeData.extraData[index];
+            //todo:deal with these conditions properly!!
+
+            
+            GameObject newOp = Instantiate(playerChoicePrefab.gameObject, playerChoicePrefab.transform.position,
+                Quaternion.identity,playerChoicePrefab.transform.parent ) as GameObject;
+            //newOp.transform.SetParent(playerChoicePrefab.transform.parent, true);
+            
+            
+            var rect = newOp.GetComponent<RectTransform>();
+
+            var count = choices.Length;
+            
+            newOp.GetComponent<RectTransform>().anchoredPosition = new Vector2(100, (y));
+
+            y += distanceBetweenOptionButtons;
+            newOp.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+            newOp.SetActive(true);
+
+            try
+            {
+                newOp.GetComponentInChildren<TypewriterCore>().ShowText(choices[index]);
+            }
+            catch (Exception e)
+            {
+            }
+            //newOp.GetComponent<Window>().Activate().Forget(); todo:implement this!
+
+            var button = newOp.GetComponent<Button>();
+
+            button.OnClickAsObservable().Subscribe(t =>
+            {
+                
+                var data = VD.nodeData;
+                
+                //careful there. recall we must make this copy 'index' because of scopey scope
+                data.commentIndex = index;
+                CallNext();
+            }).DisposeWith(button);
+
+            currentChoices.Add(button);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+    }
+
+    //Unsuscribe from everything, disable UI, and end dialogue
+    //Called automatically because we subscribed to the OnEnd event
+    void EndDialogue(VD.NodeData data)
+    {
+        CheckTasks();
+        
+        
+        foreach (var op in currentChoices)
+            Destroy(op.gameObject);
+        currentChoices = new List<Button>();
+        
+        VD.OnActionNode -= ActionHandler;
+        VD.OnNodeChange -= UpdateUI;
+        VD.OnEnd -= EndDialogue;
+        dialogueContainer.Deactivate();
+        VD.EndDialogue();
+
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = false;
+        
+        //VD.SaveState("VIDEDEMOScene1", true); //Saves VIDE stuff related to EVs and override start nodes
+        //QuestChartDemo.SaveProgress(); //saves OUR custom game data
+    }
+
+    void OnDisable()
+    {
+        //If the script gets destroyed, let's make sure we force-end the dialogue to prevent errors
+        //We do not save changes
+        CheckTasks();
+        VD.OnActionNode -= ActionHandler;
+        VD.OnNodeChange -= UpdateUI;
+        VD.OnEnd -= EndDialogue;
+        if (dialogueContainer != null)
+            dialogueContainer.Deactivate();
+        VD.EndDialogue();
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = false;
+        
+    }
+    
+    
+    void CutTextAnim()
+    {
+        NPC_Text.GetComponent<TypewriterCore>().SkipTypewriter();		
+    }
+
+    #endregion
+
+    #region DIALOGUE CONDITIONS
+
+    //DIALOGUE CONDITIONS --------------------------------------------
+
+    //When this returns true, it means that we did something that alters the progression of the dialogue
+    //And we don't want to call Next() this time
+    bool PreConditions(VIDE_Assign dialogue)
+    {
+        var data = VD.nodeData;
+
+        if (VD.isActive) //Stuff we check while the dialogue is active
+        {
+            //Check for extra variables
+            //This one finds a key named "item" which has the value of the item thats gonna be given
+            //If there's an 'item' key, then we will assume there's also an 'itemLine' key and use it
+            if (!data.isPlayer)
+            {
+                
+            }
+            else
+            {
+                if (data.extraVars.ContainsKey("outCondition"))
+                {
+                    if (data.extraVars.ContainsKey("condInfo"))
+                    {
+                        int[] nodeIDs = VD.ToIntArray((string)data.extraVars["outCondition"]);
+                        if (VD.assigned.interactionCount < nodeIDs.Length)
+                            VD.SetNode(nodeIDs[VD.assigned.interactionCount]);
+                        else
+                            VD.SetNode(nodeIDs[nodeIDs.Length - 1]);
+                        return true;
+                    }
+                }
+            }
+        }
+        else //Stuff we do right before the dialogue begins
+        {
+            
+        }
+
+        return false;
+    }
+
+    //Conditions we check after VD.Next was called but before we update the UI
+    void PostConditions(VD.NodeData data)
+    {
+        //Don't conduct extra variable actions if we are waiting on a paused action
+        // if (data.pausedAction) return;
+        //
+        // if (!data.isPlayer) //For player nodes
+        // {
+        //     //Replace [WORDS]
+        //     ReplaceWord(data);
+        //
+        //     //Checks for extraData that concerns font size (CrazyCap node 2)
+        //     if (data.extraData[data.commentIndex].Contains("fs"))
+        //     {
+        //         int fSize = 14;
+        //
+        //         string[] fontSize = data.extraData[data.commentIndex].Split(","[0]);
+        //         int.TryParse(fontSize[1], out fSize);
+        //         //NPC_Text.fontSize = fSize;
+        //     }
+        //     else
+        //     {
+        //         //NPC_Text.fontSize = 30;
+        //     }
+        // }
+    }
+
+    //This will replace any "[NAME]" with the name of the gameobject holding the VIDE_Assign
+    //Will also replace [WEAPON] with a different variable
+    // void ReplaceWord(VD.NodeData data)
+    // {
+    //     if (data.comments[data.commentIndex].Contains("[NAME]"))
+    //         data.comments[data.commentIndex] =
+    //             data.comments[data.commentIndex].Replace("[NAME]", VD.assigned.gameObject.name);
+    //
+    //     if (data.comments[data.commentIndex].Contains("[WEAPON]"))
+    //         data.comments[data.commentIndex] = data.comments[data.commentIndex]
+    //             .Replace("[WEAPON]", player.demo_ItemInventory[0].ToLower());
+    // }
+
+    #endregion
+
+    #region EVENTS AND HANDLERS
+
+    //Just so we know when we finished loading all dialogues, then we unsubscribe
+    void OnLoadedAction()
+    {
+        Debug.Log("Finished loading all dialogues");
+        VD.OnLoaded -= OnLoadedAction;
+    }
+
+    //Another way to handle Action Nodes is to listen to the OnActionNode event, which sends the ID of the action node
+    void ActionHandler(int actionNodeID)
+    {
+        //Debug.Log("ACTION TRIGGERED: " + actionNodeID.ToString());
+    }
+
+    
+
+    //Check task progression
+    void CheckTasks()
+    {
+        // if (player.demo_ItemInventory.Count == 5)
+        //     QuestChartDemo.SetQuest(2, false);
+        //
+        // QuestChartDemo.CheckTaskCompletion(VD.nodeData);
+    }
+
+    #endregion
+
+    //Utility note: If you're on MonoDevelop. Go to Tools > Options > General and enable code folding.
+    //That way you can exapnd and collapse the regions and methods
+}
+#endif
+#endif
+#endif
