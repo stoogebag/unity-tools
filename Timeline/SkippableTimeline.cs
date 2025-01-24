@@ -1,13 +1,18 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using Sirenix.Reflection.Editor;
 using stoogebag.Extensions;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace stoogebag
 {
@@ -18,33 +23,119 @@ namespace stoogebag
         public bool DisablePlayerControl = true;
         public bool CanRunWhileRunning = false; //will this ever be true? play it safe. nfi what this was meant to be lmao
 
-
-        public void TryPlay()
+        public bool PlayOnAwake = false;
+        
+        void Awake()
         {
-
+            Director = GetComponent<PlayableDirector>();
+            if (PlayOnAwake)
+            {
+                Play().Forget();
+            }
+        }
+        
+        public static void TrySkip()
+        {
+            if (CurrentlyPlayingTimeline != null)
+            {
+                if (CurrentlyPlayingTimeline.State == TimelineState.Paused)
+                    CurrentlyPlayingTimeline.SkipToEnd();
+            }
         }
 
         private Playable Playable => Director.playableGraph.GetRootPlayable(0); //cache this? who cares for now
 
-        private void Awake()
-        {
-            Director = GetComponent<PlayableDirector>();
-        }
 
         [Button]
         public async UniTask Play() //should not be launched by anyone except the manager.
         {
+            
+            if(CurrentlyPlayingTimeline != null)
+                Debug.LogError("There is already a timeline playing. You should not be playing another one. maybe in the future...");
+            
+            CurrentlyPlayingTimeline = this;
             await Director.PlayAndAwait();
+            CurrentlyPlayingTimeline = null;
+            
 //        print("dinished.");
         }
 
+        public static SkippableTimeline CurrentlyPlayingTimeline = null;
+        
         public PlayableDirector Director { get; private set; }
 
-        public void TimelinePause()
+        public static void TimelinePause()
         {
-            Director.playableGraph.GetRootPlayable(0)
+            //TimelineSkipBack();
+            return;
+            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0)
                 .SetSpeed(0d); //BC: we set speed to 0 because calling 'pause' is a bit more like a 'stop' than a pause and causes unwanted behaviour.
-            State = TimelineState.Paused;
+            CurrentlyPlayingTimeline.State = TimelineState.Paused;
+        }
+
+        private void Update()
+        {
+            if (CurrentlyPlayingTimeline != null)
+            {
+
+                var dialogueClip = GetCurrentClip<DialogueTrack>(CurrentlyPlayingTimeline.Director);
+                if(dialogueClip != null){
+                    var time = GetNormalisedTime(dialogueClip, CurrentlyPlayingTimeline.Director);
+                    
+                    if(time > 0.5f && time < 0.9f)
+                    {
+                        TimelineSkipBack(0.1f);
+                        State = TimelineState.Paused;
+                    }
+                    
+                };
+            }
+        }
+
+        public void SkipToEnd()
+        {
+            if (CurrentlyPlayingTimeline == null) return;
+            var clip = GetCurrentClip<DialogueTrack>(CurrentlyPlayingTimeline.Director);
+            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0).SetTime(clip.end - 0.05f);
+            State = TimelineState.Playing;
+        }
+        
+        public static TimelineClip GetCurrentClip<TTrack>(PlayableDirector director, TimelineAsset timelineAsset = null) where TTrack : TrackAsset  
+        {
+            if(timelineAsset == null) timelineAsset = director.playableAsset as TimelineAsset;
+            
+            var playable = CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0);
+            var time = playable.GetTime();
+            var track = timelineAsset.GetOutputTracks().FirstOrDefault(t => t is TTrack) as TTrack;
+            var clip = track.GetClips().Where(t => t.start < time && t.end > time).FirstOrDefault();
+
+
+            return clip;
+
+        }
+        
+        public static float GetNormalisedTime(TimelineClip clip, PlayableDirector director)
+        {
+            var playable = CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0);
+            var time = playable.GetTime();
+            var normalisedTime = (float) (time - clip.start) / (float) (clip.end - clip.start);
+            return normalisedTime;
+        }
+        
+        public static float GetRealTimeFromNormalisedTime(TimelineClip clip, PlayableDirector director, float normalisedTime)
+        {
+            var time = clip.start + (clip.end - clip.start) * normalisedTime;
+            return (float) time;
+        }
+        
+        
+        public static void TimelineSkipBack(float skipTime)
+        {
+            var playable = CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0);
+            var newTime = playable.GetTime() - skipTime;
+            playable.SetTime(newTime);
+            CurrentlyPlayingTimeline.State = TimelineState.Paused;
+
         }
 
         public void SkipLine()
@@ -54,10 +145,6 @@ namespace stoogebag
 //todo
         }
 
-        public void TimelinePlay()
-        {
-            Director.playableGraph.GetRootPlayable(0).SetSpeed(1d);
-        }
 
         public void TimelineBack(PlayableDirector director) //todo:figure this one out!
         {
@@ -65,19 +152,12 @@ namespace stoogebag
         }
 
 
-        public void Skip()
-        {
-            //for now, just skip the whole thing. in future, add the 
-            //power to skip chunks etc, or force a final section, for example a fadeout.
-            //or to apply something like a fadeout before actually applying the skip, etc.
-        }
-
         public TimelineState State;
 
         public enum TimelineState
         {
             Playing,
-            Paused,
+            Paused, //paused is not really paused. it is in fact doing a tiny loop.
             NotStarted,
             Finished,
         }

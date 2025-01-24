@@ -10,6 +10,7 @@ using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using stoogebag.Extensions;
 #endif
 using Sirenix.OdinInspector;
+using stoogebag;
 using UniRx;
 using UnityEditor;
 using UnityEngine;
@@ -23,10 +24,13 @@ using Whisper;
 public class DialogueBehaviour : PlayableBehaviour
 {
 	
-	public static event Action<DialogueLine> DialogueTriggered;
-	public static IObservable<DialogueLine> DialogueTriggeredObservable => Observable.FromEvent<DialogueLine>(h =>  DialogueTriggered += h, h => DialogueTriggered -= h);
+	public static event Action<DialogueBehaviour> DialogueTriggered;
+	public static IObservable<DialogueBehaviour> DialogueTriggeredObservable => Observable.FromEvent<DialogueBehaviour>(h =>  DialogueTriggered += h, h => DialogueTriggered -= h);
 
-    public string characterName;
+	public static event Action<DialogueBehaviour> DialogueEnded;
+	public static IObservable<DialogueBehaviour> DialogueEndedObservable => Observable.FromEvent<DialogueBehaviour>(h =>  DialogueEnded += h, h => DialogueEnded -= h);
+
+    public string speakerName;
     public string dialogueLine;
     public int dialogueSize;
 
@@ -34,6 +38,8 @@ public class DialogueBehaviour : PlayableBehaviour
     private AudioClip _clip;
 
 	public bool hasToPause = false;
+	
+	public bool hasPlayed = false;
 
 	private bool clipPlayed = false;
 	private bool pauseScheduled = false;
@@ -49,23 +55,8 @@ public class DialogueBehaviour : PlayableBehaviour
 		if(!clipPlayed
 			&& info.weight > 0f)
 		{
+			DialogueTriggered?.Invoke(this);
 			
-			DialogueTriggered?.Invoke(new DialogueLine()
-			{
-				Text = dialogueLine,
-				Clip = Clip,
-			});
-			
-			// if (GameManager.Instance == null) return;
-			// GameManager.Instance.PlayNarrationDialogue( new DialogueLine()
-			// {
-			// 	Text = dialogueLine,
-			// 	Clip = Clip,
-			// }).Forget();
-			
-			
-			
-
 			if(Application.isPlaying)
 			{
 				if(hasToPause)
@@ -76,26 +67,29 @@ public class DialogueBehaviour : PlayableBehaviour
 
 			clipPlayed = true;
 		}
+		else
+		{
+			//if()
+		}
 	}
 
 	public override void OnBehaviourPause(Playable playable, FrameData info)
 	{
-		if(pauseScheduled)
+		if(clipPlayed)
 		{
-			pauseScheduled = false;
-			//GameManager.Instance.PauseTimeline(director);
+			DialogueEnded?.Invoke(this);
+			clipPlayed = false;
+			
 		}
-		else
-		{
-		//	UIManager.Instance.ToggleDialoguePanel(false);
-		}
-
-		clipPlayed = false;
 	}
 
-	
-	
-	
+	public override void OnBehaviourPlay(Playable playable, FrameData info)
+	{
+		base.OnBehaviourPlay(playable, info);
+		
+	}
+
+
 	private bool _recording;
 
 	public int MaxClipLength = 30;
