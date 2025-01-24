@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
-using Sirenix.Reflection.Editor;
 using stoogebag.Extensions;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Playables;
@@ -20,17 +20,25 @@ namespace stoogebag
     public class SkippableTimeline : MonoBehaviour
     {
         public bool Skippable = true;
-        public bool DisablePlayerControl = true;
-        public bool CanRunWhileRunning = false; //will this ever be true? play it safe. nfi what this was meant to be lmao
 
-        public bool PlayOnAwake = false;
+        public bool PlayOnStart = false;
         
-        void Awake()
+        
+        public static event Action<SkippableTimeline> TimelineStarted;
+        public static IObservable<SkippableTimeline> TimelineStartedObservable => Observable.FromEvent<SkippableTimeline>(h =>  TimelineStarted += h, h => TimelineStarted -= h);
+
+        public static event Action<SkippableTimeline> TimelineEnded;
+        public static IObservable<SkippableTimeline> TimelineEndedObservable => Observable.FromEvent<SkippableTimeline>(h =>  TimelineEnded += h, h => TimelineEnded -= h);
+
+        
+        
+        
+        void Start()
         {
             Director = GetComponent<PlayableDirector>();
-            if (PlayOnAwake)
+            if (PlayOnStart)
             {
-                Play().Forget();
+                SkippableTimeline.Play(this).Forget();
             }
         }
         
@@ -47,14 +55,23 @@ namespace stoogebag
 
 
         [Button]
-        public async UniTask Play() //should not be launched by anyone except the manager.
+        public void TryPlayThis()
+        {
+            Play(this);
+        }
+        
+        public static async UniTask Play(SkippableTimeline timeline) //should not be launched by anyone except the manager.
         {
             
             if(CurrentlyPlayingTimeline != null)
                 Debug.LogError("There is already a timeline playing. You should not be playing another one. maybe in the future...");
             
-            CurrentlyPlayingTimeline = this;
-            await Director.PlayAndAwait();
+            
+            CurrentlyPlayingTimeline = timeline;
+            TimelineStarted?.Invoke(timeline);
+            await CurrentlyPlayingTimeline.Director.PlayAndAwait();
+            
+            TimelineEnded?.Invoke(timeline);
             CurrentlyPlayingTimeline = null;
             
 //        print("dinished.");
