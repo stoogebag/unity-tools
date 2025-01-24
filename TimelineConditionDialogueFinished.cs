@@ -1,7 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
-
+#if TEXT_ANIMATOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +21,7 @@ public class TimelineConditionDialogueFinished : TimelineConditionProvider
 }
 //         block = false;
 
+#endif
 #endif
 #endif
 #endif

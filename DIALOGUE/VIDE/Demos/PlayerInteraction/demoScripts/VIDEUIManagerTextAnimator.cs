@@ -1,15 +1,7 @@
 ﻿#if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
-/*
- *  This is script is only meant to be demonstrate various ways of handling data to create a Dialogue/UI Manager
- *  VIDE doesn't focus on the actual interface, but rather on the system and the data handling
- *  This script is basically handling the node data from nodeData in its own, customized way
- *  Creating a customized in-game Dialogue/UI manager is up to you
- *  Of course, you can absolutely use this script as a start point by adding, modifying, optimizing, or simplifying it to your needs.
- *  If you are experiencing strange behaviours or have any issues or questions, don't hesitate on contacting me at https://videdialogues.wordpress.com/contact/
- *  Need help programming your own UI Manager? Check out the scripting tutorial: https://videdialogues.wordpress.com/tutorial/
- */
+#if TEXT_ANIMATOR
 
 using System;
 using UnityEngine;
@@ -521,6 +513,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
     //Utility note: If you're on MonoDevelop. Go to Tools > Options > General and enable code folding.
     //That way you can exapnd and collapse the regions and methods
 }
+#endif
 #endif
 #endif
 #endif

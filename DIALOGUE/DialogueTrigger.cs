@@ -1,5 +1,6 @@
 #if ODIN_INSPECTOR
 #if UNIRX
+#if TEXT_ANIMATOR
 
 using System;
 using System.Collections;
@@ -90,3 +91,5 @@ public abstract class TimelineConditionProvider : MonoBehaviour
 }
 #endif
 #endif
+#endif
+

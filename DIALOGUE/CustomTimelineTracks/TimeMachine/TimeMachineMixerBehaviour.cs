@@ -1,6 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+#if TEXT_ANIMATOR
 
 using System;
 using System.Collections.Generic;
@@ -79,6 +80,7 @@ public class TimeMachineMixerBehaviour : PlayableBehaviour
 }
 
 
+#endif
 #endif
 #endif
 #endif

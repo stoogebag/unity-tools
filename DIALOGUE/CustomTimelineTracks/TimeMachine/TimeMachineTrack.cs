@@ -1,6 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+#if TEXT_ANIMATOR
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -58,6 +59,7 @@ public class TimeMachineTrack : TrackAsset
 
 }
 
+#endif
 #endif
 #endif
 #endif
