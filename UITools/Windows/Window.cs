@@ -89,7 +89,7 @@ namespace stoogebag.UITools.Windows
         public void DeactivateImmediate()
         {
             Active = ActiveState.Inactive;
-            gameObject.SetActive(false);
+            if(gameObject != null) gameObject.SetActive(false);
         }
 
         [Button]

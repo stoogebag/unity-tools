@@ -8,12 +8,19 @@ public class UIFollowParent : MonoBehaviour
     private Transform toFollow;
 
     private CanvasGroup _canvasGroup;
+    
+    [SerializeField]
     private Camera camera1;
+    [SerializeField]
+    private Camera mainCam;
+
+    
 
     // Update is called once per frame
     private void Awake()
     {
-        camera1 = Camera.main;
+        if(camera1 == null) camera1 = Camera.main;
+        mainCam = Camera.main;
         _canvasGroup = GetComponent<CanvasGroup>();
     }
 

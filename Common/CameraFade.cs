@@ -15,11 +15,14 @@ namespace stoogebag.Common
 	
 		[DisableIf("@!FadeOnStart"),SerializeField, Indent] private float startFadeTime = 1;
 
+		private Color startColour;
+		
 
 		// Use this for initialization
 		void Start () {
 			myImage = GetComponent<Image> ();
-			if(FadeOnStart) FadeIn(Color.white, startFadeTime, null);
+			startColour = myImage.color;
+			if(FadeOnStart) FadeIn(startColour, startFadeTime, null);
 		}
 	
 		// Update is called once per frame
