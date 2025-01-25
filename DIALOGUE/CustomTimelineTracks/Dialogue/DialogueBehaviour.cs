@@ -43,7 +43,7 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	private bool clipPlayed = false;
 	private bool pauseScheduled = false;
-	private PlayableDirector director;
+	public PlayableDirector director;
 
 	public override void OnPlayableCreate(Playable playable)
 	{

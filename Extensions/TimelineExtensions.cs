@@ -1,8 +1,10 @@
 #if UNITASK
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace stoogebag.Extensions
 {
@@ -32,6 +34,37 @@ namespace stoogebag.Extensions
         {
             return (playable.GetGraph().GetResolver() as PlayableDirector);
         }
+        
+        
+                
+        
+        public static TimelineClip GetCurrentClip<TTrack>(this PlayableDirector director, TimelineAsset timelineAsset = null) where TTrack : TrackAsset
+        {
+            if (!director.playableGraph.IsValid()) return null;
+            
+            if(timelineAsset == null) timelineAsset = director.playableAsset as TimelineAsset;
+            
+            var playable = director.playableGraph.GetRootPlayable(0);
+            var time = playable.GetTime();
+            var track = timelineAsset.GetOutputTracks().FirstOrDefault(t => t is TTrack) as TTrack;
+            var clip = track.GetClips().Where(t => t.start < time && t.end > time).FirstOrDefault();
+            return clip;
+        }
+        
+        public static float GetNormalisedTime(this TimelineClip clip, PlayableDirector director)
+        {
+            var playable = director.playableGraph.GetRootPlayable(0);
+            var time = playable.GetTime();
+            var normalisedTime = (float) (time - clip.start) / (float) (clip.end - clip.start);
+            return normalisedTime;
+        }
+        
+        public static float GetRealTimeFromNormalisedTime(this TimelineClip clip, PlayableDirector director, float normalisedTime)
+        {
+            var time = clip.start + (clip.end - clip.start) * normalisedTime;
+            return (float) time;
+        }
+
         
     }
 }

@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Febucci.UI.Core;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UniRx;
@@ -23,6 +24,7 @@ namespace stoogebag
 
         public bool PlayOnStart = false;
         
+        public static bool TimelinePlaying => CurrentlyPlayingTimeline != null;
         
         public static event Action<SkippableTimeline> TimelineStarted;
         public static IObservable<SkippableTimeline> TimelineStartedObservable => Observable.FromEvent<SkippableTimeline>(h =>  TimelineStarted += h, h => TimelineStarted -= h);
@@ -46,6 +48,15 @@ namespace stoogebag
         {
             if (CurrentlyPlayingTimeline != null)
             {
+                if (CurrentlyPlayingTimeline.TypingTypewriter != null)
+                {
+                    CurrentlyPlayingTimeline.TypingTypewriter.SkipTypewriter();
+                    CurrentlyPlayingTimeline.TypingTypewriter = null;
+                    CurrentlyPlayingTimeline.SkipToPause();
+                    return;
+                }
+                
+                
                 if (CurrentlyPlayingTimeline.State == TimelineState.Paused)
                     CurrentlyPlayingTimeline.SkipToEnd();
             }
@@ -72,6 +83,7 @@ namespace stoogebag
             await CurrentlyPlayingTimeline.Director.PlayAndAwait();
             
             TimelineEnded?.Invoke(timeline);
+            CurrentlyPlayingTimeline.pausedClips.Clear();
             CurrentlyPlayingTimeline = null;
             
 //        print("dinished.");
@@ -80,71 +92,66 @@ namespace stoogebag
         public static SkippableTimeline CurrentlyPlayingTimeline = null;
         
         public PlayableDirector Director { get; private set; }
+        public TypewriterCore TypingTypewriter { get; set; }
+        
+        HashSet<TimelineClip> pausedClips = new HashSet<TimelineClip>();
 
-        public static void TimelinePause()
-        {
-            //TimelineSkipBack();
-            return;
-            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0)
-                .SetSpeed(0d); //BC: we set speed to 0 because calling 'pause' is a bit more like a 'stop' than a pause and causes unwanted behaviour.
-            CurrentlyPlayingTimeline.State = TimelineState.Paused;
-        }
 
         private void Update()
         {
             if (CurrentlyPlayingTimeline != null)
             {
-
-                var dialogueClip = GetCurrentClip<DialogueTrack>(CurrentlyPlayingTimeline.Director);
+                var dialogueClip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
                 if(dialogueClip != null){
-                    var time = GetNormalisedTime(dialogueClip, CurrentlyPlayingTimeline.Director);
-                    
-                    if(time > 0.5f && time < 0.9f)
+                    var time = dialogueClip.GetNormalisedTime( CurrentlyPlayingTimeline.Director);
+
+                    if (!pausedClips.Contains(dialogueClip))
                     {
-                        TimelineSkipBack(0.1f);
-                        State = TimelineState.Paused;
+
+                        if (time > 0.9f)
+                        {
+                            Pause(dialogueClip);
+                        }
                     }
-                    
+
                 };
             }
+        }
+
+        private void Pause(TimelineClip dialogueClip)
+        {
+            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0).SetSpeed(0);
+            pausedClips.Add(dialogueClip);
+            //TimelineSkipBack(0.05f);
+            State = TimelineState.Paused;
         }
 
         public void SkipToEnd()
         {
             if (CurrentlyPlayingTimeline == null) return;
-            var clip = GetCurrentClip<DialogueTrack>(CurrentlyPlayingTimeline.Director);
-            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0).SetTime(clip.end - 0.05f);
-            State = TimelineState.Playing;
+            var clip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
+            Unpause();
         }
-        
-        public static TimelineClip GetCurrentClip<TTrack>(PlayableDirector director, TimelineAsset timelineAsset = null) where TTrack : TrackAsset  
+        public void SkipToPause()
         {
-            if(timelineAsset == null) timelineAsset = director.playableAsset as TimelineAsset;
+            if (CurrentlyPlayingTimeline == null) return;
+            var clip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
+            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0)
+                .SetTime(clip.start + (clip.end - clip.start) * 0.95f);
             
-            var playable = CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0);
-            var time = playable.GetTime();
-            var track = timelineAsset.GetOutputTracks().FirstOrDefault(t => t is TTrack) as TTrack;
-            var clip = track.GetClips().Where(t => t.start < time && t.end > time).FirstOrDefault();
-
-
-            return clip;
-
+            Pause(clip);
         }
-        
-        public static float GetNormalisedTime(TimelineClip clip, PlayableDirector director)
+
+        public void Unpause() 
         {
-            var playable = CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0);
-            var time = playable.GetTime();
-            var normalisedTime = (float) (time - clip.start) / (float) (clip.end - clip.start);
-            return normalisedTime;
+            if (CurrentlyPlayingTimeline == null) return;
+            CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0).SetSpeed(1);
+            State = TimelineState.Playing;
+            _unpauseTime = Time.timeSinceLevelLoad;
         }
         
-        public static float GetRealTimeFromNormalisedTime(TimelineClip clip, PlayableDirector director, float normalisedTime)
-        {
-            var time = clip.start + (clip.end - clip.start) * normalisedTime;
-            return (float) time;
-        }
-        
+        float _unpauseTime;
+        [SerializeField] private float _pauseCooldown = 0.1f;
         
         public static void TimelineSkipBack(float skipTime)
         {
@@ -155,25 +162,12 @@ namespace stoogebag
 
         }
 
-        public void SkipLine()
-        {
-//        Director.playableGraph.GetRootPlayable(0).SetTime(CurrentClip.end);
-
-//todo
-        }
-
-
-        public void TimelineBack(PlayableDirector director) //todo:figure this one out!
-        {
-            Director.playableGraph.GetRootPlayable(0).SetSpeed(1d);
-        }
-
-
         public TimelineState State;
 
         public enum TimelineState
         {
             Playing,
+            CanSkipToPausePoint,
             Paused, //paused is not really paused. it is in fact doing a tiny loop.
             NotStarted,
             Finished,
@@ -183,3 +177,4 @@ namespace stoogebag
 #endif
 #endif
 #endif
+

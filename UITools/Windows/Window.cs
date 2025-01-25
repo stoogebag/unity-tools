@@ -86,6 +86,12 @@ namespace stoogebag.UITools.Windows
             }
         }
 
+        public void DeactivateImmediate()
+        {
+            Active = ActiveState.Inactive;
+            gameObject.SetActive(false);
+        }
+
         [Button]
         public virtual async UniTask Deactivate()
         {
