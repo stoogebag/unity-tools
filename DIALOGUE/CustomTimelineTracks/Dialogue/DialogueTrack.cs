@@ -17,8 +17,8 @@ public class DialogueTrack : TrackAsset
             var myAsset = clip.asset as DialogueClip;
             if (myAsset)
             {
-                myAsset.start = clip.start;
-                myAsset.end = clip.end;  
+                // myAsset.start = clip.start;
+                // myAsset.end = clip.end;  
             }
         }
         
