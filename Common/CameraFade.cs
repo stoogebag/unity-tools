@@ -1,13 +1,16 @@
 ﻿#if ODIN_INSPECTOR
 using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using stoogebag.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace stoogebag.Common
 {
-	public class CameraFade : MonoBehaviour {
+	public class CameraFade : Singleton<CameraFade> 
+	{
 
 		public Image myImage;
 
@@ -30,12 +33,12 @@ namespace stoogebag.Common
 		
 		}
 
-		public void FadeIn(Color startColour, float fadeTime, Action onFinish){
-			StartCoroutine(FadeInCoroutine(startColour, fadeTime, onFinish));
+		public async UniTask FadeIn(Color startColour, float fadeTime, Action onFinish = null){
+			await FadeInCoroutine(startColour, fadeTime, onFinish);
 		}
 		
-		public void FadeOut(Color startColour, float fadeTime, Action onFinish){
-			StartCoroutine(FadeOutCoroutine(startColour, fadeTime, onFinish));
+		public async UniTask FadeOut(Color startColour, float fadeTime, Action onFinish = null){
+			await FadeOutCoroutine(startColour, fadeTime, onFinish);
 		}
 
 		//from colour to trans
