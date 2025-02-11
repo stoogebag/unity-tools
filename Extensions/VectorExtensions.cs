@@ -168,6 +168,14 @@ namespace stoogebag.Extensions
         {
             return new Vector2(v.x * x, v.y * y);
         }
+        /// <summary>
+        /// scales pointwise
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 Scale(this Vector3 v, float x, float y = 1, float z = 1)
+        {
+            return new Vector3(v.x * x, v.y * y, v.z * z);
+        }
 
 
         public static Vector2 FromPolar(float r, float thetaInRadians)

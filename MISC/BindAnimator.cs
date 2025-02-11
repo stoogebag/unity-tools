@@ -2,36 +2,37 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Animancer;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class BindAnimator : MonoBehaviour
 {
     private Animator animator;
+    public float multiplier = 1f;
 
-    private Rigidbody _rigidbody;
+    //private Rigidbody2D _rigidbody;
     // Start is called before the first frame update
     void Awake()
     {
-        animator = GetComponent<Animator>();
-        gameObject.TryGetComponentInAncestor<Rigidbody>(out _rigidbody);
+        animator= gameObject.FirstOrDefault<Animator>();
+     //   gameObject.TryGetComponentInAncestor<Rigidbody2D>(out _rigidbody);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        animator.SetFloat("Speed", _rigidbody.linearVelocity.magnitude);
-    }
 
-    public AnimationClip TestClip;
+    private Vector3 oldPos;
 
-    [Button]
-    void PlayTestClip()
+    [SerializeField]
+    private GameObject model;
+    
+    void LateUpdate()
     {
-        GetComponent<AnimancerComponent>().Play(TestClip);
+        var pos = transform.position;
+        var velocity = (pos - oldPos)/Time.deltaTime;
+        
+        animator?.SetFloat("Speed", velocity.magnitude * multiplier);
+        oldPos = pos;
+
     }
 
 

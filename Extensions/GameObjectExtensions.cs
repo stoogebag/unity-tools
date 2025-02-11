@@ -89,6 +89,14 @@ namespace stoogebag.Extensions
         {
             return go.transform.FirstOrDefault(name)?.gameObject;
         }
+        
+        public static IEnumerable<T> GetComponentsWithInterface<T>(this GameObject go) where T:class
+        {
+            foreach (var monoBehaviour in go.GetComponents<MonoBehaviour>())
+            {
+                if (monoBehaviour is T t) yield return t;
+            }
+        }
 
         public static T GetChild<T>(this MonoBehaviour component, string name = null) where T: Component
         {

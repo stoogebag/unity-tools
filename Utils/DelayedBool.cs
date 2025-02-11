@@ -3,7 +3,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using stoogebag.Extensions;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 
@@ -24,10 +26,14 @@ public class DelayedBool
     private DateTime _lastSetTrue;
 
     public TimeSpan Delay;
+    bool _reverseProgressOnFalse;
+    
+    
+    public FloatReactiveProperty Progress { get; } = new FloatReactiveProperty();
     
     public DelayedBool(){}
     
-    public DelayedBool(Func<Tween> onTrueFunc, Func<Tween> onFalseFunc, float delayInSeconds, bool initialValue)
+    public DelayedBool(Func<Tween> onTrueFunc, Func<Tween> onFalseFunc, float delayInSeconds, bool initialValue, bool reverseProgressOnFalse = true)
     {
         this.onTrueFunc = onTrueFunc;
         this.onFalseFunc = onFalseFunc;
@@ -37,6 +43,15 @@ public class DelayedBool
         Value = new BoolReactiveProperty(initialValue);
         
         UnderlyingValue?.Throttle(Delay).Subscribe(b=>StartTween(b));
+        _reverseProgressOnFalse = reverseProgressOnFalse;
+        // owner?.UpdateAsObservable().Subscribe(_ =>
+        // {
+        //     if (_progressFunc != null)
+        //     {
+        //         Progress.Value = _progressFunc.Invoke();
+        //     }
+        // }).DisposeWith(owner);
+
     }
     
     public void SetValue(bool b)
@@ -44,6 +59,8 @@ public class DelayedBool
         //Debug.Log($"setvalue {b}");
         UnderlyingValue.Value = b;
     }
+    
+    
 
     public async UniTask SetValueAwaitable(bool b) //ONLY USE IF YOU KNOW IT WONT CANCEL EVER
     {
@@ -61,10 +78,14 @@ public class DelayedBool
             onFalse?.Pause().Kill(); 
             if (onTrue?.IsPlaying() == true) return;
             
+            //_progressFunc = ()=>onTrue.ElapsedPercentage();
+            
+            
             //Debug.Log($"onTrue Start");
             onTrue = onTrueFunc.Invoke();
+            onTrue.OnUpdate(() => Progress.Value = onTrue.ElapsedPercentage());
             onTrue.Restart();
-            
+
             onTrue.OnComplete(() =>
             {
                 //Debug.Log($"onTrue Complete");
@@ -76,9 +97,12 @@ public class DelayedBool
             onTrue?.Pause().Kill(); 
             if (onFalse?.IsPlaying() == true) return;
             
+            
             //Debug.Log($"onFalse Start");
 
             onFalse = onFalseFunc.Invoke();
+            
+            onFalse.OnUpdate(() => Progress.Value = 0);
             onFalse.Restart();
             
             onFalse.OnComplete(() =>
@@ -101,5 +125,6 @@ public class DelayedBool
         }
     }
 }
+
 #endif
 #endif

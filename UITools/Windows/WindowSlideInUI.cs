@@ -24,7 +24,9 @@ namespace stoogebag.UITools.Windows
         [SerializeField] 
         private Ease ease = Ease.InOutQuad;
         [SerializeField] 
-        private float time = 0.5f;
+        private float inTime = 0.5f;
+        [SerializeField] 
+        private float outTime = 0.5f;
         [SerializeField]
         private bool AnimateOnClose = true;
 
@@ -46,7 +48,7 @@ namespace stoogebag.UITools.Windows
             rect.anchoredPosition = _offScreenPos;
         
         
-            await rect.DOAnchorPos3D(_originalPos, time, true).SetEase(ease).AsyncWaitForCompletion();
+            await rect.DOAnchorPos3D(_originalPos, inTime, true).SetEase(ease).AsyncWaitForCompletion();
 
             return true;
         }
@@ -56,7 +58,7 @@ namespace stoogebag.UITools.Windows
             if (AnimateOnClose)
             {
                 var rect = GetComponent<RectTransform>();
-                await rect.DOAnchorPos3D(_offScreenPos, time).SetEase(ease).AsyncWaitForCompletion();
+                await rect.DOAnchorPos3D(_offScreenPos, outTime).SetEase(ease).AsyncWaitForCompletion();
                 gameObject.SetActive(false);
                 ResetPosition();
             }
