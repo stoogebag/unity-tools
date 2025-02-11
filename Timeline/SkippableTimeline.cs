@@ -102,15 +102,18 @@ namespace stoogebag
             if (CurrentlyPlayingTimeline != null)
             {
                 var dialogueClip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
-                if(dialogueClip != null){
+                if(dialogueClip != null ){
                     var time = dialogueClip.GetNormalisedTime( CurrentlyPlayingTimeline.Director);
 
-                    if (!pausedClips.Contains(dialogueClip))
+                    if ((dialogueClip.asset as DialogueClip).template.PauseTimeline)
                     {
-
-                        if (time > 0.9f)
+                        if (!pausedClips.Contains(dialogueClip))
                         {
-                            Pause(dialogueClip);
+
+                            if (time > 0.9f)
+                            {
+                                Pause(dialogueClip);
+                            }
                         }
                     }
 

@@ -26,7 +26,6 @@ public class DialogueBehaviour : PlayableBehaviour
 	
 	public static event Action<DialogueBehaviour> DialogueTriggered;
 	public static IObservable<DialogueBehaviour> DialogueTriggeredObservable => Observable.FromEvent<DialogueBehaviour>(h =>  DialogueTriggered += h, h => DialogueTriggered -= h);
-
 	public static event Action<DialogueBehaviour> DialogueEnded;
 	public static IObservable<DialogueBehaviour> DialogueEndedObservable => Observable.FromEvent<DialogueBehaviour>(h =>  DialogueEnded += h, h => DialogueEnded -= h);
 
@@ -34,15 +33,12 @@ public class DialogueBehaviour : PlayableBehaviour
     public string dialogueLine;
     public int dialogueSize;
 
+    public bool PauseTimeline = true;
+    
     public AudioClip Clip;
     private AudioClip _clip;
 
-	public bool hasToPause = false;
-	
-	public bool hasPlayed = false;
-
 	private bool clipPlayed = false;
-	private bool pauseScheduled = false;
 	public PlayableDirector director;
 
 	public override void OnPlayableCreate(Playable playable)
@@ -56,15 +52,6 @@ public class DialogueBehaviour : PlayableBehaviour
 			&& info.weight > 0f)
 		{
 			DialogueTriggered?.Invoke(this);
-			
-			if(Application.isPlaying)
-			{
-				if(hasToPause)
-				{
-					pauseScheduled = true;
-				}
-			}
-
 			clipPlayed = true;
 		}
 		else
@@ -79,14 +66,12 @@ public class DialogueBehaviour : PlayableBehaviour
 		{
 			DialogueEnded?.Invoke(this);
 			clipPlayed = false;
-			
 		}
 	}
 
 	public override void OnBehaviourPlay(Playable playable, FrameData info)
 	{
 		base.OnBehaviourPlay(playable, info);
-		
 	}
 
 
