@@ -88,6 +88,17 @@ namespace stoogebag
             
 //        print("dinished.");
         }
+        
+        public static async UniTask Play(string timelineName)
+        {
+            var timeline = FindObjectsOfType<SkippableTimeline>().FirstOrDefault(t => t.name == timelineName);
+            if (timeline == null)
+            {
+                Debug.LogError($"Timeline {timelineName} not found.");
+                return;
+            }
+            await Play(timeline);
+        }
 
         public static SkippableTimeline CurrentlyPlayingTimeline = null;
         

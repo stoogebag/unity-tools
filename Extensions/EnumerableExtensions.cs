@@ -68,9 +68,10 @@ namespace stoogebag.Extensions
         }
 
 #if UNIRX
-        public static void DisposeWith(this IDisposable d, Component component)
+        public static T DisposeWith<T>(this T d, Component component) where T:IDisposable
         {
             component.OnDestroyAsObservable().Subscribe(u => d.Dispose());
+            return d;
         }
 
 #endif

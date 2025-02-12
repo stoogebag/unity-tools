@@ -12,7 +12,7 @@ using UnityEngine;
 //delayedbool lets you set a bool, but it only registers the change in value as reactiveProperty Value after a tween has finished.
 //todo: make it a unitask?
 //todo: make it extend boolReactiveProperty instead of having its own Value prop?
-public class DelayedBool
+public class DelayedBool : IDisposable
 {
     private Tween onTrue;
     private Tween onFalse;
@@ -123,6 +123,15 @@ public class DelayedBool
             if (onFalse.IsPlaying()) return State.TransitioningToFalse;
             return Value.Value ? State.True : State.False;
         }
+    }
+
+    public void Dispose()
+    {
+        onTrue?.Kill();
+        onFalse?.Kill();
+        UnderlyingValue?.Dispose();
+        Value?.Dispose();
+        Progress?.Dispose();
     }
 }
 

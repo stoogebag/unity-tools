@@ -10,6 +10,15 @@ namespace stoogebag.Extensions
         {
             return UniTask.WhenAll(tasks);
         } 
+
+
+        public static UniTask AwaitAllParallel(params UniTask[] tasks)
+        {
+            return UniTask.WhenAll(tasks);
+        } 
+
+
+
         public static async UniTask AwaitAllSeries(this IEnumerable<UniTask> tasks)
         {
             foreach (var uniTask in tasks)
