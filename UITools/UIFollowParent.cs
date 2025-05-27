@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using Cysharp.Threading.Tasks.Triggers;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class UIFollowParent : MonoBehaviour

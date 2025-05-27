@@ -70,6 +70,11 @@ namespace stoogebag
         {
             Play(this);
         }
+
+        public async UniTask Play()
+        {
+            await Play(this);
+        }
         
         public static async UniTask Play(SkippableTimeline timeline) //should not be launched by anyone except the manager.
         {
