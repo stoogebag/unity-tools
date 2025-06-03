@@ -126,6 +126,30 @@ public class AssetMenus
         }
     }
 
+    [MenuItem("GameObject/stooge/find all invalid scripts")]
+    static void FindInvalidScripts()
+    {
+        var gos = Selection.gameObjects;
+
+        foreach (var gameObject in gos)
+        {
+            gameObject.ForAllChildrenRecursive(child =>
+            {
+         
+                
+                var comps = child.GetComponents<Component>();
+                foreach (var c in comps)
+                {
+                    if (c == null)
+                        Debug.LogWarning($"Missing script on '{child.name}'", child);
+                }
+                
+                
+            });
+            
+        }
+    }
+
 
 
 }
