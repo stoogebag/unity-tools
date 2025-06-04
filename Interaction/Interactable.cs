@@ -27,7 +27,7 @@ public class Interactable : Examinable
     void Interact(IInteractor interactor)
     {
         OnInteraction?.Invoke(interactor);
-        print($"interacted! with {gameObject.name}");
+        Debug.Log($"interacted! with {gameObject.name}", gameObject);
         
     }
 
