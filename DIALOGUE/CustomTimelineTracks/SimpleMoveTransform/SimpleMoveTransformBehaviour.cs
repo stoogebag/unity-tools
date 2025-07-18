@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 #if UNITY_EDITOR
 
-using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using stoogebag.Extensions;
 #endif
 using Sirenix.OdinInspector;

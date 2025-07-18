@@ -1,6 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+#if TEXT_ANIMATOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -196,4 +197,6 @@ namespace stoogebag
 #endif
 #endif
 #endif
+#endif
+
 

@@ -1,4 +1,6 @@
 #if UNITASK && ODIN_INSPECTOR && UNIRX
+#if CINEMACHINE
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -66,4 +68,5 @@ public class PointOfInterest : MonoBehaviour
 
 
 
+#endif
 #endif

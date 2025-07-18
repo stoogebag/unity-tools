@@ -1,4 +1,6 @@
 ﻿#if UNITASK
+#if CINEMACHINE
+
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
@@ -22,4 +24,5 @@ public class DialogueSpeaker : MonoBehaviour
     
     public AudioSource AudioSource;
 }
+#endif
 #endif

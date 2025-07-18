@@ -1,3 +1,5 @@
+#if CINEMACHINE
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -85,3 +87,4 @@ public class UIFollowParent : MonoBehaviour
     #endif
     
 }
+#endif
