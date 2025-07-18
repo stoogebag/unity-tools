@@ -1,6 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 
+#if CINEMACHINE
 using System;
 using System.Linq;
 using System.Threading;
@@ -187,5 +188,6 @@ public class DialogueBehaviour : PlayableBehaviour
 	
 	
 }
+#endif
 #endif
 #endif

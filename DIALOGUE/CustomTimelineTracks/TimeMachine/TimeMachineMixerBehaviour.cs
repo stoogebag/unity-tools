@@ -1,7 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
-
+#if CINEMACHINE
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -79,6 +79,7 @@ public class TimeMachineMixerBehaviour : PlayableBehaviour
 }
 
 
+#endif
 #endif
 #endif
 #endif

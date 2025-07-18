@@ -1,6 +1,7 @@
 ﻿#if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+#if CINEMACHINE
 using System;
 using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
@@ -77,6 +78,7 @@ public class Examinable : MonoBehaviour
         }
     }
 }
+#endif
 #endif
 #endif
 #endif

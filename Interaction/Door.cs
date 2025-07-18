@@ -1,4 +1,5 @@
 #if UNITASK
+#if CINEMACHINE
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,4 +101,5 @@ public class Door : MonoBehaviour
     }
 }
 
+#endif
 #endif

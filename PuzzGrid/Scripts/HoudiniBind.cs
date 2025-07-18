@@ -1,4 +1,5 @@
 #if ODIN_INSPECTOR
+#if HOUDINI
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,4 +48,5 @@ public class HoudiniBind : MonoBehaviour
 
     }
 }
+#endif
 #endif

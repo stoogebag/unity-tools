@@ -1,6 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+#if CINEMACHINE
 
 using System;
 using UnityEngine;
@@ -66,6 +67,7 @@ public class TimeMachineBehaviour : PlayableBehaviour
 	}
 }
 
+#endif
 #endif
 #endif
 #endif
