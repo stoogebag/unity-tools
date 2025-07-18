@@ -1,6 +1,6 @@
 ﻿#if UNITASK
 #if ODIN_INSPECTOR
-
+#if CINEMACHINE
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -49,5 +49,6 @@ namespace stoogebag.DIALOGUE
     
     }
 }
+#endif
 #endif
 #endif

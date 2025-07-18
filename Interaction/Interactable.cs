@@ -1,4 +1,5 @@
 #if UNIRX
+#if CINEMACHINE
 using System;
 using UniRx;
 using UnityEngine;
@@ -40,4 +41,5 @@ public interface IInteractor
     bool HasKey(string key);
 }
 
+#endif
 #endif

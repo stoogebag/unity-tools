@@ -1,4 +1,5 @@
 #if UNITASK
+#if CINEMACHINE
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -48,4 +49,5 @@ public class UIPopup : Window
     
 }
 
+#endif
 #endif

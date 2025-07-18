@@ -1,7 +1,7 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
-#if TEXT_ANIMATOR
+#if CINEMACHINE#if TEXT_ANIMATOR
 
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,6 @@
 #if ODIN_INSPECTOR
+#if CINEMACHINE
+#if UNITASK
 #if UNIRX
 #if TEXT_ANIMATOR
 
@@ -89,6 +91,8 @@ public abstract class TimelineConditionProvider : MonoBehaviour
 {
     public abstract bool ConditionMet();
 }
+#endif
+#endif
 #endif
 #endif
 #endif
