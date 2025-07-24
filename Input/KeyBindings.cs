@@ -26,6 +26,6 @@ namespace stoogebag.Input
         
         public KeyCode KeySelectLeft = KeyCode.Q;
         public KeyCode KeySelectRight = KeyCode.E;
-        
+
     }
 }
