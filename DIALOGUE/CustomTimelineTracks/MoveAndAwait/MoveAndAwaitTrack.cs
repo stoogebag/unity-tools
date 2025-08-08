@@ -1,3 +1,5 @@
+#if TIMELINE
+#if UNITASK
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -12,3 +14,5 @@ public class MoveAndAwaitTrack : TrackAsset
         return ScriptPlayable<MoveAndAwaitMixerBehaviour>.Create (graph, inputCount);
     }
 }
+#endif
+#endif

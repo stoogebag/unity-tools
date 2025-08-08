@@ -1,3 +1,6 @@
+#if UNITASK
+#if UNIRX
+
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -36,3 +39,6 @@ public class MoveAndAwaitBehaviour : PlayableBehaviour
     private bool started = false;
     private CompositeDisposable _disposable = new();
 }
+
+#endif
+#endif

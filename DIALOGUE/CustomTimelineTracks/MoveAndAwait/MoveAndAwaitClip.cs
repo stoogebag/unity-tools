@@ -1,3 +1,6 @@
+#if TIMELINE
+
+
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -22,3 +25,5 @@ public class MoveAndAwaitClip : PlayableAsset, ITimelineClipAsset
         return playable;
     }
 }
+
+#endif

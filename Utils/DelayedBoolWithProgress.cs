@@ -1,10 +1,13 @@
-﻿using System;
+﻿#if UNITASK
+#if UNIRX
+      
+
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 
-#if UNITASK
 public class DelayedBoolWithProgress: IProgress<float>
 {
     
@@ -85,4 +88,5 @@ public class DelayedBoolWithProgress: IProgress<float>
         Debug.Log("progress is now " + value);
     }
 }
+#endif
 #endif

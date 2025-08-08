@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -26,3 +27,4 @@ public class MoveAndAwaitMixerBehaviour : PlayableBehaviour
         }
     }
 }
+#endif
