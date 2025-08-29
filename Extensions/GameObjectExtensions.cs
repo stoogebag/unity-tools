@@ -28,6 +28,7 @@ namespace stoogebag.Extensions
         {
             foreach (var go in me)
             {
+                if(go == null) continue;
                 UnityEngine.GameObject.DestroyImmediate(go);
             }
             me.Clear();
