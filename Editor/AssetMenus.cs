@@ -4,6 +4,14 @@ using stoogebag.Extensions;
 using UnityEditor;
 using UnityEngine;
 
+#if CINEMACHINE
+#if NEW_CINEMACHINE
+using Unity.Cinemachine;
+#else
+using Cinemachine; //BOOO
+#endif
+#endif
+
 public class AssetMenus
 {
 
@@ -19,6 +27,25 @@ public class AssetMenus
     }
 
 
+#if CINEMACHINE
+    [MenuItem("GameObject/stooge/create virtualCamera aligned with view")]
+    static void CreateVirtualCamera()
+    {
+        var go = new GameObject("VCam");
+        var vcam = go.AddComponent<CinemachineCamera>();
+
+        var sv = SceneView.lastActiveSceneView;
+        vcam.transform.position = sv.camera.transform.position;
+
+        //todo: only do this if orthographic scene view or it will break
+        if (sv.camera.orthographic)
+        {
+            vcam.Lens.OrthographicSize = sv.camera.orthographicSize;
+        }
+
+    }
+#endif
+    
     //specifically for importing rokoko animations in mixamo format 
     //NOTE! This throws a bunch of meaningless errors that don't seem to matter.
     //sometimes the editor won't see the changes for a minute, i think if the clip is open at the time the 
@@ -99,19 +126,12 @@ public class AssetMenus
 
     public static string RootString = "mixamorig:Reference";
 
-
-    
-    
-
     [MenuItem("GameObject/stooge/Add Collider to all meshes")]
     static void AddCollider()
     {
         var gos = Selection.gameObjects;
-
         foreach (var gameObject in gos)
         {
-            Debug.Log(gameObject.name);
-            
             gameObject.ForAllChildrenRecursive(child =>
             {
                 if (child.TryGetComponent<MeshFilter>(out var filter))
@@ -122,7 +142,6 @@ public class AssetMenus
                     }
                 }
             });
-            
         }
     }
 
@@ -135,18 +154,13 @@ public class AssetMenus
         {
             gameObject.ForAllChildrenRecursive(child =>
             {
-         
-                
                 var comps = child.GetComponents<Component>();
                 foreach (var c in comps)
                 {
                     if (c == null)
                         Debug.LogWarning($"Missing script on '{child.name}'", child);
                 }
-                
-                
             });
-            
         }
     }
 

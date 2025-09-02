@@ -78,7 +78,7 @@ namespace stoogebag.UITools.Windows
                 CreateModalBlocker();
             }
             
-            _windowOpened.Invoke(this);
+            _windowOpened?.Invoke(this);
             
             if (Active == ActiveState.Deactivating)
             {
@@ -87,7 +87,9 @@ namespace stoogebag.UITools.Windows
 
             Active = ActiveState.Activating;
 
+            print("setting active");
             gameObject.SetActive(true);
+            print(gameObject.activeSelf);
 
             if (Animations?.Any() != true)
             {
@@ -120,8 +122,6 @@ namespace stoogebag.UITools.Windows
             {
                 Destroy(_blocker);
             }
-            _windowClosed.Invoke(this);
-
             //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
             Active = ActiveState.Deactivating;
@@ -145,7 +145,11 @@ namespace stoogebag.UITools.Windows
                 Active = ActiveState.Inactive;
 
                 gameObject.SetActive(false);
+                _windowClosed?.Invoke(this);
+
             }
+            
+
         }
 
         public ActiveState Active = ActiveState.Inactive;
