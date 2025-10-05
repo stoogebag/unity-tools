@@ -180,6 +180,7 @@ namespace stoogebag.UITools.Windows
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
+            rect.localScale = new Vector3(1000, 1000);
 
             Image image = _blocker.AddComponent<Image>();
             image.color = new Color(0, 0, 0, 0.5f); // Nearly transparent
