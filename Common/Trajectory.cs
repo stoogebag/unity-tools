@@ -49,7 +49,13 @@ public class Trajectory : MonoBehaviour {
         ghostObj.gameObject.name = "trajectoryObject";
         SceneManager.MoveGameObjectToScene(ghostObj.gameObject, _simulationScene);
 
-        ghostObj.linearVelocity = vel;
+        #if UNITY_6000_0_OR_NEWER
+            ghostObj.linearVelocity = vel;
+        #else
+            ghostObj.velocity = vel;
+        #endif
+        
+      
         _line.positionCount = _maxPhysicsFrameIterations;
 
         for (var i = 0; i < _maxPhysicsFrameIterations; i++) {

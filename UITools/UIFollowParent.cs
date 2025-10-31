@@ -1,10 +1,11 @@
 #if CINEMACHINE
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks.Triggers;
+
+#if NEW_CINEMACHINE
 using Unity.Cinemachine;
+#else 
+using Cinemachine;
+#endif
 using UnityEngine;
 
 public class UIFollowParent : MonoBehaviour

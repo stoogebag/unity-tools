@@ -27,7 +27,7 @@ public class AssetMenus
     }
 
 
-#if CINEMACHINE
+#if CINEMACHINE && NEW_CINEMACHINE
     [MenuItem("GameObject/stooge/create virtualCamera aligned with view")]
     static void CreateVirtualCamera()
     {

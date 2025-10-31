@@ -55,7 +55,7 @@ public class CameraMove : MonoBehaviour
 #if UNITY_6
         rigidbody.linearVelocity = newVelocity;
 #else
-        rigidbody.linearVelocity = newVelocity;
+        rigidbody.velocity = newVelocity;
 #endif
     }
 
