@@ -125,6 +125,7 @@ namespace stoogebag.UITools.Windows
             //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
             Active = ActiveState.Deactivating;
+            print("setting inactive");
             
             //todo: make delay optional.
             // var delay = .5f;

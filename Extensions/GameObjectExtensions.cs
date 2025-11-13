@@ -99,6 +99,14 @@ namespace stoogebag.Extensions
             }
         }
 
+        public static IEnumerable<T> GetDescendantsWithInterface<T>(this GameObject go, bool includeOriginal = false, bool includeInactive = false) where T:class
+        {
+            foreach (var monoBehaviour in go.GetComponentsInDescendants<MonoBehaviour>(includeOriginal, includeInactive))
+            {
+                if (monoBehaviour is T t) yield return t;
+            }
+        }
+
         public static T GetChild<T>(this MonoBehaviour component, string name = null) where T: Component
         {
             return component.gameObject.FirstOrDefault<T>(name);
@@ -208,7 +216,11 @@ namespace stoogebag.Extensions
         {
             if (includeOriginal)
             {
-                if(go.TryGetComponent<T>(out var c)) yield return c;
+                var components = go.GetComponents<T>();
+                foreach (var c in components)
+                {
+                    yield return c;
+                }
             }
             var transform = go.transform;
             for (int i = 0; i < transform.childCount; i++)
@@ -216,8 +228,11 @@ namespace stoogebag.Extensions
                 var result = GetAllDescendants(transform.GetChild(i),t=>t.gameObject.activeInHierarchy || includeInactive);
                 foreach (var t in result)
                 {
-                    if(t.TryGetComponent<T>(out var c))
+                    var components = t.GetComponents<T>();
+                    foreach (var c in components)
+                    {
                         yield return c;
+                    }
                 }
             }
         }

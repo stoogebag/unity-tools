@@ -23,13 +23,23 @@ public class Interactable : Examinable
         if (InteractDistance < Vector3.Distance(interactor.transform.position, transform.position)) return;
         Interact(interactor);        
     }
-    void InteractionCancelled(IInteractor interactor){} //todo
+
+    void InteractionCancelled(IInteractor interactor)
+    {
+        //OnInera
+        
+    } //todo
 
     void Interact(IInteractor interactor)
     {
+        //todo: figure out the right way to do this. it seems jank to hand responsibility back and forth like this,
+        //but i don't want to have to sub to a bunch of shit.
+        //but sometimes the interactor is the guy who ought to handle things, other times the interactable....
+        //eg a door can open itself. but a 'inspectable' probs should be handled by a central authority (eg player obj)...
+        
         OnInteraction?.Invoke(interactor);
         Debug.Log($"interacted! with {gameObject.name}", gameObject);
-        
+        interactor.Interacted(this);
     }
 
 }
@@ -39,6 +49,7 @@ public interface IInteractor
     public Transform transform { get; }
     public GameObject gameObject { get; }
     bool HasKey(string key);
+    void Interacted(Interactable interactable);
 }
 
 #endif
