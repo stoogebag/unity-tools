@@ -62,7 +62,15 @@ public class Trajectory2D : MonoBehaviour {
         
         _physicsScene.Simulate(Time.fixedDeltaTime);
         //ghostObj.AddForce(vel.ToVector2(), ForceMode2D.Impulse);
+        
+        
+#if UNITY_6
         ghostObj.linearVelocity = vel.ToVector2();
+
+#else  
+        ghostObj.velocity = vel.ToVector2();
+#endif
+        
         ghostObj.simulated = true;
         ghostObj.transform.position = ghostObj.transform.position.WithZ(1);
 
