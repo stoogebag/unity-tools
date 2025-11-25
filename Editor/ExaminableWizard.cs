@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEditor;

@@ -50,7 +50,7 @@ namespace stoogebag.UITools.Windows
         
             await rect.DOAnchorPos3D(_originalPos, inTime, true).SetEase(ease).AsyncWaitForCompletion();
 
-            return true;
+            return true; 
         }
 
         public async UniTask<bool> Deactivate()

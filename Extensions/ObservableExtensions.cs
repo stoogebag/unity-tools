@@ -38,6 +38,10 @@ namespace stoogebag.Extensions
         //         }
         //     );
         // }
+        public static void Invoke<T>(this IObserver<T> observer, T value)
+        {
+            observer.OnNext(value);
+        }
         
 
         public static IObservable<Tuple<TSource, TSource>>

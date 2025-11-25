@@ -5,17 +5,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using stoogebag.Extensions;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace stoogebag.UITools.Windows
 {
+    
+    
+    
     public class Window : MonoBehaviour
     {
+        
+        private static readonly Subject<Window> _windowOpened = new Subject<Window>();
+        public static IObservable<Window> WindowOpenedObservable => _windowOpened.AsObservable();
+        private static readonly Subject<Window> _windowClosed = new Subject<Window>();
+        public static IObservable<Window> WindowClosedObservable => _windowClosed.AsObservable();
+        
         private IWindowAnimation[] _anims;
 
-        public event Action OnActivated;
-        public event Action OnDeactivated;
+        [SerializeField] bool isModal = false;
+        [SerializeField] bool closeOnClickOutside = false;
+
 
         [Button]
         public void ActivateTest()
@@ -60,6 +73,13 @@ namespace stoogebag.UITools.Windows
             //print($"activating {gameObject.name}");
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
 
+            if (isModal)
+            {
+                CreateModalBlocker();
+            }
+            
+            _windowOpened?.Invoke(this);
+            
             if (Active == ActiveState.Deactivating)
             {
                 //await UniTask.WaitUntil(() => Active != ActiveState.Deactivating); //todo:make an actual cancel!
@@ -67,14 +87,15 @@ namespace stoogebag.UITools.Windows
 
             Active = ActiveState.Activating;
 
+            print("setting active");
             gameObject.SetActive(true);
+            print(gameObject.activeSelf);
 
             if (Animations?.Any() != true)
             {
                 Active = ActiveState.Active;
 
                 gameObject.SetActive(true);
-                OnActivated?.Invoke();
                 return;
             }
 
@@ -82,7 +103,6 @@ namespace stoogebag.UITools.Windows
             if (x.All(t => t))
             {
                 Active = ActiveState.Active;
-                OnActivated?.Invoke();
             }
         }
 
@@ -97,10 +117,15 @@ namespace stoogebag.UITools.Windows
         {
             //print($"deactivating {gameObject.name}");
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
-
+            
+            if (isModal)
+            {
+                Destroy(_blocker);
+            }
             //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
             Active = ActiveState.Deactivating;
+            print("setting inactive");
             
             //todo: make delay optional.
             // var delay = .5f;
@@ -112,7 +137,6 @@ namespace stoogebag.UITools.Windows
                 Active = ActiveState.Inactive;
 
                 gameObject.SetActive(false);
-                OnDeactivated?.Invoke();
                 return;
             }
 
@@ -120,13 +144,65 @@ namespace stoogebag.UITools.Windows
             if (x.All(t => t))
             {
                 Active = ActiveState.Inactive;
-                OnDeactivated?.Invoke();
 
                 gameObject.SetActive(false);
+                _windowClosed?.Invoke(this);
+
             }
+            
+
         }
 
         public ActiveState Active = ActiveState.Inactive;
+        private GameObject _blocker;
+
+        public async UniTask Toggle()
+        {
+            if (Active == ActiveState.Active || Active == ActiveState.Activating) await Deactivate();
+            else await Activate();
+        }
+        
+        
+        private void CreateModalBlocker()
+        {
+            if(_blocker != null) Destroy(_blocker);
+            // Modal blocker - captures background input
+            _blocker = new GameObject("ModalBlocker");
+            _blocker.transform.SetParent(transform.parent, false);
+            
+            var windowCanvas = gameObject.GetComponentInAncestor<Canvas>();
+            // Window canvas - renders on top
+            windowCanvas.overrideSorting = true;
+            windowCanvas.sortingOrder = 1000;
+            
+            
+            RectTransform rect = _blocker.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            rect.localScale = new Vector3(1000, 1000);
+
+            Image image = _blocker.AddComponent<Image>();
+            image.color = new Color(0, 0, 0, 0.5f); // Nearly transparent
+            image.raycastTarget = true;
+
+            
+            _blocker.transform.SetSiblingIndex(transform.GetSiblingIndex());
+            
+// Add click handler
+            image.OnPointerClickAsObservable().Subscribe(_ =>
+            {
+                print("blocker clicked!");
+                if (closeOnClickOutside)
+                {
+                    Deactivate();
+                }
+            }).DisposeWith(this);
+
+        }
+
+
     }
 
     public enum ActiveState

@@ -25,12 +25,14 @@ public class LastButtonPressed : MonoBehaviour
             return;
         }
 
-        print(InputManager.ActiveDevice.GetControl(InputControlType.LeftTrigger).RawValue);
+        //print(InputManager.ActiveDevice.GetControl(InputControlType.LeftTrigger).RawValue);
         
         
-        // foreach (var dev in InControl.InputManager.Devices) {
-        //     Debug.Log($"{dev.Name}: {string.Join(", ", dev.Controls.Where(c=>c.HasChanged).Select(c=>$"{c.Handle}={c.Value:F2}"))}");
-        // }
+         foreach (var dev in InControl.InputManager.Devices) {
+          //   Debug.Log($"{dev.Name}: {string.Join(", ", dev.Controls.Where(c=>c.HasChanged).Select(c=>$"{c.Handle}={c.Value:F2}"))}");
+         }
+         Debug.Log(InputManager.ActiveDevice.AnyButtonIsPressed); // Should show device when you press buttons
+
         
         if(InputManager.ActiveDevice.AnyButtonIsPressed) print("somethni");
         
