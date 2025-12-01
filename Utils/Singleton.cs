@@ -26,7 +26,7 @@ namespace stoogebag.Utils
             if(Persistent) DontDestroyOnLoad(gameObject);
             
             //todo: needed?
-            if (Instance != null)
+            if (FindObjectsByType<T>(FindObjectsSortMode.None).Length > 2)
             {
                 Destroy(gameObject);
                 return;
