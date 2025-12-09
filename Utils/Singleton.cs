@@ -28,6 +28,7 @@ namespace stoogebag.Utils
             //todo: needed?
             if (FindObjectsByType<T>(FindObjectsSortMode.None).Length > 2)
             {
+                print("found two copies of singleton " + typeof(T).ToString() + ", destroying one");
                 Destroy(gameObject);
                 return;
             }
