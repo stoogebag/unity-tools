@@ -39,7 +39,16 @@ namespace stoogebag.Utils
         protected virtual void OnApplicationQuit()
         {
             _instance = null;
-            Destroy(gameObject);
+            //Destroy(gameObject);
+        }
+        
+        private void OnDestroy()
+        {
+            // Important: Release the static reference when destroyed
+            if (_instance == this)
+            {
+                _instance = null;
+            }
         }
     }
 
