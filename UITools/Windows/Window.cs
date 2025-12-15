@@ -76,6 +76,8 @@ namespace stoogebag.UITools.Windows
             if (isModal)
             {
                 CreateModalBlocker();
+                //i don't await this. for now we assume that it will be faster than the window activate, it's very quik 
+                _blocker.Activate().Forget();
             }
             
             _windowOpened?.Invoke(this);
@@ -120,7 +122,7 @@ namespace stoogebag.UITools.Windows
             
             if (isModal)
             {
-                Destroy(_blocker);
+                _blocker.Deactivate().Forget();
             }
             //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
@@ -154,7 +156,7 @@ namespace stoogebag.UITools.Windows
         }
 
         public ActiveState Active = ActiveState.Inactive;
-        private GameObject _blocker;
+        private Window _blocker;
 
         public async UniTask Toggle()
         {
@@ -165,10 +167,11 @@ namespace stoogebag.UITools.Windows
         
         private void CreateModalBlocker()
         {
-            if(_blocker != null) Destroy(_blocker);
+            if(_blocker != null) Destroy(_blocker.gameObject);
             // Modal blocker - captures background input
-            _blocker = new GameObject("ModalBlocker");
-            _blocker.transform.SetParent(transform.parent, false);
+            
+            var blockerGO = new GameObject("ModalBlocker");
+            blockerGO.transform.SetParent(transform.parent, false);
             
             var windowCanvas = gameObject.GetComponentInAncestor<Canvas>();
             // Window canvas - renders on top
@@ -176,30 +179,34 @@ namespace stoogebag.UITools.Windows
             windowCanvas.sortingOrder = 1000;
             
             
-            RectTransform rect = _blocker.AddComponent<RectTransform>();
+            RectTransform rect = blockerGO.AddComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             rect.localScale = new Vector3(1000, 1000);
 
-            Image image = _blocker.AddComponent<Image>();
+            Image image = blockerGO.AddComponent<Image>();
             image.color = new Color(0, 0, 0, 0.5f); // Nearly transparent
             image.raycastTarget = true;
 
+            _blocker = blockerGO.AddComponent<Window>();
+            blockerGO.AddComponent<CanvasGroup>();
+            var cgf = blockerGO.AddComponent<CanvasGroupFade>();
+            cgf.SetParams(0,0, 0.2f,0.2f);
+
+            
             
             _blocker.transform.SetSiblingIndex(transform.GetSiblingIndex());
             
 // Add click handler
             image.OnPointerClickAsObservable().Subscribe(_ =>
             {
-                print("blocker clicked!");
                 if (closeOnClickOutside)
                 {
                     Deactivate();
                 }
             }).DisposeWith(this);
-
         }
 
 

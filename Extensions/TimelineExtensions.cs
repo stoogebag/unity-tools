@@ -47,6 +47,8 @@ namespace stoogebag.Extensions
             var playable = director.playableGraph.GetRootPlayable(0);
             var time = playable.GetTime();
             var track = timelineAsset.GetOutputTracks().FirstOrDefault(t => t is TTrack) as TTrack;
+            if (track == null) return null;
+            
             var clip = track.GetClips().Where(t => t.start < time && t.end > time).FirstOrDefault();
             return clip;
         }

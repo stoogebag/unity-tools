@@ -39,9 +39,19 @@ namespace stoogebag.UITools.Windows
             if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
 
             var win = GetComponent<Window>();
-            canvasGroup.alpha = win.Active == ActiveState.Active ? 1 : 0;
+
+            if (win.Active == ActiveState.Active || win.Active == ActiveState.Deactivating) canvasGroup.alpha = 1;
+            if (win.Active == ActiveState.Inactive || win.Active == ActiveState.Activating) canvasGroup.alpha = 0;
         }
 
+        public void SetParams(float activateDelay, float deactivateDelay, float activateTime, float deactivateTime)
+        {
+            this.activateDelay = activateDelay;
+            this.deactivateDelay = deactivateDelay;
+            this.activateTime = activateTime;
+            this.deactivateTime = deactivateTime;
+        }
+        
         public async UniTask<bool> Activate()
         {
             //print("activating.");
@@ -69,7 +79,7 @@ namespace stoogebag.UITools.Windows
         public async UniTask<bool> Deactivate()
         {
             //print("deactivating.");
-            Init();
+            //Init();
             currentTween?.Kill(false);
             await UniTask.WaitForSeconds(deactivateDelay);
             currentTween = canvasGroup.DOFade(0, deactivateTime).SetEase(ease).SetAutoKill(false);
