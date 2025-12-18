@@ -70,7 +70,7 @@ namespace stoogebag.UITools.Windows
         //todo: make this sealed, and fire onActivate and onActivationComplete instead
         public virtual async UniTask Activate()
         {
-            //print($"activating {gameObject.name}");
+            print($"activating {gameObject.GetPathInScene()}");
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
 
             if (isModal)

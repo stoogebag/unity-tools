@@ -457,6 +457,20 @@ namespace stoogebag.Extensions
             return null;
         }
 
+        public static string GetPathInScene(this GameObject go)
+        {
+            var mytransform = go.transform;
+            var s = go.transform.name;
+            while (true)
+            {
+                mytransform = mytransform.parent;
+                if(mytransform == null) break;
+                
+                s = mytransform.name + "/" + s;
+            }
+
+            return s;
+        }
 
     }
 }
