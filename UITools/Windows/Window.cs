@@ -70,7 +70,6 @@ namespace stoogebag.UITools.Windows
         //todo: make this sealed, and fire onActivate and onActivationComplete instead
         public virtual async UniTask Activate()
         {
-            print($"activating {gameObject.GetPathInScene()}");
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
 
             if (isModal)
@@ -127,7 +126,6 @@ namespace stoogebag.UITools.Windows
             //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
             Active = ActiveState.Deactivating;
-            print("setting inactive");
             
             //todo: make delay optional.
             // var delay = .5f;
