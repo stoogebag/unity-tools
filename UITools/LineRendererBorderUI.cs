@@ -1,6 +1,7 @@
 ﻿#if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
+#if UI_EXTENSIONS
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +10,10 @@ using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UniRx;
 using UnityEngine;
-
-#if UI_EXTENSIONS
-
-
 using UnityEngine.UI.Extensions;
+
+
+
 
 [RequireComponent(typeof(UILineRenderer))]
 public class LineRendererBorderUI : MonoBehaviour
