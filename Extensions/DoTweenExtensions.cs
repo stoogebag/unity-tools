@@ -1,6 +1,6 @@
 ﻿#if DOTWEEN
-
 using DG.Tweening;
+using UnityEngine;
 
 namespace stoogebag.Extensions
 {
@@ -16,6 +16,12 @@ namespace stoogebag.Extensions
         //     }
         //     while (t.active && !t.IsComplete()) await System.Threading.Tasks.Task.Yield();
         // }
+
+        public static Tween DoColorProperty(this Material material, string materialPropertyName, Color targetColor, float duration)
+        {
+            return DOTween.To(() => material.GetColor(materialPropertyName), x => material.SetColor(materialPropertyName, x), targetColor, duration);
+        }
+        
     }
 }
 
