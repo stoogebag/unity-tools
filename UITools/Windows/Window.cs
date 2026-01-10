@@ -20,9 +20,10 @@ namespace stoogebag.UITools.Windows
     {
         
         private static readonly Subject<Window> _windowOpened = new Subject<Window>();
-        public static IObservable<Window> WindowOpenedObservable => _windowOpened.AsObservable();
+        public static IObservable<Window> OnActivatedObservable => _windowOpened.AsObservable();
         private static readonly Subject<Window> _windowClosed = new Subject<Window>();
-        public static IObservable<Window> WindowClosedObservable => _windowClosed.AsObservable();
+        public static IObservable<Window> OnDeactivatedObservable => _windowClosed.AsObservable();
+        
         
         private IWindowAnimation[] _anims;
 
