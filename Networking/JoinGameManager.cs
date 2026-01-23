@@ -10,21 +10,17 @@ using stoogebag.Extensions;
 using stoogebag.UITools;
 using UniRx;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class JoinGameManager : NetworkBehaviour
+[RequireComponent(typeof(PlayerInputManager))]
+public class JoinGameManager : MonoBehaviour
 {
     private NetworkManager _networkManager;
 
     private void Start()
     {
         _networkManager = FindObjectOfType<NetworkManager>();
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        print($"hi! client id:{ InstanceFinder.ClientManager.Connection.ClientId}");
     }
 
     private void Awake()

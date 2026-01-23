@@ -19,6 +19,11 @@ namespace stoogebag.UITools.Windows
     public class Window : MonoBehaviour
     {
         
+        [SerializeField] private Selectable firstSelectedOnActivate;
+        [SerializeField] private bool rememberSelectedOnReactivate = true;
+
+        private Selectable _lastSelected = null;
+        
         private static readonly Subject<Window> _windowOpened = new Subject<Window>();
         public static IObservable<Window> OnActivatedObservable => _windowOpened.AsObservable();
         private static readonly Subject<Window> _windowClosed = new Subject<Window>();
@@ -88,10 +93,7 @@ namespace stoogebag.UITools.Windows
             }
 
             Active = ActiveState.Activating;
-
-            print("setting active");
             gameObject.SetActive(true);
-            print(gameObject.activeSelf);
 
             if (Animations?.Any() != true)
             {
@@ -106,6 +108,15 @@ namespace stoogebag.UITools.Windows
             {
                 Active = ActiveState.Active;
             }
+            
+            if (firstSelectedOnActivate != null)
+            {
+                await UniTask.Yield();
+                if(_lastSelected != null && rememberSelectedOnReactivate)
+                    _lastSelected.Select();
+                else
+                    firstSelectedOnActivate.Select();
+            }
         }
 
         public void DeactivateImmediate()
@@ -117,8 +128,10 @@ namespace stoogebag.UITools.Windows
         [Button]
         public virtual async UniTask Deactivate()
         {
-            //print($"deactivating {gameObject.name}");
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
+
+            if (rememberSelectedOnReactivate) // Just store the global selection directly
+                _lastSelected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
             
             if (isModal)
             {
