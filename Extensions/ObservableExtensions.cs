@@ -42,7 +42,11 @@ namespace stoogebag.Extensions
         {
             observer.OnNext(value);
         }
-        
+
+        public static void Invoke(this IObserver<Unit> observer)
+        {
+            observer.OnNext(Unit.Default);
+        }
 
         public static IObservable<Tuple<TSource, TSource>>
             PairWithPrevious<TSource>(this IObservable<TSource> source)
