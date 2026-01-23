@@ -28,12 +28,13 @@ namespace stoogebag.Extensions
             }
         } 
         
-        public static async UniTask AwaitCondition(Func<bool> condition, int checkIntervalMs = 10)
+        public static async UniTask<bool> AwaitCondition(Func<bool> condition, int checkIntervalMs = 10, int timeoutMs = -1) //todo:timeout
         {
             while (!condition())
             {
                 await UniTask.Delay(checkIntervalMs);
             }
+            return true;
         }
         
     }
