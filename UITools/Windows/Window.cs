@@ -222,6 +222,13 @@ namespace stoogebag.UITools.Windows
         }
 
 
+        public static async UniTask CloseAllWindows(GameObject parent)
+        {
+            foreach (var window in parent.GetComponentsInDescendants<Window>(true))
+            {
+                await window.Deactivate();
+            }
+        }
     }
 
     public enum ActiveState

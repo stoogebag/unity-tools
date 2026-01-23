@@ -8,41 +8,43 @@ using FishNet.Object;
 using stoogebag;
 using stoogebag.Extensions;
 using stoogebag.UITools;
+using stoogebag.Utils;
 using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerInputManager))]
-public class JoinGameManager : MonoBehaviour
+public class JoinGameManager : Singleton<JoinGameManager>
 {
-    private NetworkManager _networkManager;
+    private PlayerInputManager _playerInputManager;
+    private bool _focused;
+
+    public bool AllowJoining;
 
     private void Start()
     {
-        _networkManager = FindObjectOfType<NetworkManager>();
+        _playerInputManager = GetComponent<PlayerInputManager>();
+        Application.focusChanged += OnApplicationFocusChanged;
+        
+        RefreshJoinStatus();
     }
 
-    private void Awake()
+    private void OnDestroy()
     {
-        var hostButton = gameObject.FirstOrDefault<Button>("ButtonHost");
-        hostButton.OnClickAsObservable().Subscribe((s) =>
-        {
-            print("clicked host");
-            var l = LoadingPopup.Open();
-            l.SetMessage("starting server");
-            StartServer();
-            l.Close();
-        });
-
+        Application.focusChanged -= OnApplicationFocusChanged;
     }
 
-    private void StartServer()
+    private void OnApplicationFocusChanged(bool val)
     {
-        if (_networkManager == null)
-            return;
+        _focused = val;
+        RefreshJoinStatus();
+    }
 
-        _networkManager.ServerManager.StartConnection();
+    private void RefreshJoinStatus()
+    {
+        if(_focused && AllowJoining) _playerInputManager.EnableJoining();
+        else _playerInputManager.DisableJoining();
     }
 }
 
