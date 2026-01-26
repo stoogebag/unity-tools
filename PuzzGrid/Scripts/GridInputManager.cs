@@ -1,24 +1,16 @@
-#if UNITASK
-#if INCONTROL_EXISTS
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cysharp.Threading.Tasks;
-using InControl;
 using stoogebag.Extensions;
 using stoogebag.Utils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GridInputManager : Singleton<GridInputManager>
 {
     GridPlayerActions actions;
 
-    [SerializeField] private bool FindGridOnAwake;
-
     private List<MangEnt> Movers;
 
-    [SerializeField]
     private PuzzGrid Grid;
     
     void Awake()
@@ -36,52 +28,13 @@ public class GridInputManager : Singleton<GridInputManager>
 
     private void AssignGrid()
     {
-        if (FindGridOnAwake) Grid = FindObjectOfType<PuzzGrid>();
-
-        Movers = Grid.GetComponentsInChildren<MangEnt>().ToList();
+        Grid = FindObjectOfType<PuzzGrid>();
+        Movers=FindObjectsOfType<MangEnt>(false).ToList();
     }
 
     private void HandleBindings()
     {
-        actions = new GridPlayerActions();
-
-        actions.West.AddDefaultBinding(Key.A);
-        //actions.West.AddDefaultBinding(Key.LeftArrow);
-        actions.West.AddDefaultBinding(InputControlType.DPadLeft);
-        actions.West.AddDefaultBinding(InputControlType.LeftStickLeft);
-
-
-        actions.East.AddDefaultBinding(Key.D);
-        //actions.East.AddDefaultBinding(Key.RightArrow);
-        actions.East.AddDefaultBinding(InputControlType.DPadRight);
-        actions.East.AddDefaultBinding(InputControlType.LeftStickRight);
-
-        actions.North.AddDefaultBinding(Key.W);
-        actions.North.AddDefaultBinding(InputControlType.DPadUp);
-        actions.North.AddDefaultBinding(InputControlType.LeftStickUp);
-
-        actions.South.AddDefaultBinding(Key.S);
-        actions.South.AddDefaultBinding(InputControlType.DPadDown);
-        actions.South.AddDefaultBinding(InputControlType.LeftStickDown);
-        //actions.South.AddDefaultBinding(Key.DownArrow);
-
-        actions.Grow.AddDefaultBinding(Key.UpArrow);
-        actions.Grow.AddDefaultBinding(InputControlType.RightBumper);
         
-        actions.Shrink.AddDefaultBinding(Key.DownArrow);
-        actions.Shrink.AddDefaultBinding(InputControlType.LeftBumper);
-        
-        actions.Undo.AddDefaultBinding(Key.Z);
-        actions.Undo.AddDefaultBinding(InputControlType.Action3);
-        
-        actions.Reset.AddDefaultBinding(Key.R);
-        actions.Reset.AddDefaultBinding(InputControlType.Action4);
-
-        actions.Pause.AddDefaultBinding(Key.Escape);
-        actions.Pause.AddDefaultBinding(InputControlType.Start);
-        
-        actions.NextLevel.AddDefaultBinding(Key.L);
-        actions.PrevLevel.AddDefaultBinding(Key.K);
     }
 
     private void Update()
@@ -126,13 +79,7 @@ public class GridInputManager : Singleton<GridInputManager>
         }
         else if (a == actions.Pause)
         {
-                    
-            //VERY NAUGHTY!
-            //for ldjam
-            //fix.
-            gameObject.SetActive(false);
-
-//            Grid.PauseUnpause();
+            Grid.PauseUnpause();
         }
         else if (a == actions.Grow)
         {
@@ -149,7 +96,7 @@ public class GridInputManager : Singleton<GridInputManager>
         Grid.MoveQueue.AddAction(async () =>
         {
             var multiplier = (Input.GetKey(KeyCode.LeftControl) ? 1 : 10) ;
-            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier));
+            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.localScale.x));
             var gp = new GridActionSetGroup(Grid) { ActionSets = sets.ToList() };
 
             await Grid.AddActionSetGroup(gp);
@@ -167,23 +114,23 @@ public class GridInputManager : Singleton<GridInputManager>
     }
 
    
-
-    public Vector3 GetDirection(PlayerAction a)
-    {
-        switch (a.Name)
-        {
-            case "Move North":
-                return new Vector3(0, 0, 1);
-            case "Move West":
-                return new Vector3(-1, 0, 0);
-            case "Move South":
-                return new Vector3(0, 0, -1);
-            case "Move East":
-                return new Vector3(1, 0, 0);
-            default: 
-                return Vector3.zero;
-        }
-    }
+    //
+    // public Vector3 GetDirection(InputAction a)
+    // {
+    //     switch (a)
+    //     {
+    //         case "Move North":
+    //             return new Vector3(0, 0, 1);
+    //         case "Move West":
+    //             return new Vector3(-1, 0, 0);
+    //         case "Move South":
+    //             return new Vector3(0, 0, -1);
+    //         case "Move East":
+    //             return new Vector3(1, 0, 0);
+    //         default: 
+    //             return Vector3.zero;
+    //     }
+    // }
 
     //returns best nsew direction 
     public Vector3 CameraDirectionRelativeToCam(Camera cam, Vector3 dir)

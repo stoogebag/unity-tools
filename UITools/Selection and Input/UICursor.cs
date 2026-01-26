@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using InControl;
 using UnityEngine;
 using stoogebag;
 using stoogebag.Extensions;
@@ -22,7 +21,6 @@ public class UICursor :  UIInteractorBase
     private PlayerInfo _player;
     public InputSchemeBase input;
 
-    public InputDevice controller ;
     public bool isMouse;
 
     private Image im;
@@ -37,10 +35,6 @@ public class UICursor :  UIInteractorBase
 
     private void Update()
     {
-        bool buttonDown;
-
-        if (isMouse) buttonDown = Input.GetMouseButtonDown(0);
-        else buttonDown = controller?.Action1.WasPressed ?? false;
         
         PointerEventData pointerData = new PointerEventData (EventSystem.current)
         {
@@ -100,26 +94,26 @@ public class UICursor :  UIInteractorBase
             var mousePos = Input.mousePosition;
             transform.position = mousePos;
         }
-        else if (controller != null)
-        {
-            var valX = 0f;
-            var valY = 0f;
-            valX += input.GetHorizontal();
-            valY += input.GetVertical();
-
-            var vec = new Vector3(valX * Time.deltaTime * cursorSpeed,
-                valY * Time.deltaTime * cursorSpeed,
-                0);
-
-            transform.position += vec;
-        }
+        // else if (controller != null)
+        // {
+        //     var valX = 0f;
+        //     var valY = 0f;
+        //     valX += input.GetHorizontal();
+        //     valY += input.GetVertical();
+        //
+        //     var vec = new Vector3(valX * Time.deltaTime * cursorSpeed,
+        //         valY * Time.deltaTime * cursorSpeed,
+        //         0);
+        //
+        //     transform.position += vec;
+        // }
     }
 
     public void Bind(PlayerInfo player)
     {
         _player = player;
         input = player?.Input;
-        controller = (input as ControllerInputs)?.controller;
+      //  controller = (input as ControllerInputs)?.controller;
         isMouse = (input is KeyboardInputs);
         im.color = player.Color;
     }
