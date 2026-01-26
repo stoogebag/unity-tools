@@ -1,29 +1,39 @@
+#if UNIRX
+
 using System.Collections.Generic;
 using System.Linq;
 using stoogebag.Extensions;
 using stoogebag.Utils;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GridInputManager : Singleton<GridInputManager>
 {
-    GridPlayerActions actions;
 
+    [SerializeField] InputActionAsset inputActionAsset;
     private List<MangEnt> Movers;
 
     private PuzzGrid Grid;
     
     void Awake()
     {
-        HandleBindings();
-             
         AssignGrid();
     }
 
     private void OnEnable()
     {
-        //todo move this to after everything is initialised or something.
-        //Grid.AddActionSetGroup(GridActionSetGroup.Empty(Grid));
+        var moveAction = inputActionAsset.FindAction("Move");
+        print(moveAction);
+        moveAction.Enable();
+
+        var hold = moveAction.started;
+        moveAction.OnPerformedAsObservable(1).Subscribe(e =>
+        {
+            var action = e.action;
+            var dir = CameraDirectionRelativeToCam(Camera.main, GetDirection(action));
+            HandleMove(dir);
+        }).AddTo(this);
     }
 
     private void AssignGrid()
@@ -32,73 +42,55 @@ public class GridInputManager : Singleton<GridInputManager>
         Movers=FindObjectsOfType<MangEnt>(false).ToList();
     }
 
-    private void HandleBindings()
+    // private void HandleInput(PlayerAction a)
+    // {
+    //     if (Grid == null || !Grid.isActiveAndEnabled)
+    //     {
+    //         AssignGrid();
+    //     }
+    //     
+    //     HandleMove(a);
+    //     
+    //     if (a == actions.Undo)
+    //     {
+    //         Grid.MoveQueue.AddAction(async () =>
+    //         {
+    //             await Grid.RequestUndo();
+    //         });
+    //     }
+    //     else if (a == actions.Reset)
+    //     {
+    //         Grid.RequestReset();
+    //     }
+    //     else if (a == actions.NextLevel)
+    //     {
+    //         Grid.NextLevel();
+    //     }
+    //     else if (a == actions.PrevLevel)
+    //     {
+    //         Grid.PrevLevel();
+    //     }
+    //     else if (a == actions.Pause)
+    //     {
+    //         Grid.PauseUnpause();
+    //     }
+    //     else if (a == actions.Grow)
+    //     {
+    //         HandleGrow();
+    //     }
+    //     
+    // }
+    //
+    private void HandleMove(Vector3 dir)
     {
-        
-    }
-
-    private void Update()
-    {
-        //handle control!
-        foreach (var a in actions.AllActions)
-        {
-            if (a.WasPressed)
-            {
-                HandleInput(a);
-            }
-        }
-    }
-
-    private void HandleInput(PlayerAction a)
-    {
-        if (Grid == null || !Grid.isActiveAndEnabled)
-        {
-            AssignGrid();
-        }
-        
-        HandleMove(a);
-        
-        if (a == actions.Undo)
-        {
-            Grid.MoveQueue.AddAction(async () =>
-            {
-                await Grid.RequestUndo();
-            });
-        }
-        else if (a == actions.Reset)
-        {
-            Grid.RequestReset();
-        }
-        else if (a == actions.NextLevel)
-        {
-            Grid.NextLevel();
-        }
-        else if (a == actions.PrevLevel)
-        {
-            Grid.PrevLevel();
-        }
-        else if (a == actions.Pause)
-        {
-            Grid.PauseUnpause();
-        }
-        else if (a == actions.Grow)
-        {
-            HandleGrow();
-        }
-        
-    }
-   
-    private void HandleMove(PlayerAction a)
-    {
-        var dir = CameraDirectionRelativeToCam(Camera.main, GetDirection(a));
         if(dir == Vector3.zero) return;
-
+    
         Grid.MoveQueue.AddAction(async () =>
         {
             var multiplier = (Input.GetKey(KeyCode.LeftControl) ? 1 : 10) ;
             var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.localScale.x));
             var gp = new GridActionSetGroup(Grid) { ActionSets = sets.ToList() };
-
+    
             await Grid.AddActionSetGroup(gp);
         });
     }
@@ -114,23 +106,12 @@ public class GridInputManager : Singleton<GridInputManager>
     }
 
    
-    //
-    // public Vector3 GetDirection(InputAction a)
-    // {
-    //     switch (a)
-    //     {
-    //         case "Move North":
-    //             return new Vector3(0, 0, 1);
-    //         case "Move West":
-    //             return new Vector3(-1, 0, 0);
-    //         case "Move South":
-    //             return new Vector3(0, 0, -1);
-    //         case "Move East":
-    //             return new Vector3(1, 0, 0);
-    //         default: 
-    //             return Vector3.zero;
-    //     }
-    // }
+    
+    public Vector3 GetDirection(InputAction a)
+    {
+        var value = a.ReadValue<Vector2>();
+        return new Vector3(value.x, 0, value.y);
+    }
 
     //returns best nsew direction 
     public Vector3 CameraDirectionRelativeToCam(Camera cam, Vector3 dir)
@@ -154,5 +135,4 @@ public class GridInputManager : Singleton<GridInputManager>
     }
     
 }
-#endif
 #endif

@@ -1,9 +1,9 @@
+#if ODIN_INSPECTOR
+#if UNITASK
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using stoogebag.UITools.Windows;
 
-#if ODIN_INSPECTOR
-#if UNITASK
 public static class WindowExtensions
 {
 

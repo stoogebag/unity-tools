@@ -28,7 +28,14 @@ namespace stoogebag.Extensions
         {
             action.Enable();
 
-            return Observable.FromEvent<InputAction.CallbackContext>(
+            if (throttleInMilliseconds == 0)
+            {
+                return Observable.FromEvent<InputAction.CallbackContext>(
+                    h => action.performed += h,
+                    h => action.performed -= h
+                );
+            }
+            else return Observable.FromEvent<InputAction.CallbackContext>(
                 h => action.performed += h,
                 h => action.performed -= h
             ).ThrottleFirst(System.TimeSpan.FromMilliseconds(throttleInMilliseconds));
