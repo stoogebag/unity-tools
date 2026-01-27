@@ -177,8 +177,8 @@ public partial class PuzzGrid : MonoBehaviour
 
         if (winEnt != null)
         {
-            var winBox = winEnt.GetComponentInChildren<BoxCollider>();
-            var mangBox = mangEnt.GetComponentInChildren<BoxCollider>();
+            var winBox = winEnt.GetComponentInChildren<Collider>();
+            var mangBox = mangEnt.GetComponentInChildren<Collider>();
             
             if (winBox.bounds.Intersects(mangBox.bounds))
             {

@@ -11,6 +11,7 @@ using UnityEngine.InputSystem;
 public class GridInputManager : Singleton<GridInputManager>
 {
 
+    [SerializeField] private Camera Camera;
     [SerializeField] InputActionAsset inputActionAsset;
     private List<MangEnt> Movers;
 
@@ -19,6 +20,7 @@ public class GridInputManager : Singleton<GridInputManager>
     void Awake()
     {
         AssignGrid();
+        if(Camera == null) Camera = Camera.main;
     }
 
     private void OnEnable()
@@ -27,13 +29,31 @@ public class GridInputManager : Singleton<GridInputManager>
         print(moveAction);
         moveAction.Enable();
 
-        var hold = moveAction.started;
-        moveAction.OnPerformedAsObservable(1).Subscribe(e =>
+        moveAction.RepeatOnHold<Vector2>(rawVec =>
+            {
+                return NearestCardinal(rawVec);
+            }, 100, new []{500,250})
+            .Where(v=> v.x == 1 || v.x == -1 || v.y == 1 || v.y == -1) //integers only! to do: check about stick input. might need to do some rounding before the repeatonhold...
+            .Subscribe(v =>
         {
-            var action = e.action;
-            var dir = CameraDirectionRelativeToCam(Camera.main, GetDirection(action));
+            var dir = CameraDirectionRelativeToCam(Camera, GetDirection(v));
             HandleMove(dir);
         }).AddTo(this);
+    }
+
+    private Vector2 NearestCardinal(Vector2 rawVec)
+    {
+        var deadZone = 0.2f;
+        if (rawVec.x > deadZone || rawVec.x < -deadZone || rawVec.y > deadZone || rawVec.y < -deadZone)
+        {
+            if (Mathf.Abs(rawVec.x) > Mathf.Abs(rawVec.y)) 
+                return new Vector2(Mathf.Sign(rawVec.x), 0);
+            else 
+                return new Vector2(0,Mathf.Sign(rawVec.y));
+        }
+        else
+            return Vector2.zero;
+        
     }
 
     private void AssignGrid()
@@ -107,9 +127,8 @@ public class GridInputManager : Singleton<GridInputManager>
 
    
     
-    public Vector3 GetDirection(InputAction a)
+    public Vector3 GetDirection(Vector2 value)
     {
-        var value = a.ReadValue<Vector2>();
         return new Vector3(value.x, 0, value.y);
     }
 
