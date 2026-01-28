@@ -1,3 +1,5 @@
+#if SPLINES
+
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -25,3 +27,4 @@ public class SplineAnimatePlayableClip : PlayableAsset, ITimelineClipAsset
     }
     
 }
+#endif

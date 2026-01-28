@@ -104,5 +104,28 @@ namespace stoogebag.Extensions
             
         }
         
+        public static IObservable<Unit> RepeatOnHold(this InputAction action, int periodInMilliseconds = 100, params int[] initialDelays)
+        {
+            action.Enable();
+            return action.OnPerformedAsObservable()
+                .SelectMany(_ =>
+                {
+                    var initialSequence = initialDelays.Select(d => 
+                        Observable.Timer(TimeSpan.FromMilliseconds(d))
+                            .Select(__ => Unit.Default)
+                    );
+
+                    var loop = Observable.Interval(TimeSpan.FromMilliseconds(periodInMilliseconds))
+                        .Select(__ => Unit.Default);
+
+                    return Observable.Return(Unit.Default)
+                        .Concat(Observable.Concat(initialSequence))
+                        .Concat(loop);
+                })
+                .TakeUntil(action.OnCanceledAsObservable())
+                .Repeat()
+                .ThrottleFirst(TimeSpan.FromMilliseconds(10));
+        }
+        
     }
 }
