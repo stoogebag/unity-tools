@@ -25,20 +25,42 @@ public class GridInputManager : Singleton<GridInputManager>
 
     private void OnEnable()
     {
+        BindInputs();
+    }
+
+    private void BindInputs()
+    {
         var moveAction = inputActionAsset.FindAction("Move");
-        print(moveAction);
         moveAction.Enable();
 
-        moveAction.RepeatOnHold<Vector2>(rawVec =>
-            {
-                return NearestCardinal(rawVec);
-            }, 100, new []{500,250})
-            .Where(v=> v.x == 1 || v.x == -1 || v.y == 1 || v.y == -1) //integers only! to do: check about stick input. might need to do some rounding before the repeatonhold...
+        moveAction.RepeatOnHold<Vector2>(rawVec => NearestCardinal(rawVec), 100, new []{500,250})
+            .Where(v=> v != Vector2.zero) 
             .Subscribe(v =>
-        {
-            var dir = CameraDirectionRelativeToCam(Camera, GetDirection(v));
-            HandleMove(dir);
-        }).AddTo(this);
+            {
+                var dir = CameraDirectionRelativeToCam(Camera, GetDirection(v));
+                HandleMove(dir);
+            }).AddTo(this);
+        
+        //undo
+        var undoAction = inputActionAsset.FindAction("Undo");
+        undoAction.Enable();
+        
+        undoAction.RepeatOnHold( 100, new []{500,250})
+            .Subscribe(v =>
+            {
+                Grid.RequestUndo();
+            }).AddTo(this);
+
+        //reset
+        var resetAction = inputActionAsset.FindAction("Reset");
+        resetAction.Enable();
+
+        resetAction.OnPerformedAsObservable(100)
+            .Subscribe(u =>
+            {
+                Grid.RequestReset();
+            }).AddTo(this);
+
     }
 
     private Vector2 NearestCardinal(Vector2 rawVec)

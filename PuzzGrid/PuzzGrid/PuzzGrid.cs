@@ -205,7 +205,7 @@ public partial class PuzzGrid : MonoBehaviour
     bool _moving = false;
     private bool _undoing = false;
 
-    public async UniTask Undo()
+    private async UniTask Undo()
     {
         if (_moving || _undoing) return;
         _undoing = true;

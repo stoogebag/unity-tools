@@ -1,3 +1,4 @@
+#if SPLINES
 #if UNITY_EDITOR
 
 using UnityEditor;
@@ -18,4 +19,5 @@ public class SplineAnimatePlayableDrawer : PropertyDrawer
         Rect singleFieldRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
     }
 }
+#endif
 #endif

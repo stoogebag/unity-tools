@@ -1,3 +1,5 @@
+#if SPLINES
+
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -27,3 +29,4 @@ public class SplineAnimatePlayableMixerBehaviour : PlayableBehaviour
         }
     }
 }
+#endif
