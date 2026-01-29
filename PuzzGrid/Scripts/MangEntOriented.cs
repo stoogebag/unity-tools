@@ -82,6 +82,8 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
         
         var currentForward = this.transform.forward;
         
+        var dot = Math.Abs(direction.Dot(currentForward));
+        print("Current forward: " + currentForward + " Desired dir: " + direction + " Dot: " + dot);
         if(direction.Dot(currentForward) < 0.9f) //not facing the right way!
         {
             var targetRot = Quaternion.LookRotation(direction, Vector3.up);

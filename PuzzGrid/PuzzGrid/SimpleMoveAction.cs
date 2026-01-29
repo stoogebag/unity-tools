@@ -129,12 +129,10 @@ public class SimpleMoveAction : GridAction, IPushAction
                         //     else continue;
                         // }
                         //
-
-
+                        
                         if (hitEnt == null) continue;
                         if (hitEnt == Ent) continue;
-
-
+                        
                         var res = new PuzzGridRaycastResult()
                         {
                             HitEnt = hitEnt,

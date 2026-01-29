@@ -47,7 +47,7 @@ public class SimpleRotateAction : GridAction
      public override GridAction Evaluate(HashSet<GridAction> evaluatedActions)
      {
          Evaluated = true;
-         return null;
+         return this;
      }
 
 
@@ -72,7 +72,7 @@ public class SimpleRotateAction : GridAction
     {
         Ent.PendingMoves.Add(this);
 
-         //   Ent.transform.LookAt(Ent.transform.position + MovementVec, Vector3.up);
+        Ent.transform.rotation = this.Orientation;
     }
 
 
@@ -108,12 +108,16 @@ public class SimpleRotateAction : GridAction
 
     public async override UniTask GetExecutionTask()
     {
+        
+        Ent.transform.rotation = this.Orientation;
        // Ent.transform.position -= MovementVec;
        // await Ent.transform.DOMove(Ent.transform.position+MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
     }
     
     public async override UniTask GetUndoTask()
     {
+        
+        Ent.transform.rotation = this.OriginalOrientation;
         // Ent.transform.position += MovementVec;
         // await Ent.transform.DOMove(Ent.transform.position-MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
     }
