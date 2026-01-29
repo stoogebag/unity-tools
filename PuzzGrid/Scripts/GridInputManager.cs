@@ -13,7 +13,7 @@ public class GridInputManager : Singleton<GridInputManager>
 
     [SerializeField] private Camera Camera;
     [SerializeField] InputActionAsset inputActionAsset;
-    private List<MangEnt> Movers;
+    private List<IReceivesInput> Movers;
 
     private PuzzGrid Grid;
     
@@ -53,13 +53,12 @@ public class GridInputManager : Singleton<GridInputManager>
         }
         else
             return Vector2.zero;
-        
     }
 
     private void AssignGrid()
     {
         Grid = FindObjectOfType<PuzzGrid>();
-        Movers=FindObjectsOfType<MangEnt>(false).ToList();
+        Movers=Grid.gameObject.GetDescendantsWithInterface<IReceivesInput>().ToList();
     }
 
     // private void HandleInput(PlayerAction a)
@@ -108,7 +107,7 @@ public class GridInputManager : Singleton<GridInputManager>
         Grid.MoveQueue.AddAction(async () =>
         {
             var multiplier = (Input.GetKey(KeyCode.LeftControl) ? 1 : 10) ;
-            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier*t.gameObject.transform.localScale.x));
+            var sets = Movers.Select(t => t.GetWalkMove( dir*multiplier));
             var gp = new GridActionSetGroup(Grid) { ActionSets = sets.ToList() };
     
             await Grid.AddActionSetGroup(gp);
@@ -153,5 +152,10 @@ public class GridInputManager : Singleton<GridInputManager>
         return dir;
     }
     
+}
+
+public interface IReceivesInput
+{
+    GridActionSet GetWalkMove(Vector3 dir);
 }
 #endif

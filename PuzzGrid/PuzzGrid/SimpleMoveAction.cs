@@ -15,8 +15,7 @@ public class SimpleMoveAction : GridAction, IPushAction
     public Vector3 MovementVec { get; }
 
     public Quaternion OriginalOrientation;
-
-
+    
     static int _idCounter = 0;
     private bool _aborted;
 

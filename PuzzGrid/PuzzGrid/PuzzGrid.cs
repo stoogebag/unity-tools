@@ -172,6 +172,7 @@ public partial class PuzzGrid : MonoBehaviour
 
     private void CheckWinConditions()
     {
+        return;
         if (winEnt == null) winEnt = FindObjectOfType<WinEnt>();
         if (mangEnt == null) mangEnt = FindObjectOfType<MangEnt>();
 

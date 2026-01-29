@@ -10,7 +10,7 @@ using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
 
-public class MangEnt : GridEntity, IPushesButton, IReceivesInput
+public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
 {
 
     public bool InvertX;
@@ -42,10 +42,6 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
         
         return result;
     }
-
-    
-
-    
 
     public override IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
@@ -84,9 +80,19 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
     {
         var direction = InvertX ? new Vector3(-dir.x, dir.y, dir.z) : dir;
         
+        var currentForward = this.transform.forward;
+        
+        if(direction.Dot(currentForward) < 0.9f) //not facing the right way!
+        {
+            var targetRot = Quaternion.LookRotation(direction, Vector3.up);
+            return SimpleRotateAction.GetMove(
+                this,
+                targetRot, 
+                this.transform.rotation);
+        }
+        
         
         return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), false, default);
-        return null;
         
     }
 

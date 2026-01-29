@@ -25,7 +25,6 @@ public class ButtonEnt : GridEntity, IActivateable
         var up = GetNeighbours(Vector3.up * 10);
 
         var pusher = up?.FirstOrDefault(t => t.HitEnt.GetComponent<IPushesButton>() != null);
-
         var swap = false;
         if (pusher == null)
         {

@@ -186,13 +186,11 @@ public abstract class GridEntity : MonoBehaviour
                 float prePortalDistance = 0;
                 float postPortalDistance = 0;
                 float portalMultiplier = 1;
-
-
+                
                 var hitEnt = hit.collider.gameObject.GetComponentInAncestor<GridEntity>();
                 if (hitEnt == null) continue;
                 if (hitEnt == this) continue;
-
-
+                
                 var res = new PuzzGridRaycastResult()
                 {
                     HitEnt = hitEnt,
@@ -224,7 +222,6 @@ public abstract class GridEntity : MonoBehaviour
         {
             c.enabled = false;
         }
-
         return UniTask.CompletedTask;
     }
 
