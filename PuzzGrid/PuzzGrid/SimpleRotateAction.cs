@@ -71,7 +71,6 @@ public class SimpleRotateAction : GridAction
     public override void Execute()
     {
         Ent.PendingMoves.Add(this);
-
         Ent.transform.rotation = this.Orientation;
     }
 
@@ -108,15 +107,18 @@ public class SimpleRotateAction : GridAction
 
     public async override UniTask GetExecutionTask()
     {
-        await Ent.transform.DORotateQuaternion(this.Orientation, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
-        //Ent.transform.rotation = this.Orientation;
-       // Ent.transform.position -= MovementVec;
-       // await Ent.transform.DOMove(Ent.transform.position+MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
+        Ent.transform.rotation = OriginalOrientation;
+        // Use this to ensure the target is absolute and avoids Euler math errors
+        await Ent.transform.DORotateQuaternion(this.Orientation.normalized, .1f)
+            .SetEase(Ease.InOutSine)
+            .ToUniTask();
+
     }
     
     public async override UniTask GetUndoTask()
     {
-        await Ent.transform.DORotateQuaternion(this.OriginalOrientation, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
+        Ent.transform.rotation = Orientation;
+        await Ent.transform.DORotateQuaternion(this.OriginalOrientation.normalized, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
 
 //        Ent.transform.rotation = this.OriginalOrientation;
         // Ent.transform.position += MovementVec;
