@@ -52,7 +52,7 @@ public class SimpleMoveAction : GridAction, IPushAction
         _approvedMovements = new List<SimpleMoveAction>();
         Evaluated = true;
 
-        if (Ent is MangEnt || Ent is BlockEnt)
+        if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented)
         {
             
             var hits = new List<PuzzGridRaycastResult>();
