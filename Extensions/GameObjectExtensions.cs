@@ -33,6 +33,22 @@ namespace stoogebag.Extensions
             }
             me.Clear();
         }
+        public static void DestroyAll(this IEnumerable<GameObject> me)
+        {
+            foreach (var go in me)
+            {
+                UnityEngine.GameObject.Destroy(go);
+            }
+        }
+
+        public static void DestroyAllImmediate<T>(this IEnumerable<T> me) where T:MonoBehaviour
+        {
+            foreach (var go in me)
+            {
+                if(go == null) continue;
+                UnityEngine.GameObject.DestroyImmediate(go);
+            }
+        }
 
         public static void ForAllChildrenRecursive(this GameObject go, Action<GameObject> action) {
             if (go == null) return;
