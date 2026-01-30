@@ -254,6 +254,23 @@ namespace stoogebag.Extensions
                 }
             }
         }
+        
+        public static Transform FindChildByPath(this Transform parent, string path)
+        {
+            var current = parent;
+            var parts = path.Split('/');
+            foreach (var part in parts)
+            {
+                if (string.IsNullOrEmpty(part)) continue;
+                current = current.Find(part);
+                if (current == null)
+                {
+                    return null;
+                }
+            }
+            return current;
+        }
+        
         public static T GetComponentInDescendants<T>(this GameObject go,bool includeOriginal = false, bool includeInactive = false) where T : Component
         {
             return go.GetComponentsInDescendants<T>(includeOriginal,includeInactive).FirstOrDefault();
