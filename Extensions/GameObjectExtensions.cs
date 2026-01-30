@@ -185,6 +185,24 @@ namespace stoogebag.Extensions
             }
         }
 
+        public static IEnumerable<GameObject> GetAllDescendants(this GameObject go, bool includeOriginal = false)
+        {
+            if (includeOriginal) {
+                yield return go;
+            }
+
+            for (int i = 0; i < go.transform.childCount; i++)
+            {
+                var result = GetAllDescendants(go.transform.GetChild(i));
+                foreach (var t in result)
+                {
+                    yield return t.gameObject;
+                }
+            }
+        }
+
+
+
         public static IEnumerable<T> GetComponentsInDescendants<T>(this MonoBehaviour component, bool includeInactive = false) where T : MonoBehaviour
         {
             var transform = component.transform;
