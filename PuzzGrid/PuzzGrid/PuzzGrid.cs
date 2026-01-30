@@ -409,6 +409,12 @@ public partial class PuzzGrid : MonoBehaviour
         {
             var cons = ent.GetSettlementMoves(actionSummary);
             if (cons != null) gp.ActionSets.Add(cons);
+            
+            foreach (var settlementMoveProvider in ent.gameObject.GetComponentsWithInterface<ISettlementMoveProvider>())
+            {
+                   var spCons = settlementMoveProvider.GetSettlementMoves(actionSummary);
+                   if (spCons != null) gp.ActionSets.Add(spCons);
+            }
         }
 
         return gp;
@@ -438,4 +444,15 @@ public partial class PuzzGrid : MonoBehaviour
         return transform.TransformVector(direction);
     }
 }
+
+public interface ISettlementMoveProvider
+{
+    GridActionSet GetSettlementMoves(GridActionSummary actionSummary);
+}
+
+public interface IConsequenceProvider
+{
+    GridActionSetGroup GetConsequences(GridActionSet triggeringSet, IEnumerable<GridAction> triggeringActions);
+}
+
 #endif
