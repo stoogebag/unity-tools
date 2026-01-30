@@ -12,6 +12,11 @@ using UnityEngine;
 
 public class ElevatorEnt : GridEntity, IActivateable, IActivatesByParents
 {
+    private void Awake()
+    {
+        BindParents();
+    }
+
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set) => null;
 
     public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
@@ -37,6 +42,11 @@ public class ElevatorEnt : GridEntity, IActivateable, IActivatesByParents
     private List<IActivateable> Parents;
 
     private void OnValidate()
+    {
+        BindParents();
+        }
+
+    private void BindParents()
     {
         if (!_parents.All(t => t.GetComponent<IActivateable>() != null))
         {
