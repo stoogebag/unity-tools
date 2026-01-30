@@ -108,16 +108,17 @@ public class SimpleRotateAction : GridAction
 
     public async override UniTask GetExecutionTask()
     {
-        
-        Ent.transform.rotation = this.Orientation;
+        await Ent.transform.DORotateQuaternion(this.Orientation, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
+        //Ent.transform.rotation = this.Orientation;
        // Ent.transform.position -= MovementVec;
        // await Ent.transform.DOMove(Ent.transform.position+MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
     }
     
     public async override UniTask GetUndoTask()
     {
-        
-        Ent.transform.rotation = this.OriginalOrientation;
+        await Ent.transform.DORotateQuaternion(this.OriginalOrientation, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
+
+//        Ent.transform.rotation = this.OriginalOrientation;
         // Ent.transform.position += MovementVec;
         // await Ent.transform.DOMove(Ent.transform.position-MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
     }

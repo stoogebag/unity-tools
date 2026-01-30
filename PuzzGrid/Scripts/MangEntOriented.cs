@@ -14,7 +14,8 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
 {
 
     public bool InvertX;
-    
+    [SerializeField] private bool turn180 = false;
+
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;
@@ -82,9 +83,8 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
         
         var currentForward = this.transform.forward;
         
-        var dot = Math.Abs(direction.Dot(currentForward));
-        print("Current forward: " + currentForward + " Desired dir: " + direction + " Dot: " + dot);
-        if(direction.Dot(currentForward) < 0.9f) //not facing the right way!
+        var dot = turn180 ? direction.Dot(currentForward) : Math.Abs(direction.Dot(currentForward));
+        if(dot < 0.9f) //not facing the right way!
         {
             var targetRot = Quaternion.LookRotation(direction, Vector3.up);
             return SimpleRotateAction.GetMove(
