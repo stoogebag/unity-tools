@@ -136,15 +136,10 @@ public partial class PuzzGrid : MonoBehaviour
                     sideEffect.Execute();
                 }
                 
-                
                 foreach (var gridActionSet in approved)
                 {
                     gridActionSet.Undo();
                 }
-
-                
-                    
-                
             }
             else break;
         }
@@ -322,7 +317,6 @@ public partial class PuzzGrid : MonoBehaviour
             .ToDictionary(t => t.Key, t => t.ToList());
 
         var actions = new List<GridAction> { };
-        //var gp = new GridActionSetGroup(sideEffectMoves.PuzzGrid);
         foreach (var (ent, effects) in sideEffectGroups)
         {
             var result = ent.FilterSideEffects(effects);
@@ -344,8 +338,6 @@ public partial class PuzzGrid : MonoBehaviour
             {
                 var task = gridAction.GetExecutionTask();
                 tasks.Add(task);
-               // tasks.AddRange(gridAction.GetAllDescendants(t=>t.Consequences).Select(t=>t.GetExecutionTask()));
-                //todo:this
             }
         }
 
@@ -374,9 +366,6 @@ public partial class PuzzGrid : MonoBehaviour
                 tasks.Add(task);
             }
         }
-        
-        //don't do failures for undo
-        
         await UniTask.WhenAll(tasks);
     }
 

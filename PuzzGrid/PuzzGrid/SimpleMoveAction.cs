@@ -414,6 +414,11 @@ public class SimpleMoveAction : GridAction, IPushAction
         return HashCode.Combine(Ent, MovementVec);
     }
 
+    public override string ToString()
+    {
+        return "SimpleMoveAction: " + Ent.name + " move " + MovementVec;
+    }
+
     public override bool ConflictsWith(GridAction sideEffectAction) => false;
 
     public async override UniTask GetExecutionTask()

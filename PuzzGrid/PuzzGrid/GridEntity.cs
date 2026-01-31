@@ -26,15 +26,7 @@ public abstract class GridEntity : MonoBehaviour
         {
             entityComponent.BindGridEntity(this);
         }
-
-        
         PuzzGrid = gameObject.GetComponentInAncestor<PuzzGrid>();
-        
-        // foreach (var nodeEntity in NodeEnts)
-        // {
-        //     nodeEntity.GridEntity = this;
-        //     nodeEntity.PuzzGrid = PuzzGrid;
-        // }
     }
 
     protected List<IGridEntityComponent> _components;

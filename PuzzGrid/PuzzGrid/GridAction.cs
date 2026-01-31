@@ -13,8 +13,7 @@ using UnityEngine.Rendering;
 
 public abstract class GridAction
 {
-    public abstract void
-        Execute(); //this can be a single GAS with all the natural 'groups' in it, since if one fails all fail.
+    public abstract void Execute(); //this can be a single GAS with all the natural 'groups' in it, since if one fails all fail.
 
     //public abstract UniTask ExecuteFinally();
     public abstract void Undo();
@@ -25,14 +24,9 @@ public abstract class GridAction
     public abstract override bool Equals(object obj);
     public abstract override int GetHashCode();
     
-    //moved to the entity!
-    //public abstract IEnumerable<UniTask> GetExecutionTasks();
-    //public abstract IEnumerable<UniTask> GetUndoTasks();
-
     public int ID;
 
     public GridEntity Ent;
-    //public abstract GridAction ResolveConflict(GridAction sideEffectAction);
     public abstract bool ConflictsWith(GridAction sideEffectAction);
 
     public bool Executed;

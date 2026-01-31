@@ -40,39 +40,38 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
                 else result.Actions.AddRange(se.Actions);
             }
         }
-        
+
+       
+
         return result;
     }
 
     public override IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
-        var list = new List<GridAction>();
-        
-        // for (var i = effects.Count - 1; i >= 0; i--)
-        // {
-        //     var gridAction = effects[i];
-        //     if (gridAction is CompoundMoveAction move)
-        //     {
-        //         var newMove = new CompoundMoveAction(this, move.MovementVec, move.NumMoves, true, false, move.Force);
-        //         var numMoves = move.NumMoves;
-        //         foreach (var action in PendingMoves.OfType<SimpleMoveAction>())
-        //         {
-        //             if (action.MovementVec == move.MovementVec)
-        //             {
-        //                 //these are duplicates!
-        //                 numMoves--;
-        //             }
-        //         }
-        //
-        //         if (numMoves == move.NumMoves) continue; //nothing happened
-        //         
-        //         effects.RemoveAt(i);
-        //         if(numMoves <= 0) continue; //move is totally cancelled
-        //         
-        //         newMove.NumMoves = numMoves;
-        //         effects.Insert(i, newMove); //move is replaced
-        //     }
-        // }
+        for (var i = effects.Count - 1; i >= 0; i--)
+        {
+            var gridAction = effects[i];
+            if (gridAction is SimpleMoveAction move)
+            {
+                //var newMove = new CompoundMoveAction(this, move.MovementVec, move.NumMoves, true, false, move.Force);
+                var moveDistance = move.MovementVec.magnitude;
+                foreach (var action in PendingMoves.OfType<SimpleMoveAction>())
+                {
+                    if (action.MovementVec.IsInSameDirection( move.MovementVec))
+                    {
+                        //these are duplicates!
+                        moveDistance -= action.MovementVec.magnitude;
+                    }
+                }
+                
+                if (moveDistance == move.MovementVec.magnitude) continue; //nothing happened
+                
+                effects.RemoveAt(i);
+                if(moveDistance <= 0.01f) continue; //move is totally cancelled
+                var newMove = new SimpleMoveAction(this, move.MovementVec.WithMagnitude(moveDistance), move.Force, move.PlatformPush, move.Turn);
+                effects.Insert(i, newMove); //move is replaced
+            }
+        }
 
         return effects;
     }
@@ -82,18 +81,20 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
         var direction = InvertX ? new Vector3(-dir.x, dir.y, dir.z) : dir;
         
         var currentForward = this.transform.forward;
-        
-        var dot = turn180 ? direction.Dot(currentForward) : Math.Abs(direction.Dot(currentForward));
-        if(dot < 0.9f) //not facing the right way!
+
+        if (GetComponent<SettlementGaze>()._partner == null)
         {
-            var targetRot = Quaternion.LookRotation(direction, Vector3.up);
-            return SimpleRotateAction.GetMove(
-                this,
-                targetRot, 
-                this.transform.rotation);
+            var dot = turn180 ? direction.Dot(currentForward) : Math.Abs(direction.Dot(currentForward));
+            if (dot < 0.9f) //not facing the right way!
+            {
+                var targetRot = Quaternion.LookRotation(direction, Vector3.up);
+                return SimpleRotateAction.GetMove(
+                    this,
+                    targetRot,
+                    this.transform.rotation);
+            }
         }
-        
-        
+
         return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), false, default);
         
     }

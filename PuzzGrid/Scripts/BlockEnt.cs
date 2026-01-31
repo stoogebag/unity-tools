@@ -58,33 +58,30 @@ public class BlockEnt : GridEntity, IPushesButton
 
     public override IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
-        // for (var i = effects.Count - 1; i >= 0; i--)
-        // {
-        //     var gridAction = effects[i];
-        //     if (gridAction is CompoundMoveAction move)
-        //     {
-        //         var newMove = new CompoundMoveAction(this, move.MovementVec, move.NumMoves, true, false, move.Force);
-        //         var numMoves = move.NumMoves;
-        //         foreach (var action in PendingMoves.OfType<SimpleMoveAction>())
-        //         {
-        //             if (action.MovementVec == move.MovementVec)
-        //             {
-        //                 //these are duplicates!
-        //                 numMoves--;
-        //             }
-        //         }
-        //
-        //         if (numMoves == move.NumMoves) continue; //nothing happened
-        //         
-        //         effects.RemoveAt(i);
-        //         if(numMoves <= 0) continue; //move is totally cancelled
-        //         
-        //         newMove.NumMoves = numMoves;
-        //         effects.Insert(i, newMove); //move is replaced
-        //         
-        //         //todo if needed: this could ez be optimised in the replacement case by jujst replacing the move. 
-        //     }
-        // }
+         for (var i = effects.Count - 1; i >= 0; i--)
+         {
+            var gridAction = effects[i];
+            if (gridAction is SimpleMoveAction move)
+            {
+                //var newMove = new CompoundMoveAction(this, move.MovementVec, move.NumMoves, true, false, move.Force);
+                var moveDistance = move.MovementVec.magnitude;
+                foreach (var action in PendingMoves.OfType<SimpleMoveAction>())
+                 {
+                     if (action.MovementVec.IsInSameDirection( move.MovementVec))
+                     {
+                         //these are duplicates!
+                         moveDistance -= action.MovementVec.magnitude;
+                     }
+                 }
+                
+                if (moveDistance == move.MovementVec.magnitude) continue; //nothing happened
+                
+                effects.RemoveAt(i);
+                if(moveDistance <= 0.01f) continue; //move is totally cancelled
+                var newMove = new SimpleMoveAction(this, move.MovementVec.WithMagnitude(moveDistance), move.Force, move.PlatformPush, move.Turn);
+                effects.Insert(i, newMove); //move is replaced
+            }
+        }
 
         return effects;
     }
