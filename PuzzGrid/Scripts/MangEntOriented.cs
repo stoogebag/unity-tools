@@ -25,8 +25,35 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
 
     public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
     {
-        return null;
+
+        GridActionSet result = null;
+        foreach (var action in actionSummary.ExecutedMoveSummary)
+        {
+            if (action.Ent == this)
+            {
+                if (action is SimpleMoveAction move)
+                {
+                    var down = GetNeighbours(Vector3.down * 10);
+                    if (down != null && down.Count() > 0)
+                    {
+                        //theres a grippy surface below us.
+                        var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
+                        if (!nonIce)
+                        {
+                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
+                                transform.rotation);
+                            if (result == null) result = newmove;
+                            else result.Actions.AddRange(newmove.Actions);
+
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
+
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set)
     {
         GridActionSet result = null;
@@ -120,6 +147,30 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
         {
             return new GridActionConsequences() { Dependency = new SimpleMoveAction(this, push.MovementVec, push.Force) , Approval = Approvals.Partial};
         }
+
+        if (action is SimpleMoveAction move)
+        {
+            if (move.Force == PushForce.WeakGravity)
+            {
+                if (move.Ent.TryGetComponent<SettlementGaze>(out var gazer))
+                {
+                    if (gazer._partner != null)
+                    {
+                        Debug.Log(gazer._partner);
+                        return new GridActionConsequences()
+                        {
+                            Dependency = new SimpleMoveAction(gazer._partner.Entity, move.MovementVec, move.Force),
+                            Approval = Approvals.Partial
+                        };
+                    }
+
+                    ;
+                }
+                
+                
+            }
+        }
+        
         return GridActionConsequences.ActionApproved; //unsure what to do as a default. i guess nothing.
     }
 }

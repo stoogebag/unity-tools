@@ -32,6 +32,31 @@ public class BlockEnt : GridEntity, IPushesButton
                 else result.Actions.AddRange(se.Actions);
             }
         }
+        
+        //ice!
+
+        foreach (var action in actionSummary.ExecutedMoveSummary)
+        {
+            if (action.Ent == this)
+            {
+                if (action is SimpleMoveAction move)
+                {
+                    var down = GetNeighbours(Vector3.down * 10);
+                    if (down != null && down.Count() > 0)
+                    {
+                        //theres a grippy surface below us.
+                        var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
+                        if (!nonIce)
+                        {
+                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false, transform.rotation);
+                            if (result == null) result = newmove;
+                            else result.Actions.AddRange(newmove.Actions);
+                            
+                        }
+                    }
+                }
+            }
+        }
 
         return result;
         
