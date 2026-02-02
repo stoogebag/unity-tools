@@ -197,12 +197,10 @@ public abstract class GridEntity : MonoBehaviour
             }
         }
 
-
         if (!hits.Any()) return null;
         return hits;
     }
-
-
+    
     public virtual IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
         return effects;
