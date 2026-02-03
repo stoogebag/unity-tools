@@ -1,12 +1,10 @@
 #if UNITASK && ODIN_INSPECTOR && UNIRX
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using stoogebag.Extensions;
 using UnityEngine;
 
-[Serializable]
-public class BlockEnt : GridEntity, IPushesButton
+public class BarrelEnt : GridEntity, IPushesButton
 {
 
     public override GridActionSetGroup GetGravityMoves()

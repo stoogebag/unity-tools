@@ -62,7 +62,7 @@ public class SimpleMoveAction : GridAction, IPushAction
         }
         
 
-        if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented)
+        if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented || Ent is BarrelEnt)
         {
             var hits = new List<PuzzGridRaycastResult>();
 
