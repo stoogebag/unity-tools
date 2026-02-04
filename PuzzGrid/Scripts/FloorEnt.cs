@@ -23,13 +23,14 @@ public class FloorEnt : GridEntity
         //fire propagation.
         if (gameObject.TryGetComponent<Fire>(out var fire))
         {
-            var vecs = new []{ transform.forward, -transform.forward, transform.right, -transform.right  };
+            var vecs = new []{ transform.forward, -transform.forward, transform.right, -transform.right, transform.up  };
             
             foreach (Vector3 v in vecs)
             {
                 var hits = GetAllNeighbours(v)?
                     .Select(t => t.HitEnt?.GetComponent<Oil>())
                     .WhereNotNull()
+                    .Where(t=>t.gameObject.activeInHierarchy)
                     .ToHashSet();
 
                 

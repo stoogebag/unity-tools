@@ -94,8 +94,9 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                             var result = new GridActionSet(PuzzGrid);
                             
                             var down = GetAllNeighbours(Vector3.down * 10)?.Select(t => t?.HitEnt).WhereNotNull();
-
-                            if(down.Any() && down.All(t => t.GetComponent<Oil>() == null)) //no oil. add oil
+                            
+                            
+                            if(down != null && down.Any() && down.All(t => t.GetComponent<Oil>() == null)) //no oil. add oil
                             {
                                 var oilPrefab = PuzzGrid.GetComponent<PrefabDirectory>().oilPrefab;
 
@@ -123,7 +124,6 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                                 yield return newmove;
                             }
 
-                            yield return result;
 
 
                             //

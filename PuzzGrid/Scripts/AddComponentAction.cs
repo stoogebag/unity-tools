@@ -9,7 +9,8 @@ public class AddComponentAction<T> : GridAction where T: MonoBehaviour
 {
     public override void Execute()
     {
-        Ent.gameObject.AddComponent<T>();
+        var t = Ent.gameObject.AddComponent<T>();
+        (t as IGridEntityComponent).Entity = Ent;
     }
 
     public override void Undo()
