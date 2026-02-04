@@ -21,8 +21,8 @@ public abstract class GridAction
     //returns the 'approved part' of the action. if null, rejected.
     public abstract GridAction Evaluate(HashSet<GridAction> evaluatedActions);
 
-    public abstract override bool Equals(object obj);
-    public abstract override int GetHashCode();
+    //public abstract override bool Equals(object obj);
+    //public abstract override int GetHashCode();
     
     public int ID;
 

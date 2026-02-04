@@ -45,7 +45,6 @@ public class SettlementGaze : MonoBehaviour, IGridEntityComponent, IMoveEvaluati
         }
 
         return actionSet;
-        return null;
     }
 
     public GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set)

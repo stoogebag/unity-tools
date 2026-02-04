@@ -15,7 +15,7 @@ public class BarrelEnt : GridEntity, IPushesButton
     }
     
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) {
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary) {
      
         GridActionSet result = null;
         
@@ -29,8 +29,23 @@ public class BarrelEnt : GridEntity, IPushesButton
             }
         }
         
-        //ice!
-
+        foreach (var action in actionSummary.ExecutedMoveSummary)
+        {
+            if (action.Ent == this)
+            {
+                if (action is SimpleMoveAction move)
+                {
+                    if (IsRoll(move.MovementVec))
+                    {
+           //             var newmove = RollMoveAction.GetMove(this, move.MovementVec, PushForce.WeakSlide, false, transform.rotation);
+           //             return newmove;
+                    }
+                }
+            }
+        }
+        
+        
+        //ice! todo: move this to a component like 'SlideSettlementProvider'
         foreach (var action in actionSummary.ExecutedMoveSummary)
         {
             if (action.Ent == this)
@@ -47,14 +62,13 @@ public class BarrelEnt : GridEntity, IPushesButton
                             var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false, transform.rotation);
                             if (result == null) result = newmove;
                             else result.Actions.AddRange(newmove.Actions);
-                            
+                            yield return result;
                         }
                     }
                 }
             }
         }
 
-        return result;
         
     }
 
@@ -77,6 +91,14 @@ public class BarrelEnt : GridEntity, IPushesButton
         return result;
     }
 
+    
+    private bool IsRoll(Vector3 direction)
+    {
+        if (direction.IsParallel(Vector3.up)) return false;
+        if (direction.IsParallel(transform.up)) return false;
+        return true;
+    }
+    
     public override IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
          for (var i = effects.Count - 1; i >= 0; i--)
@@ -118,26 +140,19 @@ public class BarrelEnt : GridEntity, IPushesButton
                
                //TODO: reimplement maybe. for now grounding is empty.
             }
-            
-            //if (push.Entity != GridEntity)
-            {
-                return 
-                    new GridActionConsequences() { Dependency = new SimpleMoveAction(this, push.MovementVec, push.Force) , Approval = Approvals.Partial};
-            }
 
-            //if(!move.PlatformPush)
-            //    return (true, new GridActionConsequences() { Dependency = new SimpleMoveAction(GridEntity, move.MovementVec) });
-            // else
-            // {
-            //     var neighbours = (GridEntity as BlockEnt).GetNeighbours(Vector3.down);
-            //     
-            //     foreach (var gridNode in neighbours)
-            //     {
-            //         if(gridNode.Entities.Any(t => t.GridEntity != move.Ent)) return (false, null);
-            //     }
-            //     
-            //     return (true, new GridActionConsequences() { Dependency = new SimpleMoveAction(GridEntity, move.MovementVec) });
-            // }
+            if (action is SimpleMoveAction moveAction)
+            {
+                if (IsRoll(moveAction.MovementVec))
+                {
+                    
+                }
+                else
+                {
+                    return 
+                        new GridActionConsequences() { Dependency = new SimpleMoveAction(this, push.MovementVec, push.Force) , Approval = Approvals.Partial};    
+                }
+            }
         }
 
         return GridActionConsequences.ActionApproved;

@@ -23,7 +23,7 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
     }
 
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)
     {
 
         GridActionSet result = null;
@@ -51,7 +51,7 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
             }
         }
 
-        return result;
+        yield return result;
     }
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set)

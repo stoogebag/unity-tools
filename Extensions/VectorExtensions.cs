@@ -243,6 +243,11 @@ namespace stoogebag.Extensions
         {
             return v.normalized.Dot(w.normalized).EqualsApproximately(1);
         }
+        public static bool IsParallel(this Vector3 v, Vector3 w)
+        {
+            var dot = v.normalized.Dot(w.normalized);
+            return Mathf.Abs(dot).EqualsApproximately(1);
+        }
 
         public static Vector3 WithMagnitude(this Vector3 v, float magnitude)
         {

@@ -12,24 +12,178 @@ using UnityEngine;
 
 public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 {
-
     public bool InvertX;
-    
+
+    public bool turnOnMove;
+
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity, false, default));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this, Vector3.down * 10, PushForce.WeakGravity,
+            false, default));
     }
 
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)
     {
-        return null;
+        if (actionSummary != null)
+        {
+            foreach (var action in actionSummary.ExecutedMoveSummary)
+            {
+                if (action.Ent == this)
+                {
+                    if (GetComponent<Oil>() == null) //non-oily feet.
+                    {
+                        //sliipp
+                        if (action is SimpleMoveAction move)
+                        {
+                            var down = GetAllNeighbours(Vector3.down * 10);
+                            if (down != null && down.Count() > 0)
+                            {
+                                //theres a grippy surface below us.
+
+                                //todo: large blocks with a nonslip area.
+                                //will need to do some kind of GroupBy location and beware of snappage.
+
+                                var slipperyTypes = new[] { typeof(Ice), typeof(Oil) };
+
+                                Func<PuzzGridRaycastResult, bool> isSlippery = (r) =>
+                                {
+                                    foreach (var t in slipperyTypes)
+                                    {
+                                        if (r.HitEnt.GetComponent(t) != null) return true;
+                                    }
+
+                                    return false;
+                                };
+                                Func<PuzzGridRaycastResult, bool> isOily = (r) =>
+                                {
+                                    {
+                                        if (r.HitEnt.GetComponent<Oil>() != null) return true;
+                                    }
+                                    return false;
+                                };
+
+                                var slip = down.Any(t => isSlippery(t));
+                                if (slip)
+                                {
+                                    GridActionSet result = null;
+                                    result = new GridActionSet(PuzzGrid);
+                                    var oily = down.Any(t => isOily(t));
+                                    if (oily)
+                                    {
+                                        var addOil = new AddComponentAction<Oil>()
+                                        {
+                                            Ent = this
+                                        };
+                                        result.Actions.Add(addOil);
+                                        yield return result;
+                                    }
+
+                                    var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
+                                        transform.rotation);
+                                    
+                                    yield return newmove;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        {
+                            var result = new GridActionSet(PuzzGrid);
+                            
+                            var down = GetAllNeighbours(Vector3.down * 10)?.Select(t => t?.HitEnt).WhereNotNull();
+
+                            if(down.Any() && down.All(t => t.GetComponent<Oil>() == null)) //no oil. add oil
+                            {
+                                var oilPrefab = PuzzGrid.GetComponent<PrefabDirectory>().oilPrefab;
+
+                                var spawnOil = new SpawnEntityAction()
+                                {
+                                    EntityPrefab = oilPrefab,
+                                    Position = this.transform.position + Vector3.down * PuzzGrid.GridSpacing(),
+                                    Rotation = Quaternion.identity,
+                                    Grid = PuzzGrid
+                                };
+
+                                result.Actions.Add(spawnOil);
+
+                                yield return new GridActionSet(PuzzGrid)
+                                {
+                                    Actions = spawnOil.One().ToList<GridAction>()
+                                };
+                            }
+
+
+                            if (action is SimpleMoveAction move)
+                            {
+                                var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
+                                    transform.rotation);
+                                yield return newmove;
+                            }
+
+                            yield return result;
+
+
+                            //
+                            //
+                            // if (down != null && down.Count() > 0)
+                            // {
+                            //     //todo: large blocks with a nonslip area.
+                            //     //will need to do some kind of GroupBy location and beware of snappage.
+                            //
+                            //     var slipperyTypes = new[] { typeof(Ice), typeof(Oil) };
+                            //
+                            //     Func<PuzzGridRaycastResult, bool> isSlippery = (r) =>
+                            //     {
+                            //         foreach (var t in slipperyTypes)
+                            //         {
+                            //             if (r.HitEnt.GetComponent(t) != null) return true;
+                            //         }
+                            //
+                            //         return false;
+                            //     };
+                            //     Func<PuzzGridRaycastResult, bool> isOily = (r) =>
+                            //     {
+                            //         {
+                            //             if (r.HitEnt.GetComponent<Oil>() != null) return true;
+                            //         }
+                            //         return false;
+                            //     };
+                            //
+                            //     var slip = down.Any(t => isSlippery(t));
+                            //     if (slip)
+                            //     {
+                            //         GridActionSet result = null;
+                            //         result = new GridActionSet(PuzzGrid);
+                            //         var oily = down.Any(t => isOily(t));
+                            //         if (oily)
+                            //         {
+                            //             var addOil = new AddComponentAction<Oil>()
+                            //             {
+                            //                 Ent = this
+                            //             };
+                            //             result.Actions.Add(addOil);
+                            //         }
+                            //
+                            //         var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
+                            //             transform.rotation);
+                            //         result.Actions.AddRange(newmove.Actions);
+                            //         return result;
+                            //     }
+                            // }
+                        }
+                    }
+                }
+            }
+        }
     }
+
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set)
     {
         GridActionSet result = null;
-        
+
         foreach (var gridEntityComponent in _components)
         {
             var se = gridEntityComponent.GetSideEffectMoves(set);
@@ -39,18 +193,15 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                 else result.Actions.AddRange(se.Actions);
             }
         }
-        
+
         return result;
     }
 
-    
-
-    
 
     public override IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
         var list = new List<GridAction>();
-        
+
         // for (var i = effects.Count - 1; i >= 0; i--)
         // {
         //     var gridAction = effects[i];
@@ -80,14 +231,10 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
         return effects;
     }
 
-    public  GridActionSet GetWalkMove(Vector3 dir)
+    public GridActionSet GetWalkMove(Vector3 dir)
     {
         var direction = InvertX ? new Vector3(-dir.x, dir.y, dir.z) : dir;
-        
-        
-        return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), false, default);
-        return null;
-        
+        return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), turnOnMove, default);
     }
 
     private PushForce GetWalkForce()
@@ -103,14 +250,16 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 
         return force;
     }
-    
-    
+
+
     public override GridActionConsequences GetConsequences(GridAction action)
     {
         if (action is IPushAction push)
         {
-            return new GridActionConsequences() { Dependency = new SimpleMoveAction(this, push.MovementVec, push.Force) , Approval = Approvals.Partial};
+            return new GridActionConsequences()
+                { Dependency = new SimpleMoveAction(this, push.MovementVec, push.Force), Approval = Approvals.Partial };
         }
+
         return GridActionConsequences.ActionApproved; //unsure what to do as a default. i guess nothing.
     }
 }

@@ -114,6 +114,15 @@ namespace stoogebag.Extensions
                 if (monoBehaviour is T t) yield return t;
             }
         }
+        public static T GetComponentWithInterface<T>(this GameObject go) where T:class
+        {
+            foreach (var monoBehaviour in go.GetComponents<MonoBehaviour>())
+            {
+                if (monoBehaviour is T t) return t;
+            }
+
+            return null;
+        }
 
         public static IEnumerable<T> GetDescendantsWithInterface<T>(this GameObject go, bool includeOriginal = false, bool includeInactive = false) where T:class
         {

@@ -273,6 +273,8 @@ public class SimpleMoveAction : GridAction, IPushAction
         //     return;
         // }
 
+        OriginalOrientation = Ent.transform.rotation;
+        
         var dir = GridEntity.GetDirection(MovementVec);
         Ent.PendingMoves.Add(this);
         //var physicsEnt = Ent.GetComponent<PhysicsEnt>();
@@ -293,17 +295,6 @@ public class SimpleMoveAction : GridAction, IPushAction
         Ent.transform.position += MovementVec;
 
 
-        // foreach (var ent in Ent.NodeEnts)
-        // {
-        //     ent.CurrentNode.EntityExited(ent, this);
-        //     ent.CurrentNode = ent.CurrentNode.GetNeighbour(dir);
-        //     //ent.transform.position = ent.CurrentNode.Position;
-        //     if (ent.CurrentNode == null)
-        //     {
-        //     }
-        //
-        //     ent.CurrentNode.EntityEntered(ent, this);
-        // }
     }
 
 
@@ -315,20 +306,7 @@ public class SimpleMoveAction : GridAction, IPushAction
 
         Ent.transform.position -= MovementVec;
 
-
-        if (Turn)
-        {
-            Ent.transform.rotation = OriginalOrientation;
-        }
-
-
-        // foreach (var ent in Ent.NodeEnts)
-        // {
-        //     ent.CurrentNode.EntityExited(ent, this);
-        //     ent.CurrentNode = ent.CurrentNode.GetNeighbour(dir);
-        //     //ent.transform.position = ent.CurrentNode.Position;
-        //     ent.CurrentNode.EntityEntered(ent, this);
-        // }
+        if (Turn) { Ent.transform.rotation = OriginalOrientation; }
     }
 
 
@@ -361,7 +339,18 @@ public class SimpleMoveAction : GridAction, IPushAction
     public async override UniTask GetExecutionTask()
     {
         Ent.transform.position -= MovementVec;
-        await Ent.transform.DOMove(Ent.transform.position + MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
+
+        var tasks = new List<UniTask>();
+        
+        if (Turn)
+        {
+            Ent.transform.rotation = OriginalOrientation;
+            tasks.Add(Ent.transform.DOLookAt(Ent.transform.position + MovementVec,  0.1f).SetEase(Ease.InOutSine).ToUniTask());
+        }
+        
+        tasks.Add(Ent.transform.DOMove(Ent.transform.position + MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask());
+        
+        await UniTask.WhenAll(tasks);
     }
 
     public async override UniTask GetUndoTask()
@@ -389,6 +378,14 @@ public class ActionEvaluationOverrideResult
         Reject,
         ApproveProvisional,
     }
+}
+
+public interface IActionExecuteOverrideProvider
+{
+    (bool, Action<GridAction>) GetExecuteOverride(GridAction gridAction);
+    (bool, Action<GridAction>) GetUndoOverride(GridAction gridAction);
+    (bool, UniTask) GetExecutionTaskOverride(GridAction gridAction);
+    (bool, UniTask) GetUndoTaskOverride(GridAction gridAction);
 }
 
 public interface IPushAction

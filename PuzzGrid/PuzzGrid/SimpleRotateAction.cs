@@ -28,10 +28,6 @@ public class SimpleRotateAction : GridAction
         OriginalOrientation = originalOrientation;
     }
 
-    public bool Turn { get; set; }
-
-
-
     public static GridActionSet GetMove(GridEntity ent, Quaternion orientation, Quaternion originalOrientation)
     {
         return new GridActionSet(ent.PuzzGrid)
@@ -49,8 +45,6 @@ public class SimpleRotateAction : GridAction
          Evaluated = true;
          return this;
      }
-
-
 
     //i think not used. if it is, need to decide how. add the angles? idk. shouldnt matter in practice i guess.
     public SimpleRotateAction Merge(IEnumerable<SimpleRotateAction> actions)
