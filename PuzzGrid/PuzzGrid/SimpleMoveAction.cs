@@ -54,15 +54,22 @@ public class SimpleMoveAction : GridAction, IPushAction
         var evalProviders = Ent.gameObject.GetComponentsWithInterface<IMoveEvaluationProvider>();
         foreach (var eval in evalProviders)
         {
-            if(eval.GetActionEvaluationOverride(this, ref evaluatedActions).Result == ActionEvaluationOverrideResult.ActionOverrideResultTypes.Reject)
+            if (eval.GetActionEvaluationOverride(this, ref evaluatedActions).Result ==
+                ActionEvaluationOverrideResult.ActionOverrideResultTypes.Reject)
             {
                 Approval = Approvals.Failed;
                 return null;
             }
         }
-        
 
-        if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented || Ent is BarrelEnt)
+
+        if (!Ent.isActiveAndEnabled)
+        {
+            Approval = Approvals.Failed;
+            return null;
+        }
+
+    if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented || Ent is BarrelEnt)
         {
             var hits = new List<PuzzGridRaycastResult>();
 

@@ -6,6 +6,8 @@ using UnityEngine;
 public class Oil : MonoBehaviour, IGridEntityComponent
 {
 
+    public int SmearQuantity = -1;
+
     public GridActionSet GetSettlementMoves(GridActionSummary set)
     {
         var up = Entity.GetNeighbours(Vector3.up * 10);
