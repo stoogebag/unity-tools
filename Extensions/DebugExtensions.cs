@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Graphs;
 using UnityEngine;
+
 
 namespace stoogebag.Extensions
 {
     public static class DebugExtensions
     {
-        
         public static void DrawRay(Ray ray, float distance, Color color = default)
         {
-            if(color == default) color = Color.red;
-            Debug.DrawLine(ray.origin, ray.origin + ray.direction.normalized* distance, color);
+            if (color == default) color = Color.red;
+            Debug.DrawLine(ray.origin, ray.origin + ray.direction.normalized * distance, color);
         }
-        
-        public static void LogList<T>(this IEnumerable<T> list, Func<T,string> toString = null)
+
+        public static void LogList<T>(this IEnumerable<T> list, Func<T, string> toString = null)
         {
-            Debug.Log($"[{string.Join(", ", list.Select(t=>toString?.Invoke(t) ?? t.ToString()))}]");
+            Debug.Log($"[{string.Join(", ", list.Select(t => toString?.Invoke(t) ?? t.ToString()))}]");
+        }
+
+        public static void DrawSphere(this GameObject go, float radius = 0.1f ,Color color = default)
+        {
+            if(color == default) color = Color.red;
+            if (go == null) return;
+            Gizmos.DrawSphere(go.transform.position, radius);
         }
         
     }
