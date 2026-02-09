@@ -8,8 +8,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Febucci.UI;
-using Febucci.UI.Core;
+using Febucci.TextAnimatorCore.Typing;
+using Febucci.TextAnimatorForUnity.TextMeshPro;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
 using TMPro;
@@ -51,7 +51,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
     {
         get
         {
-            return typewriter != null && typewriter.isShowingText;
+            return typewriter != null && typewriter.IsShowingText;
         }
     }
 

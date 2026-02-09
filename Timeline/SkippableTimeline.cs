@@ -7,7 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Febucci.UI.Core;
+using Febucci.TextAnimatorCore.Typing;
+using Febucci.TextAnimatorForUnity.TextMeshPro;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UniRx;
@@ -51,7 +52,7 @@ namespace stoogebag
             {
                 if (CurrentlyPlayingTimeline.TypingTypewriter != null)
                 {
-                    CurrentlyPlayingTimeline.TypingTypewriter.SkipTypewriter();
+                    CurrentlyPlayingTimeline.TypingTypewriter.SetVisibilityEntireText(true);
                     CurrentlyPlayingTimeline.TypingTypewriter = null;
                     CurrentlyPlayingTimeline.SkipToPause();
                     return;
@@ -109,7 +110,7 @@ namespace stoogebag
         public static SkippableTimeline CurrentlyPlayingTimeline = null;
         
         public PlayableDirector Director { get; private set; }
-        public TypewriterCore TypingTypewriter { get; set; }
+        public TextAnimator_TMP TypingTypewriter { get; set; }
         
         HashSet<TimelineClip> pausedClips = new HashSet<TimelineClip>();
 

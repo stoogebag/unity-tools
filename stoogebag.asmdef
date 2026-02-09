@@ -50,7 +50,9 @@
         "Febucci.TextAnimator.Runtime",
         "DOTweenPro.Scripts",
         "GUID:cf414061cae3a954baf92763590f3127",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Febucci.TextAnimatorForUnity.Runtime",
+        "Febucci.TextAnimatorForUnity.TMP.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
