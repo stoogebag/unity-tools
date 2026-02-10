@@ -21,9 +21,13 @@ namespace stoogebag.Extensions
 
         public static void DrawSphere(this GameObject go, float radius = 0.1f ,Color color = default)
         {
+            DrawSphere(go.transform.position);
+        }
+        
+        public static void DrawSphere(this Vector3 v, float radius = 0.1f ,Color color = default)
+        {
             if(color == default) color = Color.red;
-            if (go == null) return;
-            Gizmos.DrawSphere(go.transform.position, radius);
+            Gizmos.DrawSphere(v, radius);
         }
         
     }
