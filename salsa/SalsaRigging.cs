@@ -3,7 +3,6 @@
 using System.Linq;
 using CrazyMinnow.SALSA;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using stoogebag.Extensions;
 using UniRx;
 using UnityEngine;
@@ -12,6 +11,9 @@ namespace stoogebag._2dConvos
 {
     public class SalsaRigging : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject target;
+        
         public bool TrimWhitespace = true;
         
         public string MouthClosedName = "mouth_closed";
@@ -34,12 +36,14 @@ namespace stoogebag._2dConvos
         [Button]
         public void Rig(AudioSource source = null, float eyeRangeOfMotion = .01f)
         {
+            if(target == null) target = gameObject;
+        
             if(TrimWhitespace) gameObject.StripWhitespaceFromChildNames();
 
-            var mouthClosedObj = this.GetChild<SpriteRenderer>(MouthClosedName);
-            var mouthSmallObj = this.GetChild<SpriteRenderer>(MouthSmallName);
-            var mouthMediumObj = this.GetChild<SpriteRenderer>(MouthMediumName);
-            var mouthLargeObj = this.GetChild<SpriteRenderer>(MouthLargeName);
+            var mouthClosedObj = target.FirstOrDefault<SpriteRenderer>(MouthClosedName);
+            var mouthSmallObj = target.FirstOrDefault<SpriteRenderer>(MouthSmallName);
+            var mouthMediumObj = target.FirstOrDefault<SpriteRenderer>(MouthMediumName);
+            var mouthLargeObj = target.FirstOrDefault<SpriteRenderer>(MouthLargeName);
 
             var mouthClosedSprite = mouthClosedObj?.sprite;
             var mouthSmallSprite = mouthSmallObj?.sprite;
@@ -71,12 +75,12 @@ namespace stoogebag._2dConvos
 
             var randomEyes = gameObject.GetOrAddComponent<RandomEyes2D>();
 
-            var allChildren = gameObject.transform.GetAllDescendants().ToList();
+            var allChildren = target.transform.GetAllDescendants().ToList();
 
             var eyelids = allChildren.Where(t => t.name.Contains(eyeLidString));
-            var movingEyes = allChildren.Where(t => t.name == movingEyeString + "R" || t.name == movingEyeString + "L");
+            var movingEyes = allChildren.Where(t => t.name == movingEyeString + "R" || t.name == movingEyeString + "L" || t.name == movingEyeString);
             var disappearOnBlink =
-                allChildren.Where(t => t.name.Contains(eyeNoBlinkString) && !t.name.Contains(eyeLidString));
+                allChildren.Where(t => (t.name.Contains(eyeNoBlinkString) || t.name.Contains(movingEyeString)) && !t.name.Contains(eyeLidString));
 
             var eyeRenderers = movingEyes.Select(t=>t.GetComponent<SpriteRenderer>()).ToArray();
             randomEyes.eyes = new SpriteRenderer[eyeRenderers.Length];
