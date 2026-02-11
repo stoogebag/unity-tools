@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Febucci.TextAnimatorCore;
 using Febucci.TextAnimatorCore.Typing;
+using Febucci.TextAnimatorForUnity;
 using Febucci.TextAnimatorForUnity.TextMeshPro;
 using stoogebag;
 using stoogebag.Extensions;
@@ -14,22 +15,29 @@ using UnityEngine;
 public class DialoguePanel : Window, IInitializes
 {
     public DialogueSpeaker Speaker;
-    [SerializeField] TextAnimator_TMP textTypewriter;
-    [SerializeField] TextAnimator_TMP labelTypewriter;
+    TextAnimator_TMP textAnimator;
+    TextAnimator_TMP labelAnimator;
+    [SerializeField] TypewriterComponent textTypewriter;
+    [SerializeField] TypewriterComponent labelTypewriter;
     [SerializeField] Window nextIndicator;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
     BoolReactiveProperty activated = new BoolReactiveProperty(false);
-    private float timeSinceActivationChanged = 100; 
-    
-    
+    private float timeSinceActivationChanged = 100;
+
+
+    private void Awake()
+    {
+        textAnimator = textTypewriter.GetComponent<TextAnimator_TMP>();
+        labelAnimator = labelTypewriter.GetComponent<TextAnimator_TMP>();
+    }
+
     public void Initialize()
     {
-        
         disposables.Clear();
         Speaker = GetComponentInParent<DialogueSpeaker>(); //should i just have the user assign this?
-        //typewriter = GetComponentInChildren<TypewriterCore>(true);
+
 
         DialogueBehaviour.DialogueTriggeredObservable.Subscribe(async dialogue =>
         {
@@ -50,6 +58,8 @@ public class DialoguePanel : Window, IInitializes
             activated.Value = false;
         }).AddTo(disposables);
 
+        
+        
         activated.Subscribe(val =>
         {
             timeSinceActivationChanged = 0;
@@ -60,11 +70,12 @@ public class DialoguePanel : Window, IInitializes
     {
         if (timeSinceActivationChanged > 0.05f)
         {
-            if (activated.Value == false) Hide();
+            //BC: there was a reason this was here. probably related to dialogue system usage. keep an eye out
+        //    if (activated.Value == false) Hide(); 
         }
         timeSinceActivationChanged += Time.deltaTime;
         
-         if(textTypewriter.allLettersShown && Active == ActiveState.Active)
+         if(!textTypewriter.IsShowingText && Active == ActiveState.Active)
              nextIndicator?.Activate();
         
     }
@@ -78,14 +89,33 @@ public class DialoguePanel : Window, IInitializes
 
         
         //todo: make it happen
-        textTypewriter.ShowTextAndAwait(dialogue.dialogueLine).Forget();
-        if(labelTypewriter.GetComponent<TextAnimator_TMP>().textFull != dialogue.speakerName)
+        if(labelAnimator.textFull != dialogue.speakerName)
             labelTypewriter.ShowTextAndAwait(dialogue.speakerName).Forget();
 
-        //await UniTask.WhenAll(textTypewriter.ShowTextAndAwait(dialogue.dialogueLine), Activate());
-        
+        await textTypewriter.ShowTextAndAwait(dialogue.dialogueLine); // assume the longest task is the text writing...
 
+        //await UniTask.WhenAll(textTypewriter.ShowTextAndAwait(dialogue.dialogueLine), Activate());
     }
+
+    public async UniTask Bark(DialogueLine line, string speakerName, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
+    {
+        await Bark(line.Text, speakerName, lingerTime, fadeInTime, fadeOutTime);
+    }
+
+    
+    public async UniTask Bark(string message, string speakerName = null, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
+        {
+
+            Activate().Forget();
+            if(labelAnimator.textFull != speakerName)
+                labelTypewriter.ShowTextAndAwait(speakerName).Forget();
+
+            await textTypewriter.ShowTextAndAwait(message); // assume the longest task is the text writing...
+            await UniTask.WaitForSeconds(lingerTime);
+            await Deactivate();
+        }
+    
+    
     
     private async void Hide(float delay = 0.1f)
     {
