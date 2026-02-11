@@ -178,12 +178,16 @@ namespace stoogebag._2dConvos
             
             #if UNITY_EDITOR
             FieldInfo GizmosF = typeof(RandomEyes2D).GetField("randomEyes2DGizmos", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (GizmosF.GetValue(randomEyes) == null)
+            
+            var gizmos = GizmosF.GetValue(randomEyes) as  GameObject[];
+            if (gizmos == null || gizmos.Length <= 0)
             {
-                MethodInfo StartM =
-                    typeof(RandomEyes2D).GetMethod("Start",
-                        BindingFlags.Instance | BindingFlags.NonPublic);
-                StartM.Invoke(randomEyes, null);
+                print("randomeyes gizmos is null or empty. disabling for this run.");
+                randomEyes.enabled = false;
+                // MethodInfo StartM =
+                //     typeof(RandomEyes2D).GetMethod("Start",
+                //         BindingFlags.Instance | BindingFlags.NonPublic);
+                // StartM.Invoke(randomEyes, null); 
             }
             
             
