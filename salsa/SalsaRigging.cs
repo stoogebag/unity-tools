@@ -176,6 +176,8 @@ namespace stoogebag._2dConvos
                 }
             }).AddTo(this);
             
+            //there is a bug where after a domain reload, the gizmos array is never populated. seems to be editoronly
+            //so we detect this and disable the component for that run.
             #if UNITY_EDITOR
             FieldInfo GizmosF = typeof(RandomEyes2D).GetField("randomEyes2DGizmos", BindingFlags.Instance | BindingFlags.NonPublic);
             
@@ -189,10 +191,6 @@ namespace stoogebag._2dConvos
                 //         BindingFlags.Instance | BindingFlags.NonPublic);
                 // StartM.Invoke(randomEyes, null); 
             }
-            
-            
-            
-            
             #endif
             
             
