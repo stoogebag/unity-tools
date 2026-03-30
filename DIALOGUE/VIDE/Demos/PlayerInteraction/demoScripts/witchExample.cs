@@ -14,7 +14,7 @@ public class witchExample : MonoBehaviour {
         {
             GetComponent<Renderer>().material.color = colors[2];
         }
-		GetComponent<VIDE_Assign>().overrideStartNode = 16;
+		GetComponent<VIDE_Assign>().overrideStartNode = 16;   
     }
 	 
     public void Move() //Move

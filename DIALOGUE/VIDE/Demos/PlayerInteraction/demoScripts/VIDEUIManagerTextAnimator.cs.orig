@@ -8,8 +8,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+<<<<<<< main
 using Febucci.UI;
-using Febucci.TextAnimatorForUnity.TextMeshPro;
+using Febucci.UI.Core;
+=======
+using Febucci.TextAnimatorCore.Typing;
+>>>>>>> local
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
 using TMPro;

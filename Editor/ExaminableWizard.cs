@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEditor;
@@ -106,7 +105,7 @@ public class ExaminableWizard : EditorWindow
 
             if (GUILayout.Button("play"))
             {
-                if(   dmb.Lines[0].Clip != null) AudioUtilsRef.PlayClip(dmb.Lines[0].Clip);
+                //if(   dmb.Lines[0].Clip != null) AudioUtilsRef.PlayClip(dmb.Lines[0].Clip);
             }
 #if WHISPER
             if (GUILayout.Button("transcribe") || _transcribe)
