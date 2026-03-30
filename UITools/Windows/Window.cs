@@ -13,9 +13,6 @@ using UnityEngine.UI;
 
 namespace stoogebag.UITools.Windows
 {
-    
-    
-    
     public class Window : MonoBehaviour
     {
         

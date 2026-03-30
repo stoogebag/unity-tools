@@ -5,9 +5,8 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(GridEntity))]
-public class SettlementGaze : MonoBehaviour,  IGridEntityComponent
+public class SettlementGaze : MonoBehaviour, IGridEntityComponent, IMoveEvaluationProvider
 {
-
     private void Awake()
     {
         Entity = GetComponent<GridEntity>();
@@ -19,7 +18,7 @@ public class SettlementGaze : MonoBehaviour,  IGridEntityComponent
     {
         //get forwards neighbours. 
         var raycast = Entity.GetNeighbours(Entity.transform.forward * 1000);
-        
+
         var first = raycast?.FirstOrDefault(t => t.HitEnt?.GetComponent<SettlementGaze>() != null);
         var potentialPartner = first?.HitEnt.GetComponent<SettlementGaze>();
 
@@ -27,32 +26,30 @@ public class SettlementGaze : MonoBehaviour,  IGridEntityComponent
         {
             var returnRaycast = first.HitEnt.GetNeighbours(first.HitEnt.transform.forward * 1000);
             var me = returnRaycast?.FirstOrDefault(t => t?.HitEnt == Entity);
-            if(me == null) potentialPartner = null; //we're not looking at each other
+            if (me == null) potentialPartner = null; //we're not looking at each other
         }
-        
+
         if (potentialPartner == _partner) return null;
-        
+
         var actionSet = new GridActionSet(Entity.PuzzGrid);
-        
+
         //if we have a partner already, dissolve that first
         if (_partner != null)
         {
             actionSet.Actions.Add(new PartnershipDissolveGridAction(this, _partner));
-            
         }
 
         if (potentialPartner != null)
         {
             actionSet.Actions.Add(new PartnershipEstablishGridAction(this, potentialPartner));
         }
+
         return actionSet;
-        return null;
-        
     }
 
     public GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set)
     {
-        if (_partner == null) return null;        
+        if (_partner == null) return null;
         GridActionSet result = null;
 
         foreach (var gridAction in set)
@@ -62,52 +59,83 @@ public class SettlementGaze : MonoBehaviour,  IGridEntityComponent
                 if (move.Ent.TryGetComponent<SettlementGaze>(out var gaze))
                 {
                     if (gaze.Entity == Entity) continue;
-                    
-                    
+
+
                     if (move.Ent == _partner?.Entity)
                     {
-                        var se = SimpleMoveAction.GetMove(Entity, move.MovementVec, move.Force, false, _partner.transform.rotation);
+                        var se = SimpleMoveAction.GetMove(Entity, move.MovementVec, move.Force, false,
+                            _partner.transform.rotation);
                         //var cma = new CompoundMoveAction(Entity, move.MovementVec, count, true, false, move.Force);
-                        GridActionSet.Include(Entity.PuzzGrid, se.Actions[0], ref result); 
+                        GridActionSet.Include(Entity.PuzzGrid, se.Actions[0], ref result);
                     }
                 }
             }
         }
 
         return result;
-        
-        // var gaze = GetComponent<SettlementGaze>();
-        // if (gaze != null && gaze._partner != null)
-        // {
-        //     
-        //     //this is bad. i need to refactor. i think settlementprovider is redundant and IGridEntityComponent is probably the right way to go. OR, not lol.
-        //     foreach (var gridAction in set)
-        //     {
-        //         if (gridAction.Ent != this) continue;
-        //         if (gridAction is SimpleMoveAction moveAction)
-        //         {
-        //             var se = SimpleMoveAction.GetMove(gaze._partner.Entity, moveAction.MovementVec, moveAction.Force, false, gaze._partner.transform.rotation);
-        //
-        //             if (se != null)
-        //             {
-        //                 if (result == null) result = se;
-        //                 else result.Actions.AddRange(se.Actions);
-        //             }
-        //         }
-        //     }
-        // }
-        
     }
 
     public GridEntity Entity { get; set; }
+
+    public ActionEvaluationOverrideResult GetActionEvaluationOverride(GridAction action, ref HashSet<GridAction> evaluatedActions)
+    {
+        if (action is SimpleMoveAction move)
+        {
+            if (move.Force.IsGravity)
+            {
+                if (_partner != null)
+                {
+                    var partnetEnt = _partner.Entity;
+                    var cons = partnetEnt.GetConsequences(move);
+                    
+                    if (cons?.Dependency == null) return ActionEvaluationOverrideResult.Pass;
+                    if (cons.Dependency.Equals(this)) return ActionEvaluationOverrideResult.Pass;
+                    if (!evaluatedActions.Add(cons.Dependency)) return ActionEvaluationOverrideResult.Pass; //action is a duplicate
+                    var passed = cons.Dependency.Evaluate(evaluatedActions);
+
+
+                    if (passed == null)
+                    {
+                        return ActionEvaluationOverrideResult.Fail;
+                        Debug.Break();
+                    }
+                    
+                    if (passed.Approval == Approvals.Failed)  return ActionEvaluationOverrideResult.Fail;
+                    
+                }
+                
+                
+             //   foreach (var node in Entity.GetNeighbours())
+                //{
+                    // foreach (var nodeEntity in node.Entities)
+                    // {
+                    //     if (nodeEntity.GridEntity == Ent) continue;
+                    //
+                    //     if (nodeEntity.GridEntity.TryGetComponent<MagnetEnt>(out var otherMagnet))
+                    //     {
+                    //         var (pass, cons) = nodeEntity.GetConsequences(this);
+                    //         if (!pass) return false;
+                    //
+                    //         if (cons?.Dependency == null) continue;
+                    //         if (cons.Dependency.Equals(this)) continue;
+                    //         if (!evaluatedActions.Add(cons.Dependency)) continue; //action is a duplicate
+                    //         var passed = cons.Dependency.Evaluate(ref evaluatedActions);
+                    //         if (!passed) return false;
+                    //     }
+                    // }
+                //}
+            }
+        }
+
+        return ActionEvaluationOverrideResult.Pass;
+    }
 }
 
 
 public class PartnershipEstablishGridAction : GridAction
 {
-
     private GridEntity PartnerEnt;
-    
+
     public PartnershipEstablishGridAction(SettlementGaze initiator, SettlementGaze partner)
     {
         Ent = initiator.GetComponent<GridEntity>();
@@ -156,28 +184,25 @@ public class PartnershipEstablishGridAction : GridAction
 
     public override UniTask GetExecutionTask()
     {
-        Debug.Log("partnership established between "+Ent.name+" and "+PartnerEnt.name);
-        
-        
+        Debug.Log("partnership established between " + Ent.name + " and " + PartnerEnt.name);
+
+
         return UniTask.CompletedTask;
         //return UniTask.WhenAll(Enumerable.Select(Activateable.GameObject.GetComponents<IActivateTaskProvider>(), t=>t.GetActivateTask(Activateable.Activated.Value, false)));
     }
-    
+
     public override UniTask GetUndoTask()
     {
-        
         return UniTask.CompletedTask;
         //return UniTask.WhenAll(Enumerable.Select(Activateable.GameObject.GetComponents<IActivateTaskProvider>(), t=>t.GetActivateTask(Activateable.Activated.Value, true)));
     }
 }
 
 
-
 public class PartnershipDissolveGridAction : GridAction
 {
-
     private GridEntity PartnerEnt;
-    
+
     public PartnershipDissolveGridAction(SettlementGaze initiator, SettlementGaze partner)
     {
         Ent = initiator.GetComponent<GridEntity>();
@@ -194,7 +219,6 @@ public class PartnershipDissolveGridAction : GridAction
 
     public override void Undo()
     {
-        
         var initiatorGaze = Ent.GetComponent<SettlementGaze>();
         var partnerGaze = PartnerEnt.GetComponent<SettlementGaze>();
         initiatorGaze._partner = partnerGaze;
@@ -227,19 +251,16 @@ public class PartnershipDissolveGridAction : GridAction
 
     public override UniTask GetExecutionTask()
     {
-        Debug.Log("partnership Dissolved between "+Ent.name+" and "+PartnerEnt.name);
-        
-        
-        
+        Debug.Log("partnership Dissolved between " + Ent.name + " and " + PartnerEnt.name);
+
+
         return UniTask.CompletedTask;
         //return UniTask.WhenAll(Enumerable.Select(Activateable.GameObject.GetComponents<IActivateTaskProvider>(), t=>t.GetActivateTask(Activateable.Activated.Value, false)));
     }
-    
+
     public override UniTask GetUndoTask()
     {
-        
         return UniTask.CompletedTask;
         //return UniTask.WhenAll(Enumerable.Select(Activateable.GameObject.GetComponents<IActivateTaskProvider>(), t=>t.GetActivateTask(Activateable.Activated.Value, true)));
     }
 }
-

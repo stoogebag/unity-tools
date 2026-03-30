@@ -286,6 +286,14 @@ public class PushForce
         IsGravity = true,
         IsGrounded = false,
     };
+    public static PushForce WeakSlide = new PushForce()
+    {
+        Strength = ForceStrength.Weak,
+        IsGravity = false,
+        IsGrounded = true,
+    };
+
+    
 }
 
 public enum ForceStrength

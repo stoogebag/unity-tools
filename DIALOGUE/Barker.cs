@@ -3,6 +3,7 @@
 #if CINEMACHINE
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using stoogebag.Extensions;
 using UnityEngine;
 
 
@@ -10,12 +11,12 @@ namespace stoogebag.DIALOGUE
 {
     public class Barker : MonoBehaviour
     {
-        private UIPopup _uiPopup;
+        private DialoguePanel _uiPopup;
         private DialogueSpeaker _speaker;
     
         private void Awake()
         {
-            _uiPopup = GetComponentInChildren<UIPopup>(true);
+            _uiPopup = gameObject.FirstOrDefault<DialoguePanel>();
             _speaker = GetComponent<DialogueSpeaker>();
         }
 
@@ -34,14 +35,15 @@ namespace stoogebag.DIALOGUE
     
         public async UniTask Bark(DialogueLine line)
         {
-            _uiPopup.StartBark(line).Forget();
+            _uiPopup.Speaker = _speaker;
+            var panelTask = _uiPopup.Bark(line, _speaker.Name);
 
             if (line.Clip != null)
             {
-                await _speaker.Play(line);
+                await UniTask.WhenAll(panelTask, _speaker.Play(line));
                 //await UniTask.WaitUntil(() => !_audioSource.isPlaying);
             }
-            else await UniTask.WaitForSeconds(2);
+            else await panelTask;
 
             await _uiPopup.Deactivate();
         }

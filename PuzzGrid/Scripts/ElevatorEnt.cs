@@ -19,15 +19,14 @@ public class ElevatorEnt : GridEntity, IActivateable, IActivatesByParents
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set) => null;
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)
     {
         var active = (Parents.All(t => t.Activated.Value));
 
         if (active != Activated.Value) //need to switch. 
         {
-            return GridActionSet.GetSingle(PuzzGrid, new ActivationGridAction(this));
+            yield return GridActionSet.GetSingle(PuzzGrid, new ActivationGridAction(this));
         }
-        else return null;
 
     }
 

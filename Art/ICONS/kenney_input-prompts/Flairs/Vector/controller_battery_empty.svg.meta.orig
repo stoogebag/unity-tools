@@ -1,13 +1,26 @@
 fileFormatVersion: 2
 guid: 4926475ad90ffe4458027a6d8df6da79
-DefaultImporter:
+ScriptedImporter:
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-<<<<<<< main
+  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}
+<<<<<<< HEAD
+  tessellationMode: 0
+    SpriteName: controller_battery_emptySprite
+    SpritePivot: {x: 0.5, y: 0.5}
+    SpriteAlignment: 0
+    SpriteBorder: {x: 0, y: 0, z: 0, w: 0}
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 48.013317
+      height: 42
+    SpriteID: af6a7c4d6cbebe54d83a7278d2e806ee
 =======
-  script: {fileID: 12408, guid: 0000000000000000e000000000000000, type: 0}
   svgType: 0
   texturedSpriteMeshType: 0
   svgPixelsPerUnit: 100
@@ -18,7 +31,6 @@ DefaultImporter:
   viewportOptions: 0
   preserveViewport: 0
   advancedMode: 0
-  tessellationMode: 0
   predefinedResolutionIndex: 1
   targetResolution: 1080
   resolutionMultiplier: 1
@@ -39,16 +51,18 @@ DefaultImporter:
   useSVGPixelsPerUnit: 0
   spriteData:
     TessellationDetail: 0
-    SpriteName: controller_battery_emptySprite
-    SpritePivot: {x: 0.5, y: 0.5}
-    SpriteAlignment: 0
-    SpriteBorder: {x: 0, y: 0, z: 0, w: 0}
     SpriteRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 48.013317
-      height: 42
-    SpriteID: af6a7c4d6cbebe54d83a7278d2e806ee
+      name: 
+      originalName: 
+      pivot: {x: 0, y: 0}
+      alignment: 0
+      border: {x: 0, y: 0, z: 0, w: 0}
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      spriteID: af6a7c4d6cbebe54d83a7278d2e806ee
     PhysicsOutlines: []
->>>>>>> local
+>>>>>>> a05fb7107a4e2b8d0ff50d2b590bdb2aa793341f

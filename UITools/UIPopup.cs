@@ -12,8 +12,6 @@ using UnityEngine;
 
 public class UIPopup : Window
 {
-    
-    
     public void SetText(string t)
     {
         gameObject.FirstOrDefault<TextMeshProUGUI>().text = t;

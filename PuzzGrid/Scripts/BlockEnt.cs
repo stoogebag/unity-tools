@@ -1,9 +1,7 @@
 #if UNITASK && ODIN_INSPECTOR && UNIRX
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
 
@@ -19,7 +17,7 @@ public class BlockEnt : GridEntity, IPushesButton
     }
     
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) {
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary) {
      
         GridActionSet result = null;
         
@@ -35,30 +33,35 @@ public class BlockEnt : GridEntity, IPushesButton
         
         //ice!
 
-        foreach (var action in actionSummary.ExecutedMoveSummary)
+        if (actionSummary != null)
         {
-            if (action.Ent == this)
+            foreach (var action in actionSummary.ExecutedMoveSummary)
             {
-                if (action is SimpleMoveAction move)
+                if (action.Ent == this)
                 {
-                    var down = GetNeighbours(Vector3.down * 10);
-                    if (down != null && down.Count() > 0)
+                    //ice
+                    if (action is SimpleMoveAction move)
                     {
-                        //theres a grippy surface below us.
-                        var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
-                        if (!nonIce)
+                        var down = GetNeighbours(Vector3.down * 10);
+                        if (down != null && down.Count() > 0)
                         {
-                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false, transform.rotation);
-                            if (result == null) result = newmove;
-                            else result.Actions.AddRange(newmove.Actions);
-                            
+                            //theres a grippy surface below us.
+                            var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
+                            if (!nonIce)
+                            {
+                                var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
+                                    transform.rotation);
+                                if (result == null) result = newmove;
+                                else result.Actions.AddRange(newmove.Actions);
+
+                            }
                         }
                     }
                 }
             }
         }
 
-        return result;
+        if(result != null) yield return result;
         
     }
 

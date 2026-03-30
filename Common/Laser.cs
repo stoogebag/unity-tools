@@ -19,15 +19,15 @@ public class Laser : MonoBehaviour, ICollides
 
 
     [SerializeField] private GameObject end;
-    
+    [SerializeField] private bool _updateEveryFrame;
+
     // Update is called once per frame
     void Update()
     {
-        
-        //if(TimeExtensions.NthFrame(5))
+        if (_updateEveryFrame)
         {
             UpdateLaser();
-        };
+        }
     }
 
     [Button]
@@ -50,9 +50,15 @@ public class Laser : MonoBehaviour, ICollides
                 //if the laser's getting longer, ease it out. we use a raw duration not a speed cos its so fast anyway who cares.
                 //this might have serious issues creating junk each frame. 
                 //the +1 in the condition above should handle it well enough cos its probably not a big deal
-                
-                transform.DOScaleZ(hit.distance, transitionTime);
 
+                
+                
+                if (transitionTime <= 0 || !Application.isPlaying)
+                {
+                    transform.localScale = new Vector3(1, 1, hit.distance);
+                    end.transform.localScale = new Vector3(1,  1,1 / hit.distance);
+                }
+                transform.DOScaleZ(hit.distance, transitionTime);
                 end.transform.DOScaleZ(1 / hit.distance, transitionTime);
 
                 //transform.localScale = new Vector3(1, 1, hit.distance);

@@ -114,6 +114,15 @@ namespace stoogebag.Extensions
                 if (monoBehaviour is T t) yield return t;
             }
         }
+        public static T GetComponentWithInterface<T>(this GameObject go) where T:class
+        {
+            foreach (var monoBehaviour in go.GetComponents<MonoBehaviour>())
+            {
+                if (monoBehaviour is T t) return t;
+            }
+
+            return null;
+        }
 
         public static IEnumerable<T> GetDescendantsWithInterface<T>(this GameObject go, bool includeOriginal = false, bool includeInactive = false) where T:class
         {
@@ -154,16 +163,28 @@ namespace stoogebag.Extensions
             if (result.TryGetComponent<T>(out var t)) return t;
             return null;
         }
+        
+        
+        public static GameObject FirstOrDefault(this GameObject go, Func<GameObject,bool> condition) 
+        {
+            var result = go.transform.FirstOrDefault(t =>
+            {
+                if(!condition(t.gameObject)) return false;
+                return true;
+            });
+            return result?.gameObject;
+        }
+        
         public static T FirstOrDefault<T>(this GameObject go, Func<GameObject,bool> condition) where T:Object
         {
-            var result = go.FirstOrDefault<T>(t =>
+            var result = go.transform.FirstOrDefault(t =>
             {
-                if(!condition(t)) return false;
+                if(!condition(t.gameObject)) return false;
                 if (t.gameObject.TryGetComponent<T>(out var x)) return true;
                 return false;
             });
             if (result == null) return null;
-            //if (result.TryGetComponent<T>(out var t)) return t;
+            if (result.TryGetComponent<T>(out var t)) return t; //this line was commented out in the past. beware!!!
             return null;
         }
         
@@ -523,5 +544,13 @@ namespace stoogebag.Extensions
             return s;
         }
 
+        public static T TryGetComponentOrAdd<T>(this GameObject go) where T : Component
+        {
+            if (go.TryGetComponent<T>(out var t)) return t;
+            else return go.AddComponent<T>();
+        }
+
     }
+    
+    
 }
