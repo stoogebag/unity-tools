@@ -9,7 +9,6 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Febucci.TextAnimatorCore.Typing;
 using Febucci.TextAnimatorForUnity;
-using Febucci.TextAnimatorForUnity.TextMeshPro;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UniRx;
@@ -111,7 +110,7 @@ namespace stoogebag
         public static SkippableTimeline CurrentlyPlayingTimeline = null;
         
         public PlayableDirector Director { get; private set; }
-        public TypewriterComponent TypingTypewriter { get; set; }
+        public TypewriterCore TypingTypewriter { get; set; }
         
         HashSet<TimelineClip> pausedClips = new HashSet<TimelineClip>();
 

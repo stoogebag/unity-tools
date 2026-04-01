@@ -4,13 +4,12 @@
 using Cysharp.Threading.Tasks;
 using Febucci.TextAnimatorCore.Typing;
 using Febucci.TextAnimatorForUnity;
-using Febucci.TextAnimatorForUnity.TextMeshPro;
 
 namespace stoogebag.Extensions
 {
     public static class TypewriterExtensions
     {
-        public static async UniTask ShowTextAndAwait(this TypewriterComponent typewriter, string text)
+        public static async UniTask ShowTextAndAwait(this TypewriterCore typewriter, string text)
         {
             typewriter.ShowText(text);
             await UniTask.WaitForSeconds(1);

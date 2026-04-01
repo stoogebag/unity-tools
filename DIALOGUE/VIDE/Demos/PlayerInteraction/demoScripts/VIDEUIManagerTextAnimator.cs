@@ -9,7 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Febucci.TextAnimatorCore.Typing;
-using Febucci.TextAnimatorForUnity.TextMeshPro;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
 using TMPro;
