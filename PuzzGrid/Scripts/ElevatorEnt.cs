@@ -12,17 +12,21 @@ using UnityEngine;
 
 public class ElevatorEnt : GridEntity, IActivateable, IActivatesByParents
 {
+    private void Awake()
+    {
+        BindParents();
+    }
+
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set) => null;
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)
     {
         var active = (Parents.All(t => t.Activated.Value));
 
         if (active != Activated.Value) //need to switch. 
         {
-            return GridActionSet.GetSingle(PuzzGrid, new ActivationGridAction(this));
+            yield return GridActionSet.GetSingle(PuzzGrid, new ActivationGridAction(this));
         }
-        else return null;
 
     }
 
@@ -37,6 +41,11 @@ public class ElevatorEnt : GridEntity, IActivateable, IActivatesByParents
     private List<IActivateable> Parents;
 
     private void OnValidate()
+    {
+        BindParents();
+        }
+
+    private void BindParents()
     {
         if (!_parents.All(t => t.GetComponent<IActivateable>() != null))
         {

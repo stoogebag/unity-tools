@@ -1,3 +1,5 @@
+#if SPLINES
+
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -13,3 +15,4 @@ public class SplineAnimatePlayableTrack : TrackAsset
         return ScriptPlayable<SplineAnimatePlayableMixerBehaviour>.Create (graph, inputCount);
     }
 }
+#endif

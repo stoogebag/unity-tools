@@ -1,3 +1,5 @@
+#if SPLINES
+
 using System;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -50,3 +52,4 @@ public class SplineAnimatePlayableBehaviour : PlayableBehaviour
         _splineAnimate?.Pause();
     }
 }
+#endif

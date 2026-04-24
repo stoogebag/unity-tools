@@ -75,7 +75,6 @@ public partial class PuzzGrid : MonoBehaviour
             CheckLossConditions();
             CheckWinConditions();
             //
-            // //note: it may be necessary in future to run 'settle' until no moves are made. then gravity, then a loop on settle, etc until no moves are made between them both.
             var settle = GetSettlementMoves(moveSummary);
 
             var settleSummary = await RunActionSetGroup(settle, GridActionSetGroup.GroupType.Settlement);
@@ -136,15 +135,10 @@ public partial class PuzzGrid : MonoBehaviour
                     sideEffect.Execute();
                 }
                 
-                
                 foreach (var gridActionSet in approved)
                 {
                     gridActionSet.Undo();
                 }
-
-                
-                    
-                
             }
             else break;
         }
@@ -172,23 +166,7 @@ public partial class PuzzGrid : MonoBehaviour
 
     private void CheckWinConditions()
     {
-        if (winEnt == null) winEnt = FindObjectOfType<WinEnt>();
-        if (mangEnt == null) mangEnt = FindObjectOfType<MangEnt>();
-
-        if (winEnt != null)
-        {
-            var winBox = winEnt.GetComponentInChildren<BoxCollider>();
-            var mangBox = mangEnt.GetComponentInChildren<BoxCollider>();
-            
-            if (winBox.bounds.Intersects(mangBox.bounds))
-            {
-                Won();
-            }
-            else
-            {
-                UnWon();
-            }
-        }
+        return; //todo. WinConditionProvider or something like that.
     }
 
     private void CheckLossConditions()
@@ -204,7 +182,7 @@ public partial class PuzzGrid : MonoBehaviour
     bool _moving = false;
     private bool _undoing = false;
 
-    public async UniTask Undo()
+    private async UniTask Undo()
     {
         if (_moving || _undoing) return;
         _undoing = true;
@@ -256,24 +234,6 @@ public partial class PuzzGrid : MonoBehaviour
     //returns the approved UNEXECUTED moves.
     private void EvaluateActionSetGroup(GridActionSetGroup actionSetGroup, GridActionSetGroup.GroupType type)
     {
-        //for breakpoints.
-        if (type == GridActionSetGroup.GroupType.Gravity)
-        {
-        }
-
-        if (type == GridActionSetGroup.GroupType.UserInput)
-        {
-        }
-
-        if (type == GridActionSetGroup.GroupType.Settlement)
-        {
-        }
-
-        //we must actually execute them, in order, if they succeed. otherwise there may be clashes. 
-        //the ordering at this stage doesn't matter. it may need to in future...
-        //error in the case that something is moved by an actionSet and then wants to move itself!
-        //must filter in some way...
-
         var approved = actionSetGroup.ActionSets.Where(t => t.Approved);
 
         foreach (var actionSet in actionSetGroup.ActionSets)
@@ -317,17 +277,19 @@ public partial class PuzzGrid : MonoBehaviour
     {
         var sideEffectGroups = sideEffectMoves
             .Actions
+            .Where(t => t.Ent != null) //HACK WARNING! spawn actions have no entity, but also no side effects. BEWARE!!!
             .GroupBy(t => t.Ent)
             .ToDictionary(t => t.Key, t => t.ToList());
 
         var actions = new List<GridAction> { };
-        //var gp = new GridActionSetGroup(sideEffectMoves.PuzzGrid);
         foreach (var (ent, effects) in sideEffectGroups)
         {
             var result = ent.FilterSideEffects(effects);
             actions.AddRange(result);
         }
 
+        actions.AddRange(sideEffectMoves.Actions.Where(t=>t.Ent == null));
+        
         return actions;
     }
 
@@ -341,10 +303,18 @@ public partial class PuzzGrid : MonoBehaviour
         {
             foreach (var gridAction in gridActions)
             {
-                var task = gridAction.GetExecutionTask();
-                tasks.Add(task);
-               // tasks.AddRange(gridAction.GetAllDescendants(t=>t.Consequences).Select(t=>t.GetExecutionTask()));
-                //todo:this
+                bool overridden = false;
+                foreach (var provider in gridAction.Ent.gameObject.GetComponentsWithInterface<IActionExecuteOverrideProvider>())
+                {
+                    (var exists, var newTask) = provider.GetExecutionTaskOverride(gridAction);
+                    if (exists)
+                    {
+                        tasks.Add(newTask);
+                        overridden = true;
+                    }
+                }
+                
+                if(!overridden){ tasks.Add( gridAction.GetExecutionTask());}
             }
         }
 
@@ -369,13 +339,24 @@ public partial class PuzzGrid : MonoBehaviour
         {
             foreach (var gridAction in gridActions)
             {
-                var task = gridAction.GetUndoTask();
-                tasks.Add(task);
+                bool overridden = false;
+                foreach (var provider in gridAction.Ent.gameObject
+                             .GetComponentsWithInterface<IActionExecuteOverrideProvider>())
+                {
+                    (var exists, var newTask) = provider.GetUndoTaskOverride(gridAction);
+                    if (exists)
+                    {
+                        tasks.Add(newTask);
+                        overridden = true;
+                    }
+                }
+
+                if (!overridden)
+                {
+                    tasks.Add(gridAction.GetUndoTask());
+                }
             }
         }
-        
-        //don't do failures for undo
-        
         await UniTask.WhenAll(tasks);
     }
 
@@ -407,7 +388,13 @@ public partial class PuzzGrid : MonoBehaviour
         foreach (var ent in Entities)
         {
             var cons = ent.GetSettlementMoves(actionSummary);
-            if (cons != null) gp.ActionSets.Add(cons);
+            if (cons != null) gp.ActionSets.AddRange(cons);
+            
+            foreach (var settlementMoveProvider in ent.gameObject.GetComponentsWithInterface<ISettlementMoveProvider>())
+            {
+                   var spCons = settlementMoveProvider.GetSettlementMoves(actionSummary);
+                   if (spCons != null) gp.ActionSets.Add(spCons);
+            }
         }
 
         return gp;
@@ -437,4 +424,15 @@ public partial class PuzzGrid : MonoBehaviour
         return transform.TransformVector(direction);
     }
 }
+
+public interface ISettlementMoveProvider
+{
+    GridActionSet GetSettlementMoves(GridActionSummary actionSummary);
+}
+
+public interface IConsequenceProvider
+{
+    GridActionSetGroup GetConsequences(GridActionSet triggeringSet, IEnumerable<GridAction> triggeringActions);
+}
+
 #endif

@@ -11,10 +11,10 @@ namespace stoogebag.UITools.Windows
     public class WindowWithClose : Window
     {
         public Button Close;
-    
-        void Start()
+
+        protected override void Start()
         {
-            //base.Start();
+            base.Start();
             Close = gameObject.FirstOrDefault<Button>("Close");
         }
 

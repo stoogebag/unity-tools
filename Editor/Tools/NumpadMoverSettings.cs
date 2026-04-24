@@ -1,0 +1,45 @@
+using UnityEditor;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "NumpadMoverSettings", menuName = "Numpad Mover/Settings")]
+public class NumpadMoverSettings : ScriptableObject
+{
+    public float moveFull = 1f;
+    public float moveHalf = 0.5f;
+    public float rotate90 = 90f;
+    public float rotate45 = 45f;
+
+    enum Axis
+    {
+        XY,
+        XZ,
+    }
+    
+    public static NumpadMoverSettings Instance => Load();
+    static NumpadMoverSettings Load() => Resources.Load<NumpadMoverSettings>("NumpadMoverSettings");
+}
+
+static class NumpadMoverSettingsProvider
+{
+    const string PATH = "Assets/Editor/Resources/NumpadMoverSettings.asset";
+
+    [SettingsProvider]
+    public static SettingsProvider CreateProvider()
+    {
+        var provider = new SettingsProvider("Project/stooge/Numpad Mover", SettingsScope.Project);
+        provider.guiHandler = search =>
+        {
+            var settings = AssetDatabase.LoadAssetAtPath<NumpadMoverSettings>(PATH);
+            if (settings == null) return;
+
+            var so = new SerializedObject(settings);
+            so.Update();
+            EditorGUILayout.PropertyField(so.FindProperty("moveFull"));
+            EditorGUILayout.PropertyField(so.FindProperty("moveHalf"));
+            EditorGUILayout.PropertyField(so.FindProperty("rotate90"));
+            EditorGUILayout.PropertyField(so.FindProperty("rotate45"));
+            so.ApplyModifiedProperties();
+        };
+        return provider;
+    }
+}

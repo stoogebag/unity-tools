@@ -46,7 +46,7 @@ public class MagnetEnt : MonoBehaviour, IGridEntityComponent
 public interface IGridEntityComponent
 {
     public GridActionSet GetSettlementMoves(GridActionSummary set);
-    public GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets);
+    public GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set);
 
     GridEntity Entity { get; set; }
     

@@ -11,6 +11,9 @@ using UnityEngine.SceneManagement;
 
 public partial class PuzzGrid
 {
+    [SerializeField]
+    private bool _drawDebug;
+    public bool DrawDebug => _drawDebug; 
     
     public Vector3 Origin;
     

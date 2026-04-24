@@ -239,6 +239,22 @@ namespace stoogebag.Extensions
             return false;
         }
 
+        public static bool IsInSameDirection(this Vector3 v, Vector3 w)
+        {
+            return v.normalized.Dot(w.normalized).EqualsApproximately(1);
+        }
+        public static bool IsParallel(this Vector3 v, Vector3 w)
+        {
+            var dot = v.normalized.Dot(w.normalized);
+            return Mathf.Abs(dot).EqualsApproximately(1);
+        }
+
+        public static Vector3 WithMagnitude(this Vector3 v, float magnitude)
+        {
+            if (v.magnitude.EqualsApproximately(0f)) throw new Exception("v is zero!");
+            return v.normalized * magnitude;
+        }
+        
 
         public static Vector3 MultiplyPointwise(this Vector3 v, Vector3 w)
         {

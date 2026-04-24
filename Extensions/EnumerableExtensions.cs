@@ -148,6 +148,8 @@ namespace stoogebag.Extensions
         {
             if (source == null) yield break;
             if (!excludeOriginal) yield return source;
+            
+            
             foreach (var s in childrenFunc(source))
             {
                 yield return s;

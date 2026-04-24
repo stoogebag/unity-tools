@@ -26,15 +26,7 @@ public abstract class GridEntity : MonoBehaviour
         {
             entityComponent.BindGridEntity(this);
         }
-
-        
         PuzzGrid = gameObject.GetComponentInAncestor<PuzzGrid>();
-        
-        // foreach (var nodeEntity in NodeEnts)
-        // {
-        //     nodeEntity.GridEntity = this;
-        //     nodeEntity.PuzzGrid = PuzzGrid;
-        // }
     }
 
     protected List<IGridEntityComponent> _components;
@@ -134,7 +126,7 @@ public abstract class GridEntity : MonoBehaviour
 
 
     public abstract GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set);
-    public abstract GridActionSet GetSettlementMoves(GridActionSummary actionSummary);
+    public abstract IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary);
     public abstract GridActionSetGroup GetGravityMoves();
 
 
@@ -171,7 +163,7 @@ public abstract class GridEntity : MonoBehaviour
         {
             var rayDir = direction + direction.normalized * buffer;
 
-            Debug.DrawRay(rayOrigin, rayDir, Color.red, 1f);
+            if(PuzzGrid.DrawDebug) Debug.DrawRay(rayOrigin, rayDir, Color.red, 1f);
 
 
             //cast.
@@ -186,13 +178,11 @@ public abstract class GridEntity : MonoBehaviour
                 float prePortalDistance = 0;
                 float postPortalDistance = 0;
                 float portalMultiplier = 1;
-
-
+                
                 var hitEnt = hit.collider.gameObject.GetComponentInAncestor<GridEntity>();
                 if (hitEnt == null) continue;
                 if (hitEnt == this) continue;
-
-
+                
                 var res = new PuzzGridRaycastResult()
                 {
                     HitEnt = hitEnt,
@@ -207,12 +197,64 @@ public abstract class GridEntity : MonoBehaviour
             }
         }
 
+        if (!hits.Any()) return null;
+        return hits;
+    }
+    public List<PuzzGridRaycastResult> GetAllNeighbours(Vector3 direction, int numRays = 2)
+    {
+        var hits = new List<PuzzGridRaycastResult>();
+
+        foreach ((var rayOrigin, var buffer) in GetFrontierRayOrigins(direction, 10f, numRays)
+                     .ToList())
+        {
+            var rayDir = direction + direction.normalized * buffer;
+
+            if(PuzzGrid.DrawDebug) Debug.DrawRay(rayOrigin, rayDir, Color.red, 1f);
+
+
+            
+            var castHit = Physics.RaycastAll(rayOrigin, rayDir, PuzzGrid.GridSpacing() * 100,
+                LayerMask.GetMask("Default"));
+            
+            //cast. TODO: handle 'closest'? or does direction.magnitude handle that...
+            //var minDistance = castHit.Min(t => t.distance);
+            
+            foreach (var hit in castHit)
+            {
+                var hitDistance = hit.distance - buffer;
+                if (hitDistance >= direction.magnitude) continue;
+
+                //portal related stuff.
+                Vector3 portalOutDirection = Vector3.zero;
+                float prePortalDistance = 0;
+                float postPortalDistance = 0;
+                float portalMultiplier = 1;
+                
+                var hitEnt = hit.collider.gameObject.GetComponentInAncestor<GridEntity>();
+                if (hitEnt == null) continue;
+                if (hitEnt == this) continue;
+                
+                var res = new PuzzGridRaycastResult()
+                {
+                    HitEnt = hitEnt,
+                    PrePortalDistance = prePortalDistance,
+                    PostPortalDistance = postPortalDistance,
+                    PortalMultiplier = portalMultiplier,
+                    PortalOutDirection = portalOutDirection,
+                    HitDistance = hitDistance,
+                    ThroughPortal = postPortalDistance > 0,
+                };
+                hits.Add(res);
+            }
+        }
 
         if (!hits.Any()) return null;
         return hits;
     }
-
-
+    
+    
+    
+    
     public virtual IEnumerable<GridAction> FilterSideEffects(List<GridAction> effects)
     {
         return effects;
@@ -224,7 +266,6 @@ public abstract class GridEntity : MonoBehaviour
         {
             c.enabled = false;
         }
-
         return UniTask.CompletedTask;
     }
 

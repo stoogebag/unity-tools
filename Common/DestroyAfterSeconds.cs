@@ -11,7 +11,7 @@ namespace stoogebag.Common
         void Start()
         {
             //started = DateTime.UtcNow;
-            Destroy(gameObject, Time);
+         //   Destroy(gameObject, Time);
         }
 
         void Update()

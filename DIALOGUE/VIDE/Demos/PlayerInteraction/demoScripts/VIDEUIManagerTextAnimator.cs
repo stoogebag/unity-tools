@@ -8,8 +8,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Febucci.UI;
-using Febucci.UI.Core;
+using Febucci.TextAnimatorCore.Typing;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
 using TMPro;
@@ -30,12 +29,12 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
     public Window playerContainer;
     public GameObject itemPopUp;
 
-    public TextAnimator_TMP NPC_Text;
-    public TextAnimator_TMP NPC_label;
+    public TypewriterCore NPC_Text;
+    public TypewriterCore NPC_label;
     public Image NPCSprite;
     public GameObject playerChoicePrefab;
     public Image playerSprite;
-    public TextAnimator_TMP playerLabel;
+    public TypewriterCore playerLabel;
 
     public int distanceBetweenOptionButtons = 100;
     public int initialOptionButtonY = 100;
@@ -51,7 +50,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
     {
         get
         {
-            return typewriter != null && typewriter.isShowingText;
+            return typewriter != null && typewriter.IsShowingText;
         }
     }
 
@@ -66,7 +65,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
 
     private void Start()
     {
-        typewriter = NPC_Text.GetComponent<TypewriterCore>();
+        typewriter = NPC_Text;
     }
 
     void Awake()
@@ -104,8 +103,8 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
 
         try
         {
-            NPC_Text.SetText("");
-            NPC_label.SetText("");
+            NPC_Text.ShowText("");
+            NPC_label.ShowText("");
         }
         catch (System.Exception e)
         {
@@ -204,7 +203,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
 
         try
         {
-            NPC_Text.SetText("");
+            NPC_Text.ShowText("");
         }
         catch(Exception e)
         {
@@ -268,7 +267,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
             NPC_Container.gameObject.SetActive(true);
             await NPC_Container.Activate();//.Forget();
             
-            var typewriter = NPC_Text.GetComponent<TypewriterCore>();
+            var typewriter = NPC_Text;//.GetComponent<TypewriterCore>();
             typewriter.ShowText(data.comments[data.commentIndex]);
 
             
@@ -279,9 +278,9 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
             
             //If it has a tag, show it, otherwise let's use the alias we set in the VIDE Assign
             if (data.tag.Length > 0)
-                NPC_label.SetText(data.tag);
+                NPC_label.ShowText(data.tag);
             else
-                NPC_label.SetText(VD.assigned.alias);
+                NPC_label.ShowText(VD.assigned.alias);
 
         }
     }
@@ -392,7 +391,7 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
     
     void CutTextAnim()
     {
-        NPC_Text.GetComponent<TypewriterCore>().SkipTypewriter();		
+        NPC_Text.SkipTypewriter();		
     }
 
     #endregion

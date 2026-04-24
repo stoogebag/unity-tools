@@ -1,4 +1,5 @@
 ﻿#if UNITASK
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
@@ -26,6 +27,15 @@ namespace stoogebag.Extensions
                 await uniTask;
             }
         } 
+        
+        public static async UniTask<bool> AwaitCondition(Func<bool> condition, int checkIntervalMs = 10, int timeoutMs = -1) //todo:timeout
+        {
+            while (!condition())
+            {
+                await UniTask.Delay(checkIntervalMs);
+            }
+            return true;
+        }
         
     }
 }

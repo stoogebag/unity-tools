@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "ca4acb3c8b1741c29a6dceccb7b29898",
     "m_Properties": [
@@ -11,6 +11,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "11e2f728c4ac418aa2ff87ef961d0979"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "9a613c33b7da43a993c76f2618ea152e"
@@ -89,15 +95,32 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Sub Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": "9a613c33b7da43a993c76f2618ea152e"
     },
+    "m_SubDatas": [],
     "m_ActiveTargets": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "11e2f728c4ac418aa2ff87ef961d0979",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "172a8c0b5bc74595b77b19271acd7d30"
+        },
+        {
+            "m_Id": "3c9e9197d99f49b78cf335a401024da3"
+        }
+    ]
 }
 
 {
@@ -108,9 +131,14 @@
         "m_GuidSerialized": "ccd261c1-8a19-4345-8f7a-d0fa2b83e4da"
     },
     "m_Name": "Vector4",
-    "m_DefaultReferenceName": "",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
+    "m_DefaultReferenceName": "Vector4_172a8c0b5bc74595b77b19271acd7d30",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -156,9 +184,14 @@
         "m_GuidSerialized": "9e3a8bcc-1602-4067-a478-940d61134267"
     },
     "m_Name": "DistortNoisePeriod",
-    "m_DefaultReferenceName": "",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
+    "m_DefaultReferenceName": "Vector1_3c9e9197d99f49b78cf335a401024da3",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -248,13 +281,14 @@
     "synonyms": [],
     "m_Precision": 0,
     "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []
     },
     "m_SourceType": 0,
     "m_FunctionName": "PerlinNoise",
-    "m_FunctionSource": "db31055c731730242982f74346dbb521",
+    "m_FunctionSource": "7a67c18f0360be141807f23b3d7b2507",
     "m_FunctionBody": "Enter function body here..."
 }
 
@@ -350,6 +384,7 @@
     "synonyms": [],
     "m_Precision": 0,
     "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []
@@ -385,6 +420,7 @@
     "synonyms": [],
     "m_Precision": 0,
     "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []
@@ -448,6 +484,7 @@
     "synonyms": [],
     "m_Precision": 0,
     "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []

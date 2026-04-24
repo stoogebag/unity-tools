@@ -105,7 +105,7 @@ public class ExaminableWizard : EditorWindow
 #if ULTIMATE_EDITOR_ENHANCER
             if (GUILayout.Button("play"))
             {
-                if(   dmb.Lines[0].Clip != null) AudioUtilsRef.PlayClip(dmb.Lines[0].Clip);
+                //if(   dmb.Lines[0].Clip != null) AudioUtilsRef.PlayClip(dmb.Lines[0].Clip);
             }
 #endif
 

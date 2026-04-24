@@ -13,16 +13,19 @@ using UnityEngine.UI;
 
 namespace stoogebag.UITools.Windows
 {
-    
-    
-    
     public class Window : MonoBehaviour
     {
         
+        [SerializeField] private Selectable firstSelectedOnActivate;
+        [SerializeField] private bool rememberSelectedOnReactivate = true;
+
+        private Selectable _lastSelected = null;
+        
         private static readonly Subject<Window> _windowOpened = new Subject<Window>();
-        public static IObservable<Window> WindowOpenedObservable => _windowOpened.AsObservable();
+        public static IObservable<Window> OnActivatedObservable => _windowOpened.AsObservable();
         private static readonly Subject<Window> _windowClosed = new Subject<Window>();
-        public static IObservable<Window> WindowClosedObservable => _windowClosed.AsObservable();
+        public static IObservable<Window> OnDeactivatedObservable => _windowClosed.AsObservable();
+        
         
         private IWindowAnimation[] _anims;
 
@@ -70,12 +73,13 @@ namespace stoogebag.UITools.Windows
         //todo: make this sealed, and fire onActivate and onActivationComplete instead
         public virtual async UniTask Activate()
         {
-            //print($"activating {gameObject.name}");
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
 
             if (isModal)
             {
                 CreateModalBlocker();
+                //i don't await this. for now we assume that it will be faster than the window activate, it's very quik 
+                _blocker.Activate().Forget();
             }
             
             _windowOpened?.Invoke(this);
@@ -86,10 +90,7 @@ namespace stoogebag.UITools.Windows
             }
 
             Active = ActiveState.Activating;
-
-            print("setting active");
             gameObject.SetActive(true);
-            print(gameObject.activeSelf);
 
             if (Animations?.Any() != true)
             {
@@ -104,6 +105,15 @@ namespace stoogebag.UITools.Windows
             {
                 Active = ActiveState.Active;
             }
+            
+            if (firstSelectedOnActivate != null)
+            {
+                await UniTask.Yield();
+                if(_lastSelected != null && rememberSelectedOnReactivate)
+                    _lastSelected.Select();
+                else
+                    firstSelectedOnActivate.Select();
+            }
         }
 
         public void DeactivateImmediate()
@@ -115,17 +125,18 @@ namespace stoogebag.UITools.Windows
         [Button]
         public virtual async UniTask Deactivate()
         {
-            //print($"deactivating {gameObject.name}");
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
+
+            if (rememberSelectedOnReactivate) // Just store the global selection directly
+                _lastSelected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
             
             if (isModal)
             {
-                Destroy(_blocker);
+                _blocker.Deactivate().Forget();
             }
             //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
             Active = ActiveState.Deactivating;
-            print("setting inactive");
             
             //todo: make delay optional.
             // var delay = .5f;
@@ -154,7 +165,7 @@ namespace stoogebag.UITools.Windows
         }
 
         public ActiveState Active = ActiveState.Inactive;
-        private GameObject _blocker;
+        private Window _blocker;
 
         public async UniTask Toggle()
         {
@@ -165,10 +176,11 @@ namespace stoogebag.UITools.Windows
         
         private void CreateModalBlocker()
         {
-            if(_blocker != null) Destroy(_blocker);
+            if(_blocker != null) Destroy(_blocker.gameObject);
             // Modal blocker - captures background input
-            _blocker = new GameObject("ModalBlocker");
-            _blocker.transform.SetParent(transform.parent, false);
+            
+            var blockerGO = new GameObject("ModalBlocker");
+            blockerGO.transform.SetParent(transform.parent, false);
             
             var windowCanvas = gameObject.GetComponentInAncestor<Canvas>();
             // Window canvas - renders on top
@@ -176,33 +188,44 @@ namespace stoogebag.UITools.Windows
             windowCanvas.sortingOrder = 1000;
             
             
-            RectTransform rect = _blocker.AddComponent<RectTransform>();
+            RectTransform rect = blockerGO.AddComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             rect.localScale = new Vector3(1000, 1000);
 
-            Image image = _blocker.AddComponent<Image>();
+            Image image = blockerGO.AddComponent<Image>();
             image.color = new Color(0, 0, 0, 0.5f); // Nearly transparent
             image.raycastTarget = true;
 
+            _blocker = blockerGO.AddComponent<Window>();
+            blockerGO.AddComponent<CanvasGroup>();
+            var cgf = blockerGO.AddComponent<CanvasGroupFade>();
+            cgf.SetParams(0,0, 0.2f,0.2f);
+
+            
             
             _blocker.transform.SetSiblingIndex(transform.GetSiblingIndex());
             
 // Add click handler
             image.OnPointerClickAsObservable().Subscribe(_ =>
             {
-                print("blocker clicked!");
                 if (closeOnClickOutside)
                 {
                     Deactivate();
                 }
             }).DisposeWith(this);
-
         }
 
 
+        public static async UniTask CloseAllWindows(GameObject parent)
+        {
+            foreach (var window in parent.GetComponentsInDescendants<Window>(true))
+            {
+                await window.Deactivate();
+            }
+        }
     }
 
     public enum ActiveState
@@ -294,5 +317,6 @@ namespace stoogebag.UITools.Windows
         }
     }
 }
+
 #endif
 #endif

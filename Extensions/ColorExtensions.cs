@@ -30,6 +30,23 @@ namespace stoogebag.Extensions
         {
             return new Color(color.r, color.g, color.b, a);
         }
-        
+
+        public static float Intensity(this Color color)
+        {
+            return Mathf.Max(color.r, color.g, color.b);
+        }
+
+        public static Color Normalised(this Color color)
+        {
+            var intensity = color.Intensity();
+            return new Color(color.r / intensity,
+                color.g / intensity,
+                color.b / intensity, color.a);
+        }
+
+        public static Color WithIntensity(this Color color, float intensity)
+        {
+            return color.Normalised() * color.Intensity();
+        }
     }
 }

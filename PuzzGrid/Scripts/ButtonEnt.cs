@@ -19,13 +19,12 @@ public class ButtonEnt : GridEntity, IActivateable
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set) => null;
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary)
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)
     {
         //get upstairs neighbours. 
         var up = GetNeighbours(Vector3.up * 10);
 
         var pusher = up?.FirstOrDefault(t => t.HitEnt.GetComponent<IPushesButton>() != null);
-
         var swap = false;
         if (pusher == null)
         {
@@ -40,9 +39,8 @@ public class ButtonEnt : GridEntity, IActivateable
 
         if (swap)
         {
-            return GridActionSet.GetSingle(PuzzGrid, new ActivationGridAction(this));
+            yield return GridActionSet.GetSingle(PuzzGrid, new ActivationGridAction(this));
         }
-        else return null;
     }
 
     public override GridActionSetGroup GetGravityMoves() => null;

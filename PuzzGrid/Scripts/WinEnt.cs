@@ -14,7 +14,11 @@ public class WinEnt : GridEntity
     }
 
 
-    public override GridActionSet GetSettlementMoves(GridActionSummary actionSummary) => null;
+    public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)
+    {
+        yield break;
+        
+    }
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> set) => null;
     
     
