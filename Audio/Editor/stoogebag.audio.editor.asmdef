@@ -1,13 +1,10 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.audio.editor",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
         "stoogebag"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

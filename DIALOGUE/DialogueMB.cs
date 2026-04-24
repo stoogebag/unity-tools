@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 #if UNITY_EDITOR
-using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using UnityEngine.SceneManagement;
 #endif
 using Sirenix.OdinInspector;
@@ -120,7 +119,10 @@ public class DialogueLine
     
     public static void PlayClip(AudioClip clip, int startSample = 0, bool loop = false)
     {
-        AudioUtilsRef.PlayClip(clip); //need 'ultimate editor enhancer' for this.
+        
+#if ULTIMATE_EDITOR_ENHANCER
+        AudioUtilsRef.PlayClip(clip);
+ #endif
     }
     
     [ButtonGroup , Button(SdfIconType.Save, "")]

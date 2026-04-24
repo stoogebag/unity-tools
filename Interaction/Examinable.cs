@@ -64,17 +64,7 @@ public class Examinable : MonoBehaviour
     }
 
     public string popupName = "name!";
-    private DialogueMB _examineDialogue;
-
-    DialogueMB ExamineDialogue
-    {
-        get
-        {
-            if (_examineDialogue == null) 
-                _examineDialogue = gameObject.FirstOrDefault<DialogueMB>("ExamineDialogue");
-            return _examineDialogue;
-        }
-    }
+    
 }
 #endif
 #endif

@@ -1,19 +1,19 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.puzzgrid",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "UniTask",
+        "UniRx"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "PUZZGRID"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

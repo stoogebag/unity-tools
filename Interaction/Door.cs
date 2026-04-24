@@ -59,7 +59,7 @@ public class Door : MonoBehaviour
 
 
     public bool BlocksMovement => !IsOpen;
-    public UIPopup Popup => GetComponentInChildren<UIPopup>(true);
+    //public UIPopup Popup => GetComponentInChildren<UIPopup>(true);
 
     public string InteractText => IsOpen ? "Close" : "Open"; 
 

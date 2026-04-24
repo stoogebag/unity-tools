@@ -1,19 +1,19 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.splines",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "Unity.Splines",
+        "Unity.Mathematics"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "SPLINES"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

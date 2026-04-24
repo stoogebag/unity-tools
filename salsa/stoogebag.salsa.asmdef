@@ -1,19 +1,20 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.salsa",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "RootMotion",
+        "stoogebag",
+        "UniRx"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "SALSA"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

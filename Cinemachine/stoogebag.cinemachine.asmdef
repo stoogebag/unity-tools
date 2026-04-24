@@ -1,19 +1,18 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.cinemachine",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "Unity.Cinemachine"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "CINEMACHINE"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

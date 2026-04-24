@@ -7,7 +7,6 @@ using UnityEditor;
 using UnityEditor.Animations;
 using System.Linq;
 using stoogebag.Extensions;
-using UnityEngine.WSA;
 
 public class SetLoopAndName : MonoBehaviour
 {

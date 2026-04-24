@@ -1,14 +1,14 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.timeline.editor",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "GUID:f2a1955e12e2998459296851c3f25208",
+        "GUID:e9cdfcf4fb9d33a4e8cff44f6b16b85d"
     ],
-    "includePlatforms": [
+    "includePlatforms": [],
+    "excludePlatforms": [
         "Editor"
     ],
-    "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],

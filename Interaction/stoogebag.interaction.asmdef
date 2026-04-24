@@ -1,13 +1,17 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.interaction",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "stoogebag",
+        "stoogebag.cinemachine",
+        "Unity.Cinemachine",
+        "stoogebag.UI",
+        "UniTask",
+        "UniRx",
+        "UniTask.DOTween",
+        "stoogebag.portals"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

@@ -1,0 +1,27 @@
+{
+    "name": "stoogebag.Timeline",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Timeline",
+        "UniRx",
+        "Unity.Splines",
+        "Unity.TextMeshPro",
+        "DOTweenPro.Scripts",
+        "UniTask",
+        "stoogebag",
+        "stoogebag.tweening",
+        "Febucci.TextAnimator.Runtime",
+        "stoogebag.dialogue"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "TIMELINE"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

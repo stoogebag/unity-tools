@@ -1,13 +1,11 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.textanimator",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "Febucci.TextAnimator.Runtime",
+        "UniTask"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

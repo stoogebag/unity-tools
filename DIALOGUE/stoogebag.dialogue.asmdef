@@ -1,0 +1,28 @@
+{
+    "name": "stoogebag.dialogue",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Timeline",
+        "UniTask",
+        "stoogebag",
+        "com.whisper.unity",
+        "Unity.Cinemachine",
+        "stoogebag.UI",
+        "Unity.TextMeshPro",
+        "stoogebag.interaction",
+        "UniRx",
+        "Febucci.TextAnimator.Runtime",
+        "Febucci.TextAnimator.TMP.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "TIMELINE"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

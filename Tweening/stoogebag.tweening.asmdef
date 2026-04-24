@@ -1,13 +1,12 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.tweening",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "DOTweenPro.Scripts",
+        "UniTask",
+        "UniTask.DOTween"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

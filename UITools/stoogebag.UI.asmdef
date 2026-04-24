@@ -1,13 +1,16 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.UI",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "UniRx",
+        "UniTask",
+        "stoogebag",
+        "Unity.TextMeshPro",
+        "Unity.Cinemachine",
+        "UniTask.DOTween",
+        "DOTween.Modules"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

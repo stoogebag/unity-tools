@@ -1,19 +1,18 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.AI",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag"
+        "BehaviourDesigner.Runtime"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "BEHAVIOR_DESIGNER"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }
