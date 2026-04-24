@@ -14,7 +14,6 @@ public class UICursorSimple : UIInteractorBase
     private Image im;
     public float cursorSpeed = 300f;
 
-    public MenuButton hovered;
 
     [SerializeField] private EditorBool hideSystemCursor = EditorBool.Build;
 

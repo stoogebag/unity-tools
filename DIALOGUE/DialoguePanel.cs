@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Febucci.TextAnimatorCore;
 using Febucci.TextAnimatorCore.Typing;
-using Febucci.TextAnimatorForUnity;
 using stoogebag;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
@@ -14,8 +13,6 @@ using UnityEngine;
 public class DialoguePanel : Window, IInitializes
 {
     public DialogueSpeaker Speaker;
-    //TextAnimator_TMP textAnimator;
-    //TextAnimator_TMP labelAnimator;
     [SerializeField] TypewriterCore textTypewriter;
     [SerializeField] TypewriterCore labelTypewriter;
     [SerializeField] Window nextIndicator;
@@ -43,10 +40,10 @@ public class DialoguePanel : Window, IInitializes
             if (Speaker == null) return; //bc: wtf is happening here? stale subs? but i dispose it all TT. could it be because of static
             if (dialogue.speakerName != Speaker.Name) return;
             
-            var skippable = dialogue.director.GetComponent<SkippableTimeline>(); //not sure about this.
-            skippable.TypingTypewriter = textTypewriter;
-            await Show(dialogue);
-            skippable.TypingTypewriter = null;
+            //var skippable = dialogue.director.GetComponent<SkippableTimeline>(); //not sure about this.
+            //skippable.TypingTypewriter = textTypewriter;
+            //await Show(dialogue);
+            //skippable.TypingTypewriter = null;
 
 
         }).AddTo(disposables);

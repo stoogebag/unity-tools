@@ -8,7 +8,8 @@
         "UniTask",
         "Unity.RenderPipelines.Core.Runtime",
         "UniTask.DOTween",
-        "DOTween.Modules"
+        "DOTween.Modules",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

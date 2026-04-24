@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Febucci.TextAnimatorCore.Typing;
-using Febucci.TextAnimatorForUnity;
 using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UniRx;

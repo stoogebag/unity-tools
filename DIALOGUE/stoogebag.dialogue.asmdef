@@ -12,7 +12,9 @@
         "stoogebag.interaction",
         "UniRx",
         "Febucci.TextAnimator.Runtime",
-        "Febucci.TextAnimator.TMP.Runtime"
+        "Febucci.TextAnimator.TMP.Runtime",
+        "stoogebag.textanimator",
+        ""
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
