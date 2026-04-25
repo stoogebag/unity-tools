@@ -36,8 +36,9 @@ public class DialogueBehaviour : PlayableBehaviour
 
     public bool PauseTimeline = true;
     
+    [SerializeField]
     public AudioClip Clip;
-    private AudioClip _clip;
+    private AudioClip _clipTemp;
 
 	private bool clipPlayed = false;
 	public PlayableDirector director;
@@ -80,13 +81,15 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	public int MaxClipLength = 30;
 #if UNITY_EDITOR
-	public static string Device => Microphone.devices.First(t => t.Contains("NVID"));
+	public static string Device => Microphone.devices.First();
 	#if ODIN_INSPECTOR
 	[ButtonGroup , Button(SdfIconType.Record, "")]
 #endif
 	public void Record()
 	{
-		_clip = Microphone.Start(Device, false, MaxClipLength, 44100);
+		_clipTemp = Microphone.Start(Device, false, MaxClipLength, 44100);
+		Debug.Log("Recording clip with device " + Device);
+		Debug.Log(string.Join('-', Microphone.devices));
 		_recording = true;
 	}
     
@@ -112,7 +115,7 @@ public class DialogueBehaviour : PlayableBehaviour
 		var guid = Guid.NewGuid();
 		var wavPath = $"Resources\\audioRecordings\\clip-{guid}";
         
-		var clipTrimmed = SavWav.TrimSilence(_clip, 0.001f);
+		var clipTrimmed = SavWav.TrimSilence(_clipTemp, 0.001f);
 		
 		SavWav.Save(wavPath, clipTrimmed);
 		Thread.Sleep(10); // Wait for 100 milliseconds
