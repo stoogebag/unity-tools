@@ -22,7 +22,7 @@ namespace stoogebag.Common
         {
             var offset = new Vector3(bobAmplitudeX, bobAmplitudeY, bobAmplitudeZ) *
                          (float)Math.Cos(Time.timeSinceLevelLoad * Math.PI * 2* bobFrequency);
-            transform.position = _basePosition + offset;
+            transform.position = _basePosition + offset ;
         }
     }
 }

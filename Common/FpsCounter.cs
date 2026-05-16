@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ namespace stoogebag.Common
 {
     public class FpsCounter :MonoBehaviour
     {
-        public Text uiText;
+        private TextMeshProUGUI uiText;
     
     
         string display = "{0} FPS";
@@ -13,7 +14,7 @@ namespace stoogebag.Common
 
         private void Awake()
         {
-            uiText = GetComponent<Text>();
+            uiText = GetComponent<TextMeshProUGUI>();
         }
 
         private void Start()

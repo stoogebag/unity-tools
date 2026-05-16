@@ -3,7 +3,6 @@
 
 using Cysharp.Threading.Tasks;
 using Febucci.TextAnimatorCore.Typing;
-using Febucci.TextAnimatorForUnity;
 
 namespace stoogebag.Extensions
 {

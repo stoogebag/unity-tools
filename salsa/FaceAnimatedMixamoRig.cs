@@ -1,10 +1,10 @@
-#if SALSA
-#if FINAL_IK
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using RootMotion.FinalIK;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using stoogebag._2dConvos;
@@ -174,6 +174,3 @@ public class FaceAnimatedMixamoRig : MonoBehaviour
 }
   
 
-
-#endif
-#endif

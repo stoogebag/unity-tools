@@ -11,12 +11,13 @@ namespace stoogebag.DIALOGUE
 {
     public class Barker : MonoBehaviour
     {
-        private DialoguePanel _uiPopup;
+        //BC: this was changed to DialoguePanel, then changed back. todo: handle both?
+        private UIPopup _uiPopup;
         private DialogueSpeaker _speaker;
     
         private void Awake()
         {
-            _uiPopup = gameObject.FirstOrDefault<DialoguePanel>();
+            _uiPopup = gameObject.FirstOrDefault<UIPopup>();
             _speaker = GetComponent<DialogueSpeaker>();
         }
 
@@ -35,8 +36,8 @@ namespace stoogebag.DIALOGUE
     
         public async UniTask Bark(DialogueLine line)
         {
-            _uiPopup.Speaker = _speaker;
-            var panelTask = _uiPopup.Bark(line, _speaker.Name);
+            //_uiPopup.Speaker = _speaker;
+            var panelTask = _uiPopup.Bark(line.Text,1f);//, _speaker.Name);
 
             if (line.Clip != null)
             {

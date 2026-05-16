@@ -1,4 +1,4 @@
-
+#if UNITY_EDITOR
 using Unity.Cinemachine;
 using UnityEditor;
 using UnityEngine;
@@ -23,3 +23,4 @@ public class AssetMenus
 
     }
 }
+#endif

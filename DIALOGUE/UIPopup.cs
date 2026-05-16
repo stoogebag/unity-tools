@@ -23,7 +23,7 @@ public class UIPopup : Window
         Bark("bark bark!");
     }
     
-    public async void Bark(string message, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
+    public async UniTask Bark(string message, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
     {
         gameObject.FirstOrDefault<TextMeshProUGUI>().text = message;
         
