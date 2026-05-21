@@ -1,21 +1,22 @@
 {
-    "name": "stoogebag.dialogue.editor",
+    "name": "stoogebag.networking",
     "rootNamespace": "",
     "references": [
-        "stoogebag.dialogue",
+        "stoogebag.UI",
         "stoogebag",
-        "stoogebag.interaction"
+        "FishNet.Runtime",
+        "FishyUnityTransport",
+        "UniRx",
+        "Unity.InputSystem"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "TIMELINE"
+        "FISHNET"
     ],
     "versionDefines": [],
     "noEngineReferences": false
