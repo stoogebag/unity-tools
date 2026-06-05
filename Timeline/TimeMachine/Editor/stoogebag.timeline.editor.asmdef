@@ -2,9 +2,9 @@
     "name": "stoogebag.timeline.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:f2a1955e12e2998459296851c3f25208",
-        "GUID:e9cdfcf4fb9d33a4e8cff44f6b16b85d",
-        "GUID:c789cb8ae7a594a46974120ba85fcf1b"
+        "stoogebag",
+        "stoogebag.Timeline",
+        "stoogebag.editor"
     ],
     "includePlatforms": [
         "Editor"
@@ -14,7 +14,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "TIMELINE"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

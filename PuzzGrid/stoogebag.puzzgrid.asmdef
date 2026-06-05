@@ -3,7 +3,12 @@
     "rootNamespace": "",
     "references": [
         "UniTask",
-        "UniRx"
+        "UniRx",
+        "stoogebag",
+        "Unity.InputSystem",
+        "stoogebag.portals",
+        "DOTween.Modules",
+        "UniTask.DOTween"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -12,7 +17,10 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [
-        "PUZZGRID"
+        "PUZZGRID",
+        "UNITASK",
+        "UNIRX",
+        "UNITASK_DOTWEEN_SUPPORT"
     ],
     "versionDefines": [],
     "noEngineReferences": false

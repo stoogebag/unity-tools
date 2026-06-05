@@ -9,7 +9,8 @@
         "Unity.Cinemachine",
         "UniTask.DOTween",
         "DOTween.Modules",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

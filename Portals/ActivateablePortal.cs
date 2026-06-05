@@ -1,24 +1,26 @@
 using System.Linq;
 using UnityEngine;
 
-
-public class ActivateablePortal : Activateable
+namespace stoogebag.Portals
 {
-    private void Awake()
+    public class ActivateablePortal : Activateable
     {
-        Cables = FindObjectsOfType<Cable>().Where(t => t.Child == this).ToList();
-    }
-
-    public override void OnParentPowered()
-    {
-        if (Cables.All(t => t.Powered == PoweredState.Powered))
+        private void Awake()
         {
-            var inPortal = GetComponentsInChildren<Portal>(true).First(t => t.name == "in");
+            Cables = FindObjectsOfType<Cable>().Where(t => t.Child == this).ToList();
+        }
 
-            inPortal.GetComponent<MeshRenderer>().enabled = true;
-            inPortal.GetComponent<Collider>().enabled = true;
+        public override void OnParentPowered()
+        {
+            if (Cables.All(t => t.Powered == PoweredState.Powered))
+            {
+                var inPortal = GetComponentsInChildren<Portal>(true).First(t => t.name == "in");
+
+                inPortal.GetComponent<MeshRenderer>().enabled = true;
+                inPortal.GetComponent<Collider>().enabled = true;
+
+            }
 
         }
-        
     }
 }

@@ -6,18 +6,18 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using RenderPipeline = UnityEngine.Rendering.RenderPipelineManager;
 
-public class PortalCamera : MonoBehaviour
+namespace stoogebag.Portals
+{
+
+    public class PortalCamera : MonoBehaviour
     {
-    
-        [SerializeField]
-        private List<Portal> portals = new List<Portal>();
 
-    
-        [SerializeField]
-        private Camera portalCamera;
+        [SerializeField] private List<Portal> portals = new List<Portal>();
 
-        [SerializeField]
-        private int iterations = 7;
+
+        [SerializeField] private Camera portalCamera;
+
+        [SerializeField] private int iterations = 7;
 
 
         private Camera mainCamera;
@@ -52,7 +52,7 @@ public class PortalCamera : MonoBehaviour
 
             foreach (var p in portals)
             {
-            
+
                 //for (var j = 0; j < pair.Portals.Length; j++)
                 {
                     if (p.Renderer.isVisible)
@@ -67,7 +67,7 @@ public class PortalCamera : MonoBehaviour
                     }
                 }
             }
-        
+
 
         }
 
@@ -80,7 +80,7 @@ public class PortalCamera : MonoBehaviour
             cameraTransform.position = transform.position;
             cameraTransform.rotation = transform.rotation;
 
-            for(int i = 0; i <= iterationID; ++i)
+            for (int i = 0; i <= iterationID; ++i)
             {
                 // Position the camera behind the other portal.
                 Vector3 relativePos = inTransform.InverseTransformPoint(cameraTransform.position);
@@ -91,7 +91,7 @@ public class PortalCamera : MonoBehaviour
                 Quaternion relativeRot = Quaternion.Inverse(inTransform.rotation) * cameraTransform.rotation;
                 relativeRot = Quaternion.Euler(0.0f, 180.0f, 0.0f) * relativeRot;
                 cameraTransform.rotation = outTransform.rotation * relativeRot;
-            
+
                 //scale it?
                 Vector3 relativeScale = new Vector3(inTransform.lossyScale.x / outTransform.lossyScale.x,
                     inTransform.lossyScale.y / outTransform.lossyScale.y,
@@ -123,3 +123,4 @@ public class PortalCamera : MonoBehaviour
         // public float nm22scale = 1;
     }
 
+}

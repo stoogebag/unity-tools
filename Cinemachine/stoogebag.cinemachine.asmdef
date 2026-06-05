@@ -2,7 +2,8 @@
     "name": "stoogebag.cinemachine",
     "rootNamespace": "",
     "references": [
-        "Unity.Cinemachine"
+        "Unity.Cinemachine",
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

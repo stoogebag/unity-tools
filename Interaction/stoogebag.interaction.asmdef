@@ -8,8 +8,7 @@
         "stoogebag.UI",
         "UniTask",
         "UniRx",
-        "UniTask.DOTween",
-        "stoogebag.portals"
+        "UniTask.DOTween"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
