@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using stoogebag.Extensions;
 using UnityEngine;
+using stoogebag.Extensions;
 
 namespace stoogebag.Portals
 {

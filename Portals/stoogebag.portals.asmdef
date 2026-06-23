@@ -2,7 +2,9 @@
     "name": "stoogebag.portals",
     "rootNamespace": "",
     "references": [
-        "Unity.RenderPipelines.Universal.Runtime"
+        "Unity.RenderPipelines.Universal.Runtime",
+        "stoogebag.interaction",
+        "stoogebag"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

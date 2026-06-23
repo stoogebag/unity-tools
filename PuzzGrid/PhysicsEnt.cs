@@ -1,6 +1,5 @@
-#if UNITASK
-#if ODIN_INSPECTOR
-#if UNIRX
+#if PORTALS
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using stoogebag.Extensions;
+using stoogebag.Portals;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -164,6 +163,5 @@ public class PortalClone
     }
 
 }
-#endif
-#endif
+
 #endif
