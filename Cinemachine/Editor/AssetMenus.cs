@@ -28,14 +28,7 @@ public class AssetMenus
         {
             vcam.Lens.OrthographicSize = sv.camera.orthographicSize;
         }
-        var sv = SceneView.lastActiveSceneView;
-        vcam.transform.position = sv.camera.transform.position;
-
-        //todo: only do this if orthographic scene view or it will break
-        if (sv.camera.orthographic)
-        {
-            vcam.Lens.OrthographicSize = sv.camera.orthographicSize;
-        }
+        
 #else 
         var vcam = go.AddComponent<CinemachineVirtualCamera>();
         
