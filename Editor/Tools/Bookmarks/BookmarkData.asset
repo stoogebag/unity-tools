@@ -16,5 +16,7 @@ MonoBehaviour:
   - name: Default
     items:
     - {fileID: 1043409330787493270, guid: c1e8788de72130b4eb3b7ddf0b326a6f, type: 3}
+    - {fileID: 11400000, guid: f288ae1f4751b564a96ac7587541f7a2, type: 2}
+    - {fileID: 11400000, guid: 4b83569d67af61e458304325a23e5dfd, type: 2}
   - name: Category 2
     items: []
