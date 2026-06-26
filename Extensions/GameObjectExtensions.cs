@@ -550,6 +550,18 @@ namespace stoogebag.Extensions
             else return go.AddComponent<T>();
         }
 
+        public static IEnumerable<T> FindObjectsWithInterface<T>()
+        {
+            return Object
+                .FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .OfType<T>();
+        }
+        public static T FindAnyObjectWithInterface<T>()
+        {
+            return FindObjectsWithInterface<T>().FirstOrDefault();
+        }
+        
+
     }
     
     
