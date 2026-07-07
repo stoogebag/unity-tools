@@ -10,6 +10,15 @@ namespace stoogebag.Editor.Tools
     {
         public string name = "New Category";
         public List<UnityEngine.Object> items = new List<UnityEngine.Object>();
+        public List<SceneBookmark> sceneItems = new List<SceneBookmark>();
+    }
+
+    [Serializable]
+    public class SceneBookmark
+    {
+        public string globalObjectId;
+        public string displayName;
+        public string scenePath;
     }
 
     public class BookmarkData : ScriptableObject

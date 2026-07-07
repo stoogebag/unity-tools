@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,10 +13,13 @@ namespace stoogebag.Editor.Tools
         private BookmarkData _data;
         private int _selectedCategoryIndex;
         private Vector2 _scrollPos;
-        private const string DataPath = "Assets/stoogebag/Editor/Tools/Bookmarks/BookmarkData.asset";
+        private const string DataPath = "Assets/Assets/99_DevTools/EditorTools/BookmarkData.asset";
 
         private bool _isRenaming;
         private string _renameBuffer;
+
+        private Dictionary<string, Object> _sceneResolveCache = new Dictionary<string, Object>();
+        private bool _sceneCacheDirty = true;
 
         [MenuItem("Tools/Bookmarks %#b")]
         public static void ShowWindow()
@@ -27,6 +31,26 @@ namespace stoogebag.Editor.Tools
         private void OnEnable()
         {
             LoadOrCreateData();
+            EditorSceneManager.sceneOpened      += OnSceneChanged;
+            EditorSceneManager.sceneClosed      += OnSceneChanged;
+            EditorSceneManager.activeSceneChanged += OnActiveSceneChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorSceneManager.sceneOpened      -= OnSceneChanged;
+            EditorSceneManager.sceneClosed      -= OnSceneChanged;
+            EditorSceneManager.activeSceneChanged -= OnActiveSceneChanged;
+        }
+
+        private void OnSceneChanged(Scene scene, OpenSceneMode mode) => InvalidateSceneCache();
+        private void OnSceneChanged(Scene scene) => InvalidateSceneCache();
+        private void OnActiveSceneChanged(Scene oldScene, Scene newScene) => InvalidateSceneCache();
+
+        private void InvalidateSceneCache()
+        {
+            _sceneCacheDirty = true;
+            Repaint();
         }
 
         private void LoadOrCreateData()
@@ -63,9 +87,41 @@ namespace stoogebag.Editor.Tools
                 if (_data == null) return;
             }
 
+            ResolveSceneBookmarks();
+
             DrawCategoryBar();
             DrawDropZone();
             DrawItems();
+        }
+
+        private void ResolveSceneBookmarks()
+        {
+            if (!_sceneCacheDirty) return;
+            _sceneCacheDirty = false;
+
+            var category = _data.categories[_selectedCategoryIndex];
+            if (category == null || category.sceneItems.Count == 0)
+            {
+                _sceneResolveCache.Clear();
+                return;
+            }
+
+            var gids = new List<GlobalObjectId>();
+            foreach (var sb in category.sceneItems)
+            {
+                if (GlobalObjectId.TryParse(sb.globalObjectId, out var gid))
+                    gids.Add(gid);
+            }
+
+            var resolved = new Object[gids.Count];
+            GlobalObjectId.GlobalObjectIdentifiersToObjectsSlow(gids.ToArray(), resolved);
+
+            _sceneResolveCache.Clear();
+            for (int i = 0; i < resolved.Length; i++)
+            {
+                if (resolved[i] != null)
+                    _sceneResolveCache[gids[i].ToString()] = resolved[i];
+            }
         }
 
         private void DrawCategoryBar()
@@ -87,6 +143,7 @@ namespace stoogebag.Editor.Tools
                 if (selected != _selectedCategoryIndex)
                 {
                     _selectedCategoryIndex = selected;
+                    _sceneCacheDirty = true;
                     _scrollPos = Vector2.zero;
                 }
 
@@ -154,7 +211,7 @@ namespace stoogebag.Editor.Tools
             EditorGUI.DrawRect(dropArea, bgColor);
 
             var style = new GUIStyle(EditorStyles.centeredGreyMiniLabel) { alignment = TextAnchor.MiddleCenter };
-            GUI.Label(dropArea, "Drag assets here", style);
+            GUI.Label(dropArea, "Drag assets or scene objects here", style);
 
             switch (evt.type)
             {
@@ -172,21 +229,42 @@ namespace stoogebag.Editor.Tools
                         HashSet<string> existingPaths = new HashSet<string>(
                             category.items.Where(o => o != null).Select(AssetDatabase.GetAssetPath)
                         );
+                        HashSet<string> existingSceneGids = new HashSet<string>(
+                            category.sceneItems.Select(s => s.globalObjectId)
+                        );
 
                         foreach (var obj in DragAndDrop.objectReferences)
                         {
                             string path = AssetDatabase.GetAssetPath(obj);
-                            if (string.IsNullOrEmpty(path) || !path.StartsWith("Assets/"))
-                                continue;
-                            if (AssetDatabase.IsValidFolder(path))
-                                continue;
-                            if (!existingPaths.Contains(path))
+
+                            if (!string.IsNullOrEmpty(path) && path.StartsWith("Assets/"))
                             {
-                                category.items.Add(obj);
-                                existingPaths.Add(path);
+                                if (AssetDatabase.IsValidFolder(path))
+                                    continue;
+                                if (!existingPaths.Contains(path))
+                                {
+                                    category.items.Add(obj);
+                                    existingPaths.Add(path);
+                                }
+                            }
+                            else if (obj is GameObject go && go.scene != null && go.scene.IsValid())
+                            {
+                                var gid = GlobalObjectId.GetGlobalObjectIDSlow(go);
+                                string gidStr = gid.ToString();
+                                if (!existingSceneGids.Contains(gidStr))
+                                {
+                                    category.sceneItems.Add(new SceneBookmark
+                                    {
+                                        globalObjectId = gidStr,
+                                        displayName    = go.name,
+                                        scenePath       = go.scene.path
+                                    });
+                                    existingSceneGids.Add(gidStr);
+                                }
                             }
                         }
 
+                        InvalidateSceneCache();
                         MarkDirty();
                     }
                     break;
@@ -200,9 +278,11 @@ namespace stoogebag.Editor.Tools
 
             _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
 
-            if (category.items.Count == 0)
+            bool anyItems = category.items.Count > 0 || category.sceneItems.Count > 0;
+
+            if (!anyItems)
             {
-                EditorGUILayout.LabelField("No bookmarks yet. Drag assets above.", EditorStyles.centeredGreyMiniLabel);
+                EditorGUILayout.LabelField("No bookmarks yet. Drag assets or scene objects above.", EditorStyles.centeredGreyMiniLabel);
             }
             else
             {
@@ -211,11 +291,19 @@ namespace stoogebag.Editor.Tools
                     var obj = category.items[i];
                     DrawItemRow(obj, i, category);
                 }
+
+                if (category.sceneItems.Count > 0)
+                    EditorGUILayout.Space(2);
+
+                for (int i = 0; i < category.sceneItems.Count; i++)
+                {
+                    DrawSceneItemRow(category.sceneItems[i], i, category);
+                }
             }
 
             EditorGUILayout.EndScrollView();
 
-            if (category.items.Count > 0)
+            if (anyItems)
             {
                 EditorGUILayout.Space(2);
                 if (GUILayout.Button("Clear All"))
@@ -224,6 +312,8 @@ namespace stoogebag.Editor.Tools
                         $"Clear all bookmarks in '{category.name}'?", "Clear", "Cancel"))
                     {
                         category.items.Clear();
+                        category.sceneItems.Clear();
+                        InvalidateSceneCache();
                         MarkDirty();
                     }
                 }
@@ -257,6 +347,59 @@ namespace stoogebag.Editor.Tools
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 category.items.RemoveAt(index);
+                MarkDirty();
+                GUIUtility.ExitGUI();
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawSceneItemRow(SceneBookmark entry, int index, BookmarkCategory category)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            Object resolved = null;
+            _sceneResolveCache.TryGetValue(entry.globalObjectId, out resolved);
+
+            var activeScene = EditorSceneManager.GetActiveScene();
+            bool live = resolved is GameObject go
+                && go.scene.IsValid()
+                && go.scene.isLoaded
+                && go.scene == activeScene;
+
+            if (live)
+            {
+                var icon = AssetPreview.GetMiniThumbnail(resolved);
+                GUILayout.Label(icon, GUILayout.Width(20), GUILayout.Height(20));
+
+                if (GUILayout.Button(entry.displayName, EditorStyles.label))
+                {
+                    Selection.activeObject = resolved;
+                    EditorGUIUtility.PingObject(resolved);
+                }
+            }
+            else
+            {
+                GUI.color = new Color(0.55f, 0.55f, 0.55f, 0.7f);
+                var icon = EditorGUIUtility.IconContent("GameObject Icon");
+                GUILayout.Label(icon, GUILayout.Width(20), GUILayout.Height(20));
+
+                using (new EditorGUI.DisabledGroupScope(true))
+                {
+                    string sceneName = string.IsNullOrEmpty(entry.scenePath)
+                        ? "unknown scene"
+                        : Path.GetFileNameWithoutExtension(entry.scenePath);
+                    GUILayout.Button($"{entry.displayName}  ({sceneName})", EditorStyles.label);
+                }
+                GUI.color = Color.white;
+            }
+
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Button("X", GUILayout.Width(20)))
+            {
+                category.sceneItems.RemoveAt(index);
+                InvalidateSceneCache();
                 MarkDirty();
                 GUIUtility.ExitGUI();
             }

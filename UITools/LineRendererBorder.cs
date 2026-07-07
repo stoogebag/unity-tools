@@ -25,11 +25,13 @@ public class LineRendererBorder : MonoBehaviour
     private void Reset()
     {
         _disposable.Clear();
-        gameObject.ObserveEveryValueChanged(t => Dimensions).Subscribe(v => Calculate());
-        gameObject.ObserveEveryValueChanged(t => Origin).Subscribe(v => Calculate());
-        gameObject.ObserveEveryValueChanged(t => CornerRadius).Subscribe(v => Calculate());
-        gameObject.ObserveEveryValueChanged(t => NumCornerPoints).Subscribe(v => Calculate());
-        gameObject.ObserveEveryValueChanged(t => ZOffset).Subscribe(v => Calculate());
+        gameObject.ObserveEveryValueChanged(t => Dimensions).Subscribe(v => Calculate()).AddTo(_disposable);
+        gameObject.ObserveEveryValueChanged(t => Origin).Subscribe(v => Calculate()).AddTo(_disposable);
+        gameObject.ObserveEveryValueChanged(t => CornerRadius).Subscribe(v => Calculate()).AddTo(_disposable);
+        gameObject.ObserveEveryValueChanged(t => NumCornerPoints).Subscribe(v => Calculate()).AddTo(_disposable);
+        gameObject.ObserveEveryValueChanged(t => ZOffset).Subscribe(v => Calculate()).AddTo(_disposable);
+
+        gameObject.ObserveEveryValueChanged(t => t.transform.lossyScale).Subscribe(v => Calculate()).AddTo(_disposable);
     }
 
 
@@ -37,49 +39,57 @@ public class LineRendererBorder : MonoBehaviour
     void Calculate()
     {
         var lr = GetComponent<LineRenderer>();
+        lr.useWorldSpace = false;
+
         var points = new List<Vector2>();
 
         var w = Dimensions.x/2;
         var h = Dimensions.y/2;
-        
-        var tl = new Vector2(Origin.x - w + CornerRadius, Origin.y + h - CornerRadius);
-        var tr = new Vector2(Origin.x + w - CornerRadius, Origin.y + h - CornerRadius);
-        var bl = new Vector2(Origin.x - w + CornerRadius, Origin.y - h + CornerRadius);
-        var br = new Vector2(Origin.x + w - CornerRadius, Origin.y - h + CornerRadius);
+
+        var sx = transform.lossyScale.x;
+        var sy = transform.lossyScale.y;
+
+        var rx = CornerRadius;
+        var ry = Mathf.Approximately(sy, 0f) ? rx : CornerRadius * sx / sy;
+
+        var tl = new Vector2(Origin.x - w + rx, Origin.y + h - ry);
+        var tr = new Vector2(Origin.x + w - rx, Origin.y + h - ry);
+        var bl = new Vector2(Origin.x - w + rx, Origin.y - h + ry);
+        var br = new Vector2(Origin.x + w - rx, Origin.y - h + ry);
 
         //top right
         for (int i = 0; i < NumCornerPoints; i++)
         {
             var theta = 90f - (i * 90 * 1f / NumCornerPoints);
-            var rot = VectorExtensions.FromPolarDegrees(CornerRadius, theta);
-            var v = tr + rot;
+            var rad = theta * Mathf.Deg2Rad;
+            var v = tr + new Vector2(rx * Mathf.Cos(rad), ry * Mathf.Sin(rad));
             points.Add(v);
         }
-        
+
         //bottom right
         for (int i = 0; i < NumCornerPoints; i++)
         {
             var theta = - (i * 90 * 1f / NumCornerPoints);
-            var rot = VectorExtensions.FromPolarDegrees(CornerRadius, theta);
-            var v = br + rot;
+            var rad = theta * Mathf.Deg2Rad;
+            var v = br + new Vector2(rx * Mathf.Cos(rad), ry * Mathf.Sin(rad));
             points.Add(v);
         }
-        
+
         //bottom left
         for (int i = 0; i < NumCornerPoints; i++)
         {
             var theta = -90f - (i * 90 * 1f / NumCornerPoints);
-            var rot = VectorExtensions.FromPolarDegrees(CornerRadius, theta);
-            var v = bl + rot;
+            var rad = theta * Mathf.Deg2Rad;
+            var v = bl + new Vector2(rx * Mathf.Cos(rad), ry * Mathf.Sin(rad));
             points.Add(v);
         }
-        
+
         //top left
         for (int i = 0; i < NumCornerPoints; i++)
         {
             var theta = -180f - (i * 90 * 1f / NumCornerPoints);
-            var rot = VectorExtensions.FromPolarDegrees(CornerRadius, theta);
-            var v = tl + rot;
+            var rad = theta * Mathf.Deg2Rad;
+            var v = tl + new Vector2(rx * Mathf.Cos(rad), ry * Mathf.Sin(rad));
             points.Add(v);
         }
 
