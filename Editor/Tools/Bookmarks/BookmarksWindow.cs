@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace stoogebag.Editor.Tools
 {
@@ -249,7 +250,7 @@ namespace stoogebag.Editor.Tools
                             }
                             else if (obj is GameObject go && go.scene != null && go.scene.IsValid())
                             {
-                                var gid = GlobalObjectId.GetGlobalObjectIDSlow(go);
+                                var gid = GlobalObjectId.GetGlobalObjectIdSlow(go);
                                 string gidStr = gid.ToString();
                                 if (!existingSceneGids.Contains(gidStr))
                                 {

@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 
 [ExecuteInEditMode] 
-public class DeepTracker : MonoBehaviour
+public class DisableTracker : MonoBehaviour
 {
     // This fires even in the editor and at the absolute earliest moment of Play
     void OnValidate()

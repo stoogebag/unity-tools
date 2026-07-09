@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class ThicknessWithScale : MonoBehaviour
 {
     

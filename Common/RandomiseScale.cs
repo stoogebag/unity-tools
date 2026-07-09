@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class RandomiseScale : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class RandomiseScale : MonoBehaviour
     
     private void Awake()
     {
+        Debug.Log("why am i running?", gameObject);
         this.gameObject.transform.localScale = new Vector3(Random.Range(minSizeX, maxSizeX), Random.Range(minSizeY,maxSizeY));
     }
 }
