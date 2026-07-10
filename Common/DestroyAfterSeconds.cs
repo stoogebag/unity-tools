@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace stoogebag.Common
@@ -6,16 +7,12 @@ namespace stoogebag.Common
     public class DestroyAfterSeconds : MonoBehaviour
     {
         public float Time = 30;
-        private DateTime started;
+        //private DateTime started;
 
-        void Start()
+        async void Start()
         {
-            //started = DateTime.UtcNow;
-         //   Destroy(gameObject, Time);
+            Destroy(gameObject,Time);
         }
 
-        void Update()
-        {
-        }
     }
 }
