@@ -291,7 +291,26 @@ namespace stoogebag.Extensions
                 }
             }
         }
-        
+
+
+        public static IEnumerable<T> GetComponentsInSiblings<T>(this GameObject go,
+            bool includeInactive = false) where T : Component
+        {
+            var tr = go.transform.parent;
+            return tr.gameObject.GetComponentsInChildren<T>(includeInactive);
+        }
+        public static IEnumerable<T> GetComponentsInSiblingsWithInterface<T>(this GameObject go, 
+            bool includeInactive = false) 
+        {
+            return go.GetComponentsInSiblings<MonoBehaviour>(includeInactive).OfType<T>();
+        }
+
+        public static T GetComponentInSiblings<T>(this MonoBehaviour mb, bool includeInactive = false) where T : Component => GetComponentsInSiblings<T>(mb.gameObject, includeInactive).FirstOrDefault();
+        public static T GetComponentInSiblingsWithInterface<T>(this MonoBehaviour mb,  bool includeInactive = false) => GetComponentsInSiblingsWithInterface<T>(mb.gameObject, includeInactive).FirstOrDefault();
+
+        public static IEnumerable<T> GetComponentsInSiblings<T>(this MonoBehaviour mb,  bool includeInactive = false) where T : Component => GetComponentsInSiblings<T>(mb.gameObject,includeInactive);
+        public static IEnumerable<T> GetComponentsInSiblingsWithInterface<T>(this MonoBehaviour mb, bool includeInactive = false) => GetComponentsInSiblingsWithInterface<T>(mb.gameObject, includeInactive);
+
         public static Transform FindChildByPath(this Transform parent, string path)
         {
             var current = parent;
