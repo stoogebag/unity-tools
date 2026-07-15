@@ -5,11 +5,13 @@ using UnityEngine;
 public class NumpadMoverSettings : ScriptableObject
 {
     public float moveFull = 1f;
-    public float moveHalf = 0.5f;
+    public float moveSmall = 0.5f;
     public float rotate90 = 90f;
-    public float rotate45 = 45f;
+    public float rotateSmall = 45f;
 
-    enum Axis
+    public AxisChoice Axis;
+    
+    public enum AxisChoice
     {
         XY,
         XZ,
@@ -21,7 +23,7 @@ public class NumpadMoverSettings : ScriptableObject
 
 static class NumpadMoverSettingsProvider
 {
-    const string PATH = "Assets/Editor/Resources/NumpadMoverSettings.asset";
+    const string PATH = "Assets/Resources/NumpadMoverSettings.asset";
 
     [SettingsProvider]
     public static SettingsProvider CreateProvider()
@@ -35,9 +37,10 @@ static class NumpadMoverSettingsProvider
             var so = new SerializedObject(settings);
             so.Update();
             EditorGUILayout.PropertyField(so.FindProperty("moveFull"));
-            EditorGUILayout.PropertyField(so.FindProperty("moveHalf"));
+            EditorGUILayout.PropertyField(so.FindProperty("moveSmall"));
             EditorGUILayout.PropertyField(so.FindProperty("rotate90"));
-            EditorGUILayout.PropertyField(so.FindProperty("rotate45"));
+            EditorGUILayout.PropertyField(so.FindProperty("rotateSmall"));
+            EditorGUILayout.PropertyField(so.FindProperty("Axis"));
             so.ApplyModifiedProperties();
         };
         return provider;
