@@ -151,6 +151,27 @@ namespace stoogebag.Extensions
             return component.gameObject.GetComponentsInChildren<T>(includeInactive).Select(t => t.gameObject);
         }
 
+        public static List<T> GetComponentsInChildrenOrdered<T>(this GameObject go, bool includeInactive = false)
+            where T : Component
+        {
+            var results = new List<T>();
+            var transform = go.transform;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var child = transform.GetChild(i);
+                if (!includeInactive && !child.gameObject.activeInHierarchy) continue;
+                if (child.TryGetComponent<T>(out var component))
+                    results.Add(component);
+            }
+            return results;
+        }
+
+        public static List<T> GetComponentsInChildrenOrdered<T>(this MonoBehaviour mb, bool includeInactive = false)
+            where T : Component
+        {
+            return mb.gameObject.GetComponentsInChildrenOrdered<T>(includeInactive);
+        }
+
         public static T FirstOrDefault<T>(this GameObject go, Func<string,bool> nameCondition) where T:Object
         {
             var result = go.transform.FirstOrDefault(t =>
