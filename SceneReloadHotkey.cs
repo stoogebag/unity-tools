@@ -55,4 +55,22 @@ public class SceneReloadHotkey : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         
     }
+
+    public static void LoadScreen(string sceneName)
+    {
+        {
+            var temp = new GameObject();
+            DontDestroyOnLoad(temp);
+            var persistentScene = temp.scene;
+            DestroyImmediate(temp);
+
+            foreach (var root in persistentScene.GetRootGameObjects())
+            {
+                DestroyImmediate(root);
+            }
+        }
+             
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+
+    }
 }
