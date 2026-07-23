@@ -70,6 +70,8 @@ public partial class PuzzGrid : MonoBehaviour
 
         var moveSummary = await RunActionSetGroup(actionSetGroup, GridActionSetGroup.GroupType.UserInput);
 
+        var cumulativeSummary = new GridActionSummary();
+        cumulativeSummary.Add(moveSummary);
 
         while (true)
         {
@@ -78,25 +80,23 @@ public partial class PuzzGrid : MonoBehaviour
             CheckLossConditions();
             CheckWinConditions();
             //
-            var settle = GetSettlementMoves(moveSummary);
+            var settle = GetSettlementMoves(cumulativeSummary);
 
             var settleSummary = await RunActionSetGroup(settle, GridActionSetGroup.GroupType.Settlement);
-            //todo: do i need to loop this? what if there are chains of settlement? idk.
+            if (settleSummary != null) cumulativeSummary.Add(settleSummary);
 
             var globalSettlement = GetGlobalSettlementMoves();
             var globalSettlementSummary =await RunActionSetGroup(globalSettlement, GridActionSetGroup.GroupType.Settlement); 
+            if (globalSettlementSummary != null) cumulativeSummary.Add(globalSettlementSummary);
             
             var grav = GetGravityMoves();
             var gravSummary = await RunActionSetGroup(grav, GridActionSetGroup.GroupType.Gravity);
+            if (gravSummary != null) cumulativeSummary.Add(gravSummary);
 
             if ((gravSummary == null || gravSummary.ExecutedMoveSummary.Count == 0) &&
                 (settleSummary == null || settleSummary.ExecutedMoveSummary.Count == 0)&&
                 (globalSettlementSummary == null || globalSettlementSummary.ExecutedMoveSummary.Count == 0))
                 break;
-
-            // moveSummary.Merge(gravSummary);
-            // moveSummary.Merge(settleSummary);
-            
 
             //break;
         }
