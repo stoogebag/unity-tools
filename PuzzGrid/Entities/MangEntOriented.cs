@@ -12,6 +12,7 @@ using UnityEngine;
 
 public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
 {
+    public override bool CanMove => true;
 
     public bool InvertX;
     [SerializeField] private bool turn180 = false;

@@ -18,7 +18,19 @@ public class NumpadMoverSettings : ScriptableObject
     }
     
     public static NumpadMoverSettings Instance => Load();
-    static NumpadMoverSettings Load() => Resources.Load<NumpadMoverSettings>("NumpadMoverSettings");
+    static NumpadMoverSettings Load()
+    {
+        var settings = Resources.Load<NumpadMoverSettings>("NumpadMoverSettings");
+        if (settings == null)
+        {
+            settings = CreateInstance<NumpadMoverSettings>();
+            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+                AssetDatabase.CreateFolder("Assets", "Resources");
+            AssetDatabase.CreateAsset(settings, "Assets/Resources/NumpadMoverSettings.asset");
+            AssetDatabase.Refresh();
+        }
+        return settings;
+    }
 }
 
 static class NumpadMoverSettingsProvider

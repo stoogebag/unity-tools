@@ -128,7 +128,7 @@ namespace stoogebag.UITools.Windows
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
 
             if (rememberSelectedOnReactivate) // Just store the global selection directly
-                _lastSelected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
+                _lastSelected = UnityEngine.EventSystems.EventSystem.current?.currentSelectedGameObject?.GetComponent<Selectable>();
             
             if (isModal)
             {

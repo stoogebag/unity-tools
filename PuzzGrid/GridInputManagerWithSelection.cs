@@ -1,4 +1,4 @@
-#if UNIRX
+﻿#if UNIRX
 
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GridInputManager : Singleton<GridInputManager>
+public class GridInputManagerWithSelection : Singleton<GridInputManager>
 {
 
     [SerializeField] private Camera Camera;
@@ -33,15 +33,13 @@ public class GridInputManager : Singleton<GridInputManager>
         var moveAction = inputActionAsset.FindAction("Move");
         moveAction.Enable();
 
-        moveAction.RepeatOnHold<Vector2>(rawVec => NearestCardinal(rawVec), 100, new []{200,150})
+        moveAction.RepeatOnHold<Vector2>(rawVec => NearestCardinal(rawVec), 100, new []{500,250})
             .Where(v=> v != Vector2.zero) 
             .Subscribe(v =>
             {
                 var dir = CameraDirectionRelativeToCam(Camera, GetDirection(v));
                 HandleMove(dir);
             }).AddTo(this);
-        
-        
         
         //undo
         var undoAction = inputActionAsset.FindAction("Undo");
@@ -61,6 +59,16 @@ public class GridInputManager : Singleton<GridInputManager>
             .Subscribe(u =>
             {
                 Grid.RequestReset();
+            }).AddTo(this);
+        
+        //cycle selection
+        var cycleSelectionAction = inputActionAsset.FindAction("CycleSelection");
+        cycleSelectionAction.Enable();
+
+        cycleSelectionAction.OnPerformedAsObservable(100)
+            .Subscribe(u =>
+            {
+                //Grid.RequestReset();
             }).AddTo(this);
 
     }
@@ -178,8 +186,4 @@ public class GridInputManager : Singleton<GridInputManager>
     
 }
 
-public interface IReceivesInput
-{
-    GridActionSet GetWalkMove(Vector3 dir);
-}
 #endif

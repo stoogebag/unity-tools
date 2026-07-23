@@ -14,6 +14,8 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 {
     public bool InvertX;
 
+    
+    public override bool CanMove => true;
     public bool turnOnMove;
 
     public override GridActionSetGroup GetGravityMoves()
@@ -32,6 +34,25 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
             {
                 if (action.Ent == this)
                 {
+                    // if (action is SimpleMoveAction sma)
+                    // {
+                    //     if (action == actionSummary.ExecutedMoveSummary.Last())
+                    //     {
+                    //         if (sma.MovementVec.IsInSameDirection(Vector3.up))
+                    //         {
+                    //             print(sma.MovementVec.ToString());
+                    //             print(actionSummary.ExecutedMoveSummary.Count);
+                    //             print("i just climbed a ladder.");
+                    //
+                    //             yield return SimpleMoveAction.GetMove(this, Vector3.right * 10, PushForce.WeakSlide,
+                    //                 true,
+                    //                 transform.rotation);
+                    //
+                    //         }
+                    //     }
+                    // }
+                    //
+                    
                     if (GetComponent<Oil>() == null) //non-oily feet.
                     {
                         //sliipp
@@ -184,6 +205,8 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
     {
         GridActionSet result = null;
 
+      
+        
         foreach (var gridEntityComponent in _components)
         {
             var se = gridEntityComponent.GetSideEffectMoves(set);
@@ -193,6 +216,8 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                 else result.Actions.AddRange(se.Actions);
             }
         }
+        
+        
 
         return result;
     }

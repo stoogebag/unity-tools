@@ -7,6 +7,7 @@ using UnityEngine;
 public class BarrelEnt : GridEntity, IPushesButton
 {
 
+    public override bool CanMove => true;
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;

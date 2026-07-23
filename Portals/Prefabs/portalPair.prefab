@@ -301,9 +301,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 137260378139514096}
-  - component: {fileID: 340191607248183105}
   m_Layer: 8
-  m_Name: PortalPair
+  m_Name: portalPair
   m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -327,19 +326,6 @@ Transform:
   - {fileID: 6211560101567611041}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &340191607248183105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 886328658248297757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab881504e307bbb40a3293bc7b62f3e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RenderTextureDivisor: 1
 --- !u!1 &5294763031685513983
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,12 +596,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <OtherPortal>k__BackingField: {fileID: 9210734398064362102}
-  outlineRenderer: {fileID: 1197420493}
-  <PortalColour>k__BackingField: {r: 1, g: 0.4447487, b: 0, a: 1}
   placementMask:
     serializedVersion: 2
     m_Bits: 0
-  testTransform: {fileID: 1751038375405760789}
+  RenderTextureDivisor: 2
 --- !u!64 &7886194845645322104
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -740,12 +724,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <OtherPortal>k__BackingField: {fileID: 9210734397624516433}
-  outlineRenderer: {fileID: 2067283980}
-  <PortalColour>k__BackingField: {r: 0.010392904, g: 1, b: 0, a: 1}
   placementMask:
     serializedVersion: 2
     m_Bits: 0
-  testTransform: {fileID: 8198509418328535693}
+  RenderTextureDivisor: 2
 --- !u!64 &3585271334659858880
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -780,6 +762,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4726988590624584908, guid: be1c87aa377705f4c9524abc73bed8e4,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 567
       objectReference: {fileID: 0}
     - target: {fileID: 4726988592218370038, guid: be1c87aa377705f4c9524abc73bed8e4,
         type: 3}
@@ -841,7 +828,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6588010296366834766, guid: be1c87aa377705f4c9524abc73bed8e4, type: 3}
+    - {fileID: 681960811, guid: be1c87aa377705f4c9524abc73bed8e4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

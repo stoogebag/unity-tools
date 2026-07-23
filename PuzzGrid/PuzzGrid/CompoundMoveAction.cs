@@ -293,6 +293,13 @@ public class PushForce
         IsGrounded = true,
     };
 
+    public static PushForce Water = new PushForce()
+    {
+        Strength = ForceStrength.Weak,
+        IsGravity = false,
+        IsGrounded = false,
+    };
+
     
 }
 

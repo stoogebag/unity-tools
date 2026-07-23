@@ -13,7 +13,7 @@ public class BlockEnt : GridEntity, IPushesButton
     {
         //return null;
         
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity, false, default));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity, false, default));
     }
     
 
@@ -64,6 +64,8 @@ public class BlockEnt : GridEntity, IPushesButton
         if(result != null) yield return result;
         
     }
+
+    public override bool CanMove => true;
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets)
     {

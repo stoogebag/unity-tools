@@ -12,6 +12,7 @@ using UnityEngine;
 
 public class ElevatorEnt : GridEntity, IActivateable, IActivatesByParents
 {
+    public override bool CanMove => true;
     private void Awake()
     {
         BindParents();

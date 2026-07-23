@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class WinEnt : GridEntity
 {
+    
+    public override bool CanMove => false;
     public override GridActionSetGroup GetGravityMoves()
     {
         return null;

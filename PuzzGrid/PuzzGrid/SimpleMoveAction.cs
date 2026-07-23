@@ -69,10 +69,11 @@ public class SimpleMoveAction : GridAction, IPushAction
             return null;
         }
 
-    if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented || Ent is BarrelEnt)
+    if (Ent is MangEnt || Ent is BlockEnt || Ent is MangEntOriented || Ent is BarrelEnt || Ent.CanMove)
         {
             var hits = new List<PuzzGridRaycastResult>();
 
+            
             foreach ((var rayOrigin, var buffer) in Ent.GetFrontierRayOrigins(MovementVec, PuzzGrid.GridSpacing())
                          .ToList())
             {
@@ -118,6 +119,24 @@ public class SimpleMoveAction : GridAction, IPushAction
                 this.Approval = Approvals.Approved;
                 return this;
             }
+
+            var ladderHit = hits.FirstOrDefault(t => t.HitEnt is LadderEnt);
+            if(ladderHit != null)
+            {
+                Debug.Log("hit ladder, distance " + ladderHit.HitDistance);
+                
+                var ladder = ladderHit.HitEnt as LadderEnt;
+                if (ladderHit.HitDistance < 0.05f)
+                {
+                    if (ladder.transform.right.normalized.EqualsApprox(MovementVec.normalized))
+                    {
+                        Debug.Log("i want to climb!");
+                        return new SimpleMoveAction(Ent, Vector3.up * 10, PushForce.WeakSlide, false, false,
+                            Ent.transform.rotation);
+                    }
+                }
+            }
+            
 
             var candidates = new List<SimpleMoveAction>();
             foreach (var gp in hits.GroupBy(t => t.HitEnt))
@@ -414,4 +433,5 @@ public class PuzzGridRaycastResult
     public Vector3 PortalOutDirection;
     public float HitDistance;
 }
+
 #endif

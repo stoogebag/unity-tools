@@ -14,20 +14,6 @@ public class ActionQueue : MonoBehaviour
         
         Queue.Enqueue(action);
     }
-
-    [Button]
-    async UniTask Test()
-    {
-        print("test.");
-        await UniTask.WaitForSeconds(1);
-        
-        print("queuing 1");
-        AddAction(()=>UniTask.WaitForSeconds(10));
-        print("queuing 2");
-        AddAction(()=>UniTask.WaitForSeconds(10));
-        print("queuing 3");
-        AddAction(()=>UniTask.WaitForSeconds(10));
-    }
     
     private UniTask _runningTask;
     bool _currentlyRunningTask = false;
