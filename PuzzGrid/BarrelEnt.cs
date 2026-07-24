@@ -75,8 +75,6 @@ public class BarrelEnt : GridEntity, IPushesButton
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets)
     {
-        //get all downstairs neighbours.
-
         GridActionSet result = null;
         
         foreach (var gridEntityComponent in _components)

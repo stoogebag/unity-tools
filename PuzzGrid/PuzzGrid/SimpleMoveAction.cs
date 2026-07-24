@@ -120,23 +120,24 @@ public class SimpleMoveAction : GridAction, IPushAction
                 return this;
             }
 
-            var ladderHit = hits.FirstOrDefault(t => t.HitEnt is LadderEnt);
-            if(ladderHit != null)
+            
+            //LADDER
+            if (this.Ent is MangEnt)
             {
-                Debug.Log("hit ladder, distance " + ladderHit.HitDistance);
-                
-                var ladder = ladderHit.HitEnt as LadderEnt;
-                if (ladderHit.HitDistance < 0.05f)
+                var ladderHit = hits.FirstOrDefault(t => t.HitEnt is LadderEnt);
+                if (ladderHit != null)
                 {
-                    if (ladder.transform.right.normalized.EqualsApprox(MovementVec.normalized))
+                    var ladder = ladderHit.HitEnt as LadderEnt;
+                    if (ladderHit.HitDistance < 0.05f)
                     {
-                        Debug.Log("i want to climb!");
-                        return new SimpleMoveAction(Ent, Vector3.up * 10, PushForce.WeakSlide, false, false,
-                            Ent.transform.rotation);
+                        if (ladder.transform.right.normalized.EqualsApprox(MovementVec.normalized))
+                        {
+                            return new SimpleMoveAction(Ent, Vector3.up * 10, PushForce.WeakSlide, false, false,
+                                Ent.transform.rotation);
+                        }
                     }
                 }
             }
-            
 
             var candidates = new List<SimpleMoveAction>();
             foreach (var gp in hits.GroupBy(t => t.HitEnt))

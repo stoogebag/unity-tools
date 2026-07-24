@@ -19,6 +19,8 @@ public abstract class GridEntity : MonoBehaviour
 {
     public List<GridAction> PendingMoves = new List<GridAction>();
 
+    public bool Gravity = true;
+    
     protected virtual void Start()
     {
         _components = GetComponents<IGridEntityComponent>().ToList();
@@ -28,7 +30,7 @@ public abstract class GridEntity : MonoBehaviour
         }
         PuzzGrid = gameObject.GetComponentInAncestor<PuzzGrid>();
     }
-
+    
     protected List<IGridEntityComponent> _components;
 
     protected bool Equals(GridEntity other)

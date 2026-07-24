@@ -13,14 +13,13 @@ using UnityEngine;
 public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 {
     public bool InvertX;
-
     
     public override bool CanMove => true;
     public bool turnOnMove;
 
     public override GridActionSetGroup GetGravityMoves()
     {
-        //return null;
+        if (!Gravity) return null;
         return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this, Vector3.down * 10, PushForce.WeakGravity,
             false, default));
     }
@@ -34,24 +33,28 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
             {
                 if (action.Ent == this)
                 {
-                    // if (action is SimpleMoveAction sma)
-                    // {
-                    //     if (action == actionSummary.ExecutedMoveSummary.Last())
-                    //     {
-                    //         if (sma.MovementVec.IsInSameDirection(Vector3.up))
-                    //         {
-                    //             print(sma.MovementVec.ToString());
-                    //             print(actionSummary.ExecutedMoveSummary.Count);
-                    //             print("i just climbed a ladder.");
-                    //
-                    //             yield return SimpleMoveAction.GetMove(this, Vector3.right * 10, PushForce.WeakSlide,
-                    //                 true,
-                    //                 transform.rotation);
-                    //
-                    //         }
-                    //     }
-                    // }
-                    //
+                    if (action is SimpleMoveAction sma)
+                    {
+                        
+                        if (action == actionSummary.ExecutedMoveSummary.Last())
+                        {
+                            
+                            if (sma.MovementVec.IsInSameDirection(Vector3.up))
+                            {
+                        //        print(actionSummary.ExecutedMoveSummary.Count);
+                                
+                                
+                          //      if (actionSummary.ExecutedMoveSummary.Count == 1) //todo: fix this obscene hack lmao
+                                {
+                                    yield return SimpleMoveAction.GetMove(this, Vector3.right * 10, PushForce.WeakSlide,
+                                        true,
+                                        transform.rotation);
+                                }
+
+                            }
+                        }
+                    }
+                    
                     
                     if (GetComponent<Oil>() == null) //non-oily feet.
                     {
