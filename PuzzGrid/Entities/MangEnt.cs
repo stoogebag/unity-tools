@@ -13,7 +13,7 @@ using UnityEngine;
 public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 {
     public bool InvertX;
-    
+
     public override bool CanMove => true;
     public bool turnOnMove;
 
@@ -35,27 +35,26 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                 {
                     if (action is SimpleMoveAction sma)
                     {
-                        
                         if (action == actionSummary.ExecutedMoveSummary.Last())
                         {
-                            
+                            for (var i = 0; i < actionSummary.ExecutedMoveSummary.Count; i++)
+                            {
+                                print(i + " move " + actionSummary.ExecutedMoveSummary[i].ToString());
+                            }
+
                             if (sma.MovementVec.IsInSameDirection(Vector3.up))
                             {
-                        //        print(actionSummary.ExecutedMoveSummary.Count);
-                                
-                                
-                          //      if (actionSummary.ExecutedMoveSummary.Count == 1) //todo: fix this obscene hack lmao
+                                if (sma.Force == PushForce.Climb)
                                 {
-                                    yield return SimpleMoveAction.GetMove(this, Vector3.right * 10, PushForce.WeakSlide,
+                                    yield return SimpleMoveAction.GetMove(this, transform.forward * 10,
+                                        PushForce.WeakSlide,
                                         true,
                                         transform.rotation);
                                 }
-
                             }
                         }
                     }
-                    
-                    
+
                     if (GetComponent<Oil>() == null) //non-oily feet.
                     {
                         //sliipp
@@ -106,7 +105,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 
                                     var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
                                         transform.rotation);
-                                    
+
                                     yield return newmove;
                                 }
                             }
@@ -116,11 +115,12 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                     {
                         {
                             var result = new GridActionSet(PuzzGrid);
-                            
+
                             var down = GetAllNeighbours(Vector3.down * 10)?.Select(t => t?.HitEnt).WhereNotNull();
-                            
-                            
-                            if(down != null && down.Any() && down.All(t => t.GetComponent<Oil>() == null)) //no oil. add oil
+
+
+                            if (down != null && down.Any() &&
+                                down.All(t => t.GetComponent<Oil>() == null)) //no oil. add oil
                             {
                                 var oilPrefab = PuzzGrid.GetComponent<PrefabDirectory>().oilPrefab;
 
@@ -147,7 +147,6 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                                     transform.rotation);
                                 yield return newmove;
                             }
-
 
 
                             //
@@ -208,8 +207,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
     {
         GridActionSet result = null;
 
-      
-        
+
         foreach (var gridEntityComponent in _components)
         {
             var se = gridEntityComponent.GetSideEffectMoves(set);
@@ -219,8 +217,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                 else result.Actions.AddRange(se.Actions);
             }
         }
-        
-        
+
 
         return result;
     }

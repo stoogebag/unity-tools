@@ -300,7 +300,12 @@ public class PushForce
         IsGrounded = false,
     };
 
-    
+    public static PushForce Climb =new PushForce()
+    {
+        Strength = ForceStrength.Weak,
+        IsGravity = false,
+        IsGrounded = true,
+    }; 
 }
 
 public enum ForceStrength

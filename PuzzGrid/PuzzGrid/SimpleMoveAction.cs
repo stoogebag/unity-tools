@@ -130,9 +130,10 @@ public class SimpleMoveAction : GridAction, IPushAction
                     var ladder = ladderHit.HitEnt as LadderEnt;
                     if (ladderHit.HitDistance < 0.05f)
                     {
+                        Debug.Log("ladder.");
                         if (ladder.transform.right.normalized.EqualsApprox(MovementVec.normalized))
                         {
-                            return new SimpleMoveAction(Ent, Vector3.up * 10, PushForce.WeakSlide, false, false,
+                            return new SimpleMoveAction(Ent, Vector3.up * 10, PushForce.Climb, false, false,
                                 Ent.transform.rotation);
                         }
                     }

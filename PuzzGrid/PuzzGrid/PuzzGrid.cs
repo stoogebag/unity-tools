@@ -72,35 +72,34 @@ public partial class PuzzGrid : MonoBehaviour
 
         var cumulativeSummary = new GridActionSummary();
         cumulativeSummary.Add(moveSummary);
-
         while (true)
         {
-            //break; //for debug
-            
             CheckLossConditions();
             CheckWinConditions();
-            //
-            var settle = GetSettlementMoves(cumulativeSummary);
 
-            var settleSummary = await RunActionSetGroup(settle, GridActionSetGroup.GroupType.Settlement);
-            if (settleSummary != null) cumulativeSummary.Add(settleSummary);
+            //settlement to exhaustion
+            while (true)
+            {
+                var settle = GetSettlementMoves(cumulativeSummary);
+                var settleSummary = await RunActionSetGroup(settle, GridActionSetGroup.GroupType.Settlement);
+                if (settleSummary != null) cumulativeSummary.Add(settleSummary);
+
+                if (settleSummary == null || settleSummary.ExecutedMoveSummary.Count == 0)
+                    break;
+            }
 
             var globalSettlement = GetGlobalSettlementMoves();
-            var globalSettlementSummary =await RunActionSetGroup(globalSettlement, GridActionSetGroup.GroupType.Settlement); 
+            var globalSettlementSummary = await RunActionSetGroup(globalSettlement, GridActionSetGroup.GroupType.Settlement);
             if (globalSettlementSummary != null) cumulativeSummary.Add(globalSettlementSummary);
-            
+
             var grav = GetGravityMoves();
             var gravSummary = await RunActionSetGroup(grav, GridActionSetGroup.GroupType.Gravity);
             if (gravSummary != null) cumulativeSummary.Add(gravSummary);
 
             if ((gravSummary == null || gravSummary.ExecutedMoveSummary.Count == 0) &&
-                (settleSummary == null || settleSummary.ExecutedMoveSummary.Count == 0)&&
                 (globalSettlementSummary == null || globalSettlementSummary.ExecutedMoveSummary.Count == 0))
                 break;
-
-            //break;
         }
-
         _moveCompleted.OnNext(default);
         
         _moving = false;
