@@ -15,35 +15,33 @@ public class SimpleMoveActionNoPush : GridAction
         public PushForce Force { get; }
     public Vector3 MovementVec { get; }
 
-    public Quaternion OriginalOrientation;
-
     static int _idCounter = 0;
     private bool _aborted;
 
+    private TurnData _turn;
+    public TurnData Turn { get => _turn; set => _turn = value; }
+
     public SimpleMoveActionNoPush(GridEntity ent, Vector3 movementVec, PushForce force, bool isPlatformPush = false,
-        bool turn = false, Quaternion originalOrientation = default)
+        TurnData turn = default)
     {
         PlatformPush = isPlatformPush;
         Force = force;
         Ent = ent;
         MovementVec = movementVec;
-        ID = _idCounter++; //todo: consider if this is a good idea. will they always be ordered by creation time?
-        Turn = turn;
-        OriginalOrientation = originalOrientation;
+        ID = _idCounter++;
+        _turn = turn;
     }
-
-    public bool Turn { get; set; }
 
     public bool PlatformPush { get; set; }
 
 
-    public static GridActionSet GetMove(GridEntity ent, Vector3 dir, PushForce force, bool turn,
-        Quaternion originalOrientation)
+    public static GridActionSet GetMove(GridEntity ent, Vector3 dir, PushForce force,
+        TurnData turn = default)
     {
         return new GridActionSet(ent.PuzzGrid)
         {
-            Actions = new SimpleMoveActionNoPush(ent, ent.PuzzGrid.GetDirectionVector(dir), force, turn: turn,
-                originalOrientation: originalOrientation).One().ToList<GridAction>(),
+            Actions = new SimpleMoveActionNoPush(ent, ent.PuzzGrid.GetDirectionVector(dir), force, turn: turn)
+                .One().ToList<GridAction>(),
         };
     }
 
@@ -58,35 +56,17 @@ public class SimpleMoveActionNoPush : GridAction
 
     public override void Execute()
     {
-        // if (Ent.NodeEnts.First().CurrentNode != StartNode)
-        // {
-        //     //abort!
-        //     _aborted = true;
-        //     return;
-        // }
-
-        OriginalOrientation = Ent.transform.rotation;
+        _turn.OriginalOrientation = Ent.transform.rotation;
         
         var dir = GridEntity.GetDirection(MovementVec);
         Ent.PendingMoves.Add(this);
-        //var physicsEnt = Ent.GetComponent<PhysicsEnt>();
 
-        // if (physicsEnt != null)
-        // {
-        //     physicsEnt.Moved = true;
-        //     if (physicsEnt.IsClone)
-        //     {
-        //     }
-        // }
-
-        if (Turn)
+        if (_turn.Enabled)
         {
-            Ent.transform.LookAt(Ent.transform.position + MovementVec, Vector3.up);
+            Ent.transform.rotation = _turn.TargetRotation;
         }
 
         Ent.transform.position += MovementVec;
-
-
     }
 
 
@@ -98,7 +78,7 @@ public class SimpleMoveActionNoPush : GridAction
 
         Ent.transform.position -= MovementVec;
 
-        if (Turn) { Ent.transform.rotation = OriginalOrientation; }
+        if (_turn.Enabled) { Ent.transform.rotation = _turn.OriginalOrientation; }
     }
 
 
@@ -134,10 +114,10 @@ public class SimpleMoveActionNoPush : GridAction
 
         var tasks = new List<UniTask>();
         
-        if (Turn)
+        if (_turn.Enabled)
         {
-            Ent.transform.rotation = OriginalOrientation;
-            tasks.Add(Ent.transform.DOLookAt(Ent.transform.position + MovementVec,  0.1f).SetEase(Ease.InOutSine).ToUniTask());
+            Ent.transform.rotation = _turn.OriginalOrientation;
+            tasks.Add(Ent.transform.DORotate(_turn.TargetRotation.eulerAngles, 0.1f).SetEase(Ease.InOutSine).ToUniTask());
         }
         
         tasks.Add(Ent.transform.DOMove(Ent.transform.position + MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask());
@@ -148,7 +128,17 @@ public class SimpleMoveActionNoPush : GridAction
     public async override UniTask GetUndoTask()
     {
         Ent.transform.position += MovementVec;
-        await Ent.transform.DOMove(Ent.transform.position - MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask();
+
+        var tasks = new List<UniTask>();
+        
+        if (_turn.Enabled)
+        {
+            tasks.Add(Ent.transform.DORotate(_turn.OriginalOrientation.eulerAngles, 0.1f).SetEase(Ease.InOutSine).ToUniTask());
+        }
+        
+        tasks.Add(Ent.transform.DOMove(Ent.transform.position - MovementVec, 0.1f).SetEase(Ease.InOutSine).ToUniTask());
+        
+        await UniTask.WhenAll(tasks);
     }
 }
 #endif

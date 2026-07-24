@@ -20,8 +20,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
     public override GridActionSetGroup GetGravityMoves()
     {
         if (!Gravity) return null;
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this, Vector3.down * 10, PushForce.WeakGravity,
-            false, default));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this, Vector3.down * 10, PushForce.WeakGravity));
     }
 
 
@@ -37,10 +36,6 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                     {
                         if (action == actionSummary.ExecutedMoveSummary.Last())
                         {
-                            for (var i = 0; i < actionSummary.ExecutedMoveSummary.Count; i++)
-                            {
-                                print(i + " move " + actionSummary.ExecutedMoveSummary[i].ToString());
-                            }
 
                             if (sma.MovementVec.IsInSameDirection(Vector3.up))
                             {
@@ -48,8 +43,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                                 {
                                     yield return SimpleMoveAction.GetMove(this, transform.forward * 10,
                                         PushForce.WeakSlide,
-                                        true,
-                                        transform.rotation);
+                                        TurnData.FaceDirection(transform.forward * 10));
                                 }
                             }
                         }
@@ -103,8 +97,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                                         yield return result;
                                     }
 
-                                    var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
-                                        transform.rotation);
+                                    var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force);
 
                                     yield return newmove;
                                 }
@@ -143,8 +136,7 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
 
                             if (action is SimpleMoveAction move)
                             {
-                                var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
-                                    transform.rotation);
+                                var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force);
                                 yield return newmove;
                             }
 
@@ -259,7 +251,8 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
     public GridActionSet GetWalkMove(Vector3 dir)
     {
         var direction = InvertX ? new Vector3(-dir.x, dir.y, dir.z) : dir;
-        return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), turnOnMove, default);
+        return SimpleMoveAction.GetMove(this, direction, GetWalkForce(),
+            turnOnMove ? TurnData.FaceDirection(direction) : default);
     }
 
     private PushForce GetWalkForce()

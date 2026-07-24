@@ -13,7 +13,7 @@ public class BlockEnt : GridEntity, IPushesButton
     {
         //return null;
         
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity, false, default));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity));
     }
     
 
@@ -49,8 +49,7 @@ public class BlockEnt : GridEntity, IPushesButton
                             var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
                             if (!nonIce)
                             {
-                                var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
-                                    transform.rotation);
+                                var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force);
                                 if (result == null) result = newmove;
                                 else result.Actions.AddRange(newmove.Actions);
 

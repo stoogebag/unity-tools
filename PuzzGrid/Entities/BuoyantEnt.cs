@@ -28,13 +28,10 @@ public class BuoyantEnt : MonoBehaviour, IGridEntityComponent
                 var myBox = gameObject.GetComponentInDescendants<BoxCollider>();
                 
                 if (!BoxOverlap(box, myBox)) continue;
-                        
-                
                 if (OverlapMoreThanHalf( myBox, box))
                 {
                     print("im so wet im being buoyant");
-                    return SimpleMoveAction.GetMove(Entity, Vector3.up * 10f, PushForce.Water, false,
-                        transform.rotation);
+                    return SimpleMoveAction.GetMove(Entity, Vector3.up * 10f, PushForce.Water);
                     
                     
                 }

@@ -63,8 +63,7 @@ public class SettlementGaze : MonoBehaviour, IGridEntityComponent, IMoveEvaluati
 
                     if (move.Ent == _partner?.Entity)
                     {
-                        var se = SimpleMoveAction.GetMove(Entity, move.MovementVec, move.Force, false,
-                            _partner.transform.rotation);
+                        var se = SimpleMoveAction.GetMove(Entity, move.MovementVec, move.Force);
                         //var cma = new CompoundMoveAction(Entity, move.MovementVec, count, true, false, move.Force);
                         GridActionSet.Include(Entity.PuzzGrid, se.Actions[0], ref result);
                     }

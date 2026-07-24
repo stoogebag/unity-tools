@@ -108,6 +108,9 @@ public partial class PuzzGrid : MonoBehaviour
     Subject<Unit> _moveCompleted = new Subject<Unit>();
     public IObservable<Unit> OnMoveCompletedObservable() => _moveCompleted;
 
+    Subject<GridActionSummary> _animationStart = new Subject<GridActionSummary>();
+    public IObservable<GridActionSummary> OnAnimationStartObservable() => _animationStart;
+
     private async UniTask<GridActionSummary> RunActionSetGroup(GridActionSetGroup actionSetGroup,
         GridActionSetGroup.GroupType type)
     {
@@ -188,6 +191,7 @@ public partial class PuzzGrid : MonoBehaviour
     private void CheckLossConditions()
     {
         if (mangEnt == null) mangEnt = FindObjectOfType<MangEnt>();
+        
 
     }
 
@@ -312,6 +316,7 @@ public partial class PuzzGrid : MonoBehaviour
     private async UniTask ExecuteAnimations(GridActionSummary summary)
     {
         if(summary == null) return;
+        _animationStart.OnNext(summary);
         var tasks = new List<UniTask>();
 
         //executed moves
@@ -348,8 +353,9 @@ public partial class PuzzGrid : MonoBehaviour
 
     private async UniTask ExecuteUndoAnimations(GridActionSummary summary)
     {
-        var tasks = new List<UniTask>();
         if(summary == null) return;
+        _animationStart.OnNext(summary);
+        var tasks = new List<UniTask>();
 
         foreach (var gridActions in summary.ExecutedMoveSummary.GroupBy(t => t.Ent))
         {
