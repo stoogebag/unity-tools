@@ -36,9 +36,13 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
                     {
                         if (action == actionSummary.ExecutedMoveSummary.Last())
                         {
+                            print("lastmove " + sma.MovementVec + sma.Force);
+                            print(actionSummary.ExecutedMoveSummary.Count);
 
                             if (sma.MovementVec.IsInSameDirection(Vector3.up))
                             {
+                                
+                                print("movedup");
                                 if (sma.Force == PushForce.Climb)
                                 {
                                     yield return SimpleMoveAction.GetMove(this, transform.forward * 10,

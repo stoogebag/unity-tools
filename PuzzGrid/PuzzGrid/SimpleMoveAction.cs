@@ -143,6 +143,7 @@ public class SimpleMoveAction : GridAction, IPushAction
                         Debug.Log("ladder.");
                         if (ladder.transform.right.normalized.EqualsApprox(MovementVec.normalized))
                         {
+                            Debug.Log("right direction.");
                             return new SimpleMoveAction(Ent, Vector3.up * 10, PushForce.Climb, false, TurnData.FaceDirection(MovementVec));
                         }
                     }

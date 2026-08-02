@@ -19,8 +19,12 @@ namespace stoogebag.Editor
         private bool _showGhost;
         private static Material _ghostMaterial;
 
+        private GameObject _gridPlane;
+
+        [SerializeField] private GameObject _spawnParent;
         private float _gridY;
-        private bool _active = true;
+        private float _placementRotation;
+        private bool _active;
 
         [MenuItem("stooge/Grid Level Editor")]
         public static void ShowWindow()
@@ -32,35 +36,44 @@ namespace stoogebag.Editor
 
         private void OnEnable()
         {
-            SceneView.duringSceneGui += OnSceneViewGUI;
+            SceneView.beforeSceneGui += OnSceneViewGUI;
+            SceneView.duringSceneGui += OnSceneViewRepaint;
             Undo.undoRedoPerformed += Repaint;
         }
 
         private void OnDisable()
         {
-            SceneView.duringSceneGui -= OnSceneViewGUI;
+            SceneView.beforeSceneGui -= OnSceneViewGUI;
+            SceneView.duringSceneGui -= OnSceneViewRepaint;
             Undo.undoRedoPerformed -= Repaint;
             DestroyGhost();
+            DestroyGridPlane();
         }
 
         private void OnDestroy()
         {
-            SceneView.duringSceneGui -= OnSceneViewGUI;
+            SceneView.beforeSceneGui -= OnSceneViewGUI;
+            SceneView.duringSceneGui -= OnSceneViewRepaint;
             Undo.undoRedoPerformed -= Repaint;
             DestroyGhost();
+            DestroyGridPlane();
         }
 
         private void OnGUI()
         {
             var evt = Event.current;
-            if (evt.type == EventType.KeyDown && evt.keyCode == KeyCode.Tab)
+            if (evt.type == EventType.KeyDown && evt.keyCode == KeyCode.BackQuote)
             {
                 ToggleActive();
                 evt.Use();
                 Repaint();
             }
 
+            if (evt.type == EventType.KeyDown)
+                HandleNumberKey(evt);
+
             DrawToolbar();
+            DrawSpawnParentField();
             DrawPrefabSlots();
             DrawFooter();
         }
@@ -76,6 +89,11 @@ namespace stoogebag.Editor
                 _selectedSlot = -1;
             }
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawSpawnParentField()
+        {
+            _spawnParent = (GameObject)EditorGUILayout.ObjectField("Spawn Parent", _spawnParent, typeof(GameObject), true);
         }
 
         private void DrawPrefabSlots()
@@ -128,7 +146,7 @@ namespace stoogebag.Editor
             {
                 var changed = isSelected ? (_selectedSlot != -1) : (_selectedSlot != index);
                 _selectedSlot = isSelected ? -1 : index;
-                if (changed) DestroyGhost();
+                if (changed) { DestroyGhost(); _placementRotation = 0f; }
                 Event.current.Use();
                 Repaint();
                 SceneView.RepaintAll();
@@ -194,7 +212,7 @@ namespace stoogebag.Editor
             var evt = Event.current;
             var controlId = GUIUtility.GetControlID(FocusType.Passive);
 
-            if (evt.type == EventType.KeyDown && evt.keyCode == KeyCode.Tab)
+            if (evt.type == EventType.KeyDown && evt.keyCode == KeyCode.BackQuote)
             {
                 ToggleActive();
                 evt.Use();
@@ -208,17 +226,41 @@ namespace stoogebag.Editor
 
                 if (evt.type == EventType.KeyDown)
                 {
-                    if (evt.keyCode == KeyCode.PageUp)   { _gridY += GridSpacing; evt.Use(); }
-                    if (evt.keyCode == KeyCode.PageDown)  { _gridY -= GridSpacing; evt.Use(); }
+                    if (evt.keyCode == KeyCode.PageUp)   { _gridY += GridSpacing; evt.Use(); Repaint(); }
+                    if (evt.keyCode == KeyCode.PageDown)  { _gridY -= GridSpacing; evt.Use(); Repaint(); }
+                    if (evt.keyCode == KeyCode.Q) { _placementRotation -= 90f; evt.Use(); Repaint(); }
+                    if (evt.keyCode == KeyCode.E) { _placementRotation += 90f; evt.Use(); Repaint(); }
+                    HandleNumberKey(evt);
                 }
 
-                if (evt.type == EventType.MouseDown && evt.button == 1)
+                if (evt.type == EventType.MouseDown && evt.button == 0 && evt.shift && !evt.alt)
                 {
                     var hit = HandleUtility.PickGameObject(evt.mousePosition, false);
                     if (hit != null)
                     {
-                        var root = hit.transform.root.gameObject;
-                        var source = PrefabUtility.GetCorrespondingObjectFromSource(root);
+                        var root = PrefabUtility.GetNearestPrefabInstanceRoot(hit);
+                        if (root != null && root.hideFlags == HideFlags.HideAndDontSave)
+                        {
+                            var renderers = root.GetComponentsInChildren<Renderer>();
+                            foreach (var r in renderers) r.enabled = false;
+                            hit = HandleUtility.PickGameObject(evt.mousePosition, false);
+                            root = hit != null ? PrefabUtility.GetNearestPrefabInstanceRoot(hit) : null;
+                            foreach (var r in renderers) r.enabled = true;
+                        }
+
+                        var source = root != null ? PrefabUtility.GetCorrespondingObjectFromSource(root) : null;
+
+                        var check = root?.transform.parent;
+                        while ((source == null || !_prefabSlots.Contains(source)) && check != null)
+                        {
+                            var checkRoot = PrefabUtility.GetNearestPrefabInstanceRoot(check.gameObject);
+                            source = checkRoot != null ? PrefabUtility.GetCorrespondingObjectFromSource(checkRoot) : null;
+                            if (source != null && _prefabSlots.Contains(source))
+                                root = checkRoot;
+                            check = check.parent;
+                        }
+
+                        Debug.Log($"deletion: hit={hit?.name} root={root?.name} source={source?.name} inSlots={source != null && _prefabSlots.Contains(source)}");
                         if (source != null && _prefabSlots.Contains(source))
                         {
                             Undo.DestroyObjectImmediate(root);
@@ -227,14 +269,29 @@ namespace stoogebag.Editor
                     }
                 }
 
-                DrawGridOverlay(sceneView);
-
                 if (_selectedSlot >= 0 && _selectedSlot < _prefabSlots.Count)
                 {
                     var prefab = _prefabSlots[_selectedSlot];
-                    if (prefab != null) HandlePlacement(sceneView, prefab, evt, controlId);
+                    if (prefab != null)
+                    {
+                        if (evt.shift)
+                            DestroyGhost();
+                        else
+                            HandlePlacement(sceneView, prefab, evt, controlId);
+                    }
                 }
             }
+        }
+
+        private void OnSceneViewRepaint(SceneView sceneView)
+        {
+            if (!_active)
+            {
+                DestroyGridPlane();
+                return;
+            }
+
+            UpdateGridPlane(sceneView);
         }
 
         private void HandlePlacement(SceneView sceneView, GameObject prefab, Event evt, int controlId)
@@ -262,43 +319,107 @@ namespace stoogebag.Editor
                 evt.Use();
         }
 
-        private void DrawGridOverlay(SceneView sceneView)
+        private void UpdateGridPlane(SceneView sceneView)
         {
-            var cam = sceneView.camera;
-            var camPos = cam.transform.position;
-
-            var sceneRect = sceneView.position;
-
-            var worldSize = cam.ScreenToWorldPoint(new Vector3(sceneRect.width, sceneRect.height, cam.farClipPlane * 0.5f));
-            var worldOrigin = cam.ScreenToWorldPoint(Vector3.zero);
-
-            var halfSize = Mathf.Max(Mathf.Abs(worldSize.x - worldOrigin.x), Mathf.Abs(worldSize.z - worldOrigin.z)) * 1.5f;
-
-            var centeredX = Mathf.Round(camPos.x / GridSpacing) * GridSpacing;
-            var centeredZ = Mathf.Round(camPos.z / GridSpacing) * GridSpacing;
-
-            var startX = centeredX - halfSize;
-            var startZ = centeredZ - halfSize;
-            var endX = centeredX + halfSize;
-            var endZ = centeredZ + halfSize;
-
-            Handles.color = new Color(1, 1, 1, 0.08f);
-            for (var x = startX; x <= endX; x += GridSpacing)
+            if (_gridPlane == null)
             {
-                Handles.DrawLine(new Vector3(x, _gridY, startZ), new Vector3(x, _gridY, endZ));
-            }
-            for (var z = startZ; z <= endZ; z += GridSpacing)
-            {
-                Handles.DrawLine(new Vector3(startX, _gridY, z), new Vector3(endX, _gridY, z));
+                CreateGridPlane();
+                if (_gridPlane == null) return;
             }
 
-            Handles.color = new Color(1, 1, 1, 0.15f);
-            Handles.DrawLine(new Vector3(0, _gridY, startZ), new Vector3(0, _gridY, endZ));
-            Handles.DrawLine(new Vector3(startX, _gridY, 0), new Vector3(endX, _gridY, 0));
+            var camPos = sceneView.camera.transform.position;
+            var cx = Mathf.Round((camPos.x - 5f) / GridSpacing) * GridSpacing + 5f;
+            var cz = Mathf.Round((camPos.z - 5f) / GridSpacing) * GridSpacing + 5f;
+            _gridPlane.transform.position = new Vector3(cx, _gridY, cz);
+        }
 
-            Handles.color = new Color(1, 1, 1, 0.25f);
-            Handles.DrawLine(new Vector3(0, _gridY, -0.5f), new Vector3(0, _gridY, 0.5f));
-            Handles.DrawLine(new Vector3(-0.5f, _gridY, 0), new Vector3(0.5f, _gridY, 0));
+        private void CreateGridPlane()
+        {
+            const float halfSize = 200f;
+            const float lineWidth = 0.12f;
+            const float denseSpacing = 2.5f;
+
+            var verts = new List<Vector3>();
+            var uvs = new List<Vector2>();
+            var tris = new List<int>();
+
+            void AddQuad(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+            {
+                var i = verts.Count;
+                verts.Add(a); verts.Add(b); verts.Add(c); verts.Add(d);
+                uvs.Add(Vector2.zero); uvs.Add(Vector2.zero); uvs.Add(Vector2.zero); uvs.Add(Vector2.zero);
+                tris.AddRange(new[] { i, i + 2, i + 1, i, i + 3, i + 2 });
+            }
+
+            // Fill quad
+            AddQuad(
+                new Vector3(-halfSize, 0, -halfSize),
+                new Vector3( halfSize, 0, -halfSize),
+                new Vector3( halfSize, 0,  halfSize),
+                new Vector3(-halfSize, 0,  halfSize)
+            );
+
+            var halfW = lineWidth * 0.5f;
+
+            void AddLineQuad(float pos, bool alongZ)
+            {
+                if (alongZ)
+                    AddQuad(
+                        new Vector3(pos - halfW, 0, -halfSize),
+                        new Vector3(pos + halfW, 0, -halfSize),
+                        new Vector3(pos + halfW, 0,  halfSize),
+                        new Vector3(pos - halfW, 0,  halfSize)
+                    );
+                else
+                    AddQuad(
+                        new Vector3(-halfSize, 0, pos - halfW),
+                        new Vector3( halfSize, 0, pos - halfW),
+                        new Vector3( halfSize, 0, pos + halfW),
+                        new Vector3(-halfSize, 0, pos + halfW)
+                    );
+            }
+
+            for (var x = -halfSize; x <= halfSize; x += denseSpacing) AddLineQuad(x, true);
+            for (var z = -halfSize; z <= halfSize; z += denseSpacing) AddLineQuad(z, false);
+            for (var x = -halfSize; x <= halfSize; x += GridSpacing) AddLineQuad(x, true);
+            for (var z = -halfSize; z <= halfSize; z += GridSpacing) AddLineQuad(z, false);
+
+            var mesh = new Mesh();
+            mesh.SetVertices(verts);
+            mesh.SetUVs(0, uvs);
+            mesh.SetTriangles(tris, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            mesh.hideFlags = HideFlags.HideAndDontSave;
+
+            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            mat.color = new Color(1, 0.15f, 0.15f, 0.2f);
+            mat.SetFloat("_Surface", 1);
+            mat.SetFloat("_Blend", 0);
+            mat.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            mat.SetFloat("_ZWrite", 0);
+            mat.SetInt("_AlphaClip", 0);
+            mat.SetFloat("_Cull", 0);
+            mat.renderQueue = 3000;
+            mat.hideFlags = HideFlags.HideAndDontSave;
+
+            _gridPlane = new GameObject("GRID_PLANE");
+            _gridPlane.hideFlags = HideFlags.HideAndDontSave;
+            _gridPlane.AddComponent<MeshFilter>().sharedMesh = mesh;
+            _gridPlane.AddComponent<MeshRenderer>().sharedMaterial = mat;
+        }
+
+        private void DestroyGridPlane()
+        {
+            if (_gridPlane != null)
+            {
+                var filter = _gridPlane.GetComponent<MeshFilter>();
+                if (filter != null && filter.sharedMesh != null)
+                    DestroyImmediate(filter.sharedMesh);
+                DestroyImmediate(_gridPlane);
+                _gridPlane = null;
+            }
         }
 
         private Vector3 SnapToGrid(Vector3 pos)
@@ -323,6 +444,7 @@ namespace stoogebag.Editor
             }
 
             _placementGhost.transform.position = position;
+            _placementGhost.transform.rotation = Quaternion.Euler(0, _placementRotation, 0);
             _showGhost = true;
         }
 
@@ -331,7 +453,7 @@ namespace stoogebag.Editor
             if (_ghostMaterial == null)
             {
                 _ghostMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-                _ghostMaterial.color = new Color(0.3f, 0.7f, 1f, 0.4f);
+                _ghostMaterial.color = new Color(0.3f, 0.7f, 1f, 0.15f);
                 _ghostMaterial.SetFloat("_Surface", 1);
                 _ghostMaterial.SetFloat("_Blend", 0);
                 _ghostMaterial.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
@@ -365,14 +487,42 @@ namespace stoogebag.Editor
             var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             if (go == null) return;
             go.transform.position = position;
+            go.transform.rotation = Quaternion.Euler(0, _placementRotation, 0);
+            if (_spawnParent != null)
+            {
+                var typeFolder = _spawnParent.transform.Find($"-{prefab.name}");
+                if (typeFolder == null)
+                {
+                    typeFolder = new GameObject($"-{prefab.name}").transform;
+                    typeFolder.SetParent(_spawnParent.transform);
+                    Undo.RegisterCreatedObjectUndo(typeFolder.gameObject, $"Create {prefab.name} folder");
+                }
+                go.transform.SetParent(typeFolder, true);
+            }
             Undo.RegisterCreatedObjectUndo(go, $"Place {prefab.name}");
             Selection.activeGameObject = go;
+        }
+
+        private void HandleNumberKey(Event evt)
+        {
+            var key = evt.keyCode;
+            var index = key - KeyCode.Alpha1;
+            if (index < 0 || index > 8 || index >= _prefabSlots.Count) return;
+
+            if (_selectedSlot != index) { DestroyGhost(); _placementRotation = 0f; }
+            _selectedSlot = index;
+            evt.Use();
+            Repaint();
+            SceneView.RepaintAll();
         }
 
         private void ToggleActive()
         {
             _active = !_active;
-            if (!_active) DestroyGhost();
+            if (!_active) { DestroyGhost(); DestroyGridPlane(); }
+            else Selection.activeGameObject = null;
+            ShowNotification(new GUIContent(_active ? "Grid Editor: Active" : "Grid Editor: Off"), 1f);
+            SceneView.lastActiveSceneView?.ShowNotification(new GUIContent(_active ? "Grid Editor: Active" : "Grid Editor: Off"), 1f);
         }
 
         private void DestroyGhost()
