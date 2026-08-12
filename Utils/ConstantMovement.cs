@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,10 +9,29 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider
     [SerializeField] private bool relative = false;
 
     public Vector3 speed = new Vector3(10, 10, 10);
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (rb != null)
+        {
+
+            if (relative)
+            {
+                var dir = transform.rotation * speed;
+                rb.linearVelocity = dir;
+            }
+            else rb.linearVelocity = speed;
+
+            return;
+        }
+        
         Vector3 delta;
 
         if (relative)
