@@ -12,15 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Sora-VariableFont_wght
   m_EditorClassIdentifier: 
-  hashCode: 1327808676
-  material: {fileID: 546539863025483073}
-  materialHashCode: 1922768644
   m_Version: 1.1.0
-  m_SourceFontFileGUID: 415b05657597d7c40ae7effd28c4393d
-  m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 415b05657597d7c40ae7effd28c4393d,
-    type: 3}
-  m_SourceFontFile: {fileID: 0}
-  m_AtlasPopulationMode: 0
   m_FaceInfo:
     m_FaceIndex: 0
     m_FamilyName: Sora
@@ -43,59 +35,16 @@ MonoBehaviour:
     m_StrikethroughOffset: 836.8
     m_StrikethroughThickness: 195.85
     m_TabWidth: 893
-  m_GlyphTable: []
-  m_CharacterTable: []
-  m_AtlasTextures:
-  - {fileID: 2404734454431461510}
-  m_AtlasTextureIndex: 0
-  m_IsMultiAtlasTexturesEnabled: 0
-  m_ClearDynamicDataOnBuild: 0
-  m_UsedGlyphRects: []
-  m_FreeGlyphRects:
-  - m_X: 0
-    m_Y: 0
-    m_Width: 2048
-    m_Height: 2048
-  m_fontInfo:
-    Name: 
-    PointSize: 0
-    Scale: 0
-    CharacterCount: 0
-    LineHeight: 0
-    Baseline: 0
-    Ascender: 0
-    CapHeight: 0
-    Descender: 0
-    CenterLine: 0
-    SuperscriptOffset: 0
-    SubscriptOffset: 0
-    SubSize: 0
-    Underline: 0
-    UnderlineThickness: 0
-    strikethrough: 0
-    strikethroughThickness: 0
-    TabWidth: 0
-    Padding: 0
-    AtlasWidth: 0
-    AtlasHeight: 0
-  atlas: {fileID: 2404734454431461510}
-  m_AtlasWidth: 2048
-  m_AtlasHeight: 2048
-  m_AtlasPadding: 9
-  m_AtlasRenderMode: 4121
-  m_glyphInfoList: []
-  m_KerningTable:
-    kerningPairs: []
-  m_FontFeatureTable:
-    m_GlyphPairAdjustmentRecords: []
-  fallbackFontAssets: []
-  m_FallbackFontAssetTable: []
+  m_Material: {fileID: 546539863025483073}
+  m_SourceFontFileGUID: 415b05657597d7c40ae7effd28c4393d
   m_CreationSettings:
     sourceFontFileName: 
     sourceFontFileGUID: 415b05657597d7c40ae7effd28c4393d
+    faceIndex: 0
     pointSizeSamplingMode: 0
     pointSize: 3917
     padding: 9
+    paddingMode: 0
     packingMode: 4
     atlasWidth: 2048
     atlasHeight: 2048
@@ -107,6 +56,36 @@ MonoBehaviour:
     fontStyleModifier: 0
     renderMode: 4121
     includeFontFeatures: 1
+  m_SourceFontFile: {fileID: 0}
+  m_SourceFontFilePath: 
+  m_AtlasPopulationMode: 0
+  InternalDynamicOS: 0
+  m_GlyphTable: []
+  m_CharacterTable: []
+  m_AtlasTextures:
+  - {fileID: 2404734454431461510}
+  m_AtlasTextureIndex: 0
+  m_IsMultiAtlasTexturesEnabled: 0
+  m_GetFontFeatures: 1
+  m_ClearDynamicDataOnBuild: 0
+  m_AtlasWidth: 2048
+  m_AtlasHeight: 2048
+  m_AtlasPadding: 9
+  m_AtlasRenderMode: 4121
+  m_UsedGlyphRects: []
+  m_FreeGlyphRects:
+  - m_X: 0
+    m_Y: 0
+    m_Width: 2048
+    m_Height: 2048
+  m_FontFeatureTable:
+    m_MultipleSubstitutionRecords: []
+    m_LigatureSubstitutionRecords: []
+    m_GlyphPairAdjustmentRecords: []
+    m_MarkToBaseAdjustmentRecords: []
+    m_MarkToMarkAdjustmentRecords: []
+  m_ShouldReimportFontFeatures: 0
+  m_FallbackFontAssetTable: []
   m_FontWeightTable:
   - regularTypeface: {fileID: 0}
     italicTypeface: {fileID: 0}
@@ -135,6 +114,33 @@ MonoBehaviour:
   boldSpacing: 7
   italicStyle: 35
   tabSize: 10
+  m_fontInfo:
+    Name: 
+    PointSize: 0
+    Scale: 0
+    CharacterCount: 0
+    LineHeight: 0
+    Baseline: 0
+    Ascender: 0
+    CapHeight: 0
+    Descender: 0
+    CenterLine: 0
+    SuperscriptOffset: 0
+    SubscriptOffset: 0
+    SubSize: 0
+    Underline: 0
+    UnderlineThickness: 0
+    strikethrough: 0
+    strikethroughThickness: 0
+    TabWidth: 0
+    Padding: 0
+    AtlasWidth: 0
+    AtlasHeight: 0
+  m_glyphInfoList: []
+  m_KerningTable:
+    kerningPairs: []
+  fallbackFontAssets: []
+  atlas: {fileID: 2404734454431461510}
 --- !u!21 &546539863025483073
 Material:
   serializedVersion: 8
@@ -184,6 +190,7 @@ Material:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!28 &2404734454431461510
 Texture2D:
   m_ObjectHideFlags: 0
@@ -194,10 +201,8 @@ Texture2D:
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
   m_IsAlphaChannelOptional: 0
-  serializedVersion: 2
+  serializedVersion: 4
   m_Width: 2048
   m_Height: 2048
   m_CompleteImageSize: 4194304

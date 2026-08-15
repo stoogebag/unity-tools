@@ -21,9 +21,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0ea4a8a999d60ca4792300830e6c4dd8, type: 2}
     - {fileID: 2100000, guid: 216e4820b9ef9194d8374cbfe9b39109, type: 2}
     - {fileID: 8400000, guid: 0c1a6e28fc0d1db48b5084971bf49ec5, type: 2}
+    sceneItems: []
   - name: Category 2
     items: []
+    sceneItems: []
   - name: Category 3
     items: []
+    sceneItems: []
   - name: Category 4
     items: []
+    sceneItems: []

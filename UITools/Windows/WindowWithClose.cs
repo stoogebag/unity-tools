@@ -20,6 +20,7 @@ namespace stoogebag.UITools.Windows
 
         public override async UniTask Activate()
         {
+            _disposable.Clear();
             await base.Activate();
             if(Close == null) Close = gameObject.FirstOrDefault<Button>("Close");
 
@@ -30,11 +31,6 @@ namespace stoogebag.UITools.Windows
         {
             _disposable.Clear();
             await base.Deactivate();
-        }
-
-        void Update()
-        {
-        
         }
     }
 }

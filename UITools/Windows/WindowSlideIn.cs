@@ -30,7 +30,6 @@ namespace stoogebag.UITools.Windows
         [SerializeField]
         private bool AnimateOnClose = true;
 
-        private Vector3 _differenceVec;
         private Vector3 _offScreenPos;
 
         [Button]

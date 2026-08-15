@@ -36,7 +36,6 @@ namespace stoogebag.UITools.Windows
 
         public async UniTask<bool> Activate()
         {
-            print("activating.");
             Init();
             gameObject.SetActive(true);
             
@@ -59,7 +58,6 @@ namespace stoogebag.UITools.Windows
         public async UniTask<bool> Deactivate()
         {
             
-            print("deactivating.");
             Init();
             if (AnimateOnClose)
             {

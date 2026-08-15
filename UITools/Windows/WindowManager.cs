@@ -47,7 +47,11 @@ namespace stoogebag.UITools.Windows
 
         public static void Register(Window w)
         {
-            Instance._windows.Add(w.name,w);
+            if (Instance._windows.ContainsKey(w.name))
+            {
+                Debug.LogWarning($"WindowManager: window '{w.name}' already registered, replacing.");
+            }
+            Instance._windows[w.name] = w;
         }
 
         public static void Deregister(string name)
@@ -55,17 +59,29 @@ namespace stoogebag.UITools.Windows
             Instance._windows.Remove(name);
         }
 
+        public static void Deregister(Window w)
+        {
+            Instance._windows.Remove(w.name);
+        }
+
         public static async UniTask Open(string windowName, bool exclusive = false)
         {
             if (exclusive) CloseAll();
-            await GetWindow(windowName).Activate();
+            var w = GetWindow(windowName);
+            if (w != null) await w.Activate();
         }
         public static async UniTask Close(string windowName)
         {
-            await GetWindow(windowName).Deactivate();
+            var w = GetWindow(windowName);
+            if (w != null) await w.Deactivate();
         }
 
-        public static Window GetWindow(string name) => Instance._windows[name];
+        public static Window GetWindow(string name)
+        {
+            if (Instance._windows.TryGetValue(name, out var w)) return w;
+            Debug.LogWarning($"WindowManager: no window named '{name}' registered.");
+            return null;
+        }
 
         public static async UniTask CloseAll()
         {

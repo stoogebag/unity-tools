@@ -14,21 +14,19 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            dir = relative ? transform.rotation * speed : speed;
+            rb.linearVelocity = dir;
+        }
     }
 
+    private Vector2 dir;
     // Update is called once per frame
     void FixedUpdate()
     {
         if (rb != null)
         {
-
-            if (relative)
-            {
-                var dir = transform.rotation * speed;
-                rb.linearVelocity = dir;
-            }
-            else rb.linearVelocity = speed;
-
             return;
         }
         
