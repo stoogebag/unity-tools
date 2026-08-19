@@ -14,7 +14,8 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
+        if (rb != null && rb.bodyType != RigidbodyType2D.Dynamic) rb = null;
+        if (rb != null && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             dir = relative ? transform.rotation * speed : speed;
             rb.linearVelocity = dir;
