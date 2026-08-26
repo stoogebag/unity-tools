@@ -3,6 +3,7 @@
     "rootNamespace": "",
     "references": [
         "UnityEditor.UI",
+        "Unity.TextMeshPro",
         "stoogebag"
     ],
     "includePlatforms": [
