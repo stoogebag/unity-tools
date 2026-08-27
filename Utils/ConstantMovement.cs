@@ -18,7 +18,11 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider
         if (rb != null && rb.bodyType == RigidbodyType2D.Dynamic)
         {
             dir = relative ? transform.rotation * speed : speed;
+#if UNITY_6000
             rb.linearVelocity = dir;
+#else
+            rb.velocity = dir;
+#endif
         }
     }
 
