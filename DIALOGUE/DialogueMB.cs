@@ -14,11 +14,11 @@ using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEditor;
 
-#if NEW_CINEMACHINE
-using Unity.Cinemachine;
-#else 
-using Cinemachine;
-#endif
+// #if NEW_CINEMACHINE
+// using Unity.Cinemachine;
+// #else 
+// using Cinemachine;
+// #endif
 using UnityEngine;
 
 #if UNITY_EDITOR
