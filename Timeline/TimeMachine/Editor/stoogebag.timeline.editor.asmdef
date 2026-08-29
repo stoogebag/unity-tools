@@ -4,7 +4,8 @@
     "references": [
         "stoogebag",
         "stoogebag.Timeline",
-        "stoogebag.editor"
+        "stoogebag.editor",
+        "Unity.Timeline"
     ],
     "includePlatforms": [
         "Editor"

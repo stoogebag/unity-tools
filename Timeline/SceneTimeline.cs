@@ -120,6 +120,18 @@ public class SceneTimeline : MonoBehaviour
     /// </summary>
     public TimelineAsset TimelineAsset => timelineAsset;
 
+    /// <summary>
+    /// Replace the TimelineAsset backing this SceneTimeline and keep the
+    /// PlayableDirector in sync. Used by the editor deep-copy / duplicate logic
+    /// so each SceneTimeline owns an independent timeline instance.
+    /// </summary>
+    public void AssignTimelineAsset(TimelineAsset asset)
+    {
+        timelineAsset = asset;
+        if (_director != null)
+            _director.playableAsset = asset;
+    }
+
 #if UNITASK
     public async UniTask PlayAndAwait()
     {
