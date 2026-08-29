@@ -5,6 +5,7 @@
         "stoogebag",
         "stoogebag.Timeline",
         "stoogebag.editor",
+        "Unity.Timeline.Editor",
         "Unity.Timeline"
     ],
     "includePlatforms": [

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace StoogeBag.Timeline.Editor
 {
@@ -12,8 +13,11 @@ namespace StoogeBag.Timeline.Editor
     ///
     /// Unity's default Ctrl+D only copies the serialized field value, and since <c>timelineAsset</c>
     /// is a ScriptableObject reference, the duplicate ends up pointing at the SAME TimelineAsset
-    /// instance. <c>Object.Instantiate(timelineAsset)</c> is insufficient because tracks/clips keep
-    /// referencing the original TrackAsset/clip instances, so we recursively rebuild the timeline.
+    /// instance. <c>Object.Instantiate(timelineAsset)</c> is insufficient because the tracks (separate
+    /// ScriptableObjects) keep referencing the originals, so we use the Timeline package's own deep
+    /// clone: <c>TrackAsset.Duplicate(...)</c> (TrackExtensions.cs), which recursively clones tracks,
+    /// subtracks, clips, clip assets, curves and markers and registers them as sub-assets of the new
+    /// timeline. Track bindings on the PlayableDirector are remapped to the cloned tracks.
     /// </summary>
     [InitializeOnLoad]
     public static class SceneTimelineDuplicateHandler
@@ -25,11 +29,26 @@ namespace StoogeBag.Timeline.Editor
 
         private static bool _processing;
 
-        // TrackAsset.CreateClip(Type) and AddMarker are internal to the Timeline assembly.
-        private static readonly System.Reflection.MethodInfo s_createClip =
-            typeof(TrackAsset).GetMethod("CreateClip", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, new[] { typeof(System.Type) }, null);
-        private static readonly System.Reflection.MethodInfo s_addMarker =
-            typeof(TrackAsset).GetMethod("AddMarker", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        // TrackAsset.Duplicate is internal to the Unity.Timeline.Editor assembly.
+        private static MethodInfo s_duplicateMethod;
+        private static MethodInfo DuplicateMethod
+        {
+            get
+            {
+                if (s_duplicateMethod == null)
+                {
+                    var asm = Assembly.Load("Unity.Timeline.Editor");
+                    var t = asm?.GetType("UnityEditor.Timeline.TrackExtensions");
+                    s_duplicateMethod = t?.GetMethod(
+                        "Duplicate",
+                        BindingFlags.NonPublic | BindingFlags.Static,
+                        null,
+                        new[] { typeof(TrackAsset), typeof(IExposedPropertyTable), typeof(IExposedPropertyTable), typeof(TimelineAsset) },
+                        null);
+                }
+                return s_duplicateMethod;
+            }
+        }
 
         // ---- Automatic detection -------------------------------------------------
 
@@ -51,7 +70,6 @@ namespace StoogeBag.Timeline.Editor
 
         private static void ProcessDuplicates()
         {
-
             var all = Object.FindObjectsByType<SceneTimeline>(FindObjectsSortMode.None);
 
             // Group SceneTimelines by the TimelineAsset instance they reference.
@@ -107,13 +125,12 @@ namespace StoogeBag.Timeline.Editor
             EditorUtility.SetDirty(st);
         }
 
-        // ---- Deep clone -----------------------------------------------------------
+        // ---- Deep clone (driven by the engine's own TrackAsset.Duplicate) -----------
 
         /// <summary>
-        /// Creates a fully independent copy of <paramref name="src"/>, cloning tracks, clips, clip
-        /// assets and markers. Track bindings on <paramref name="dstDirector"/> are remapped from the
-        /// source tracks to the cloned tracks (preserving the bound object Unity already remapped on
-        /// duplicate).
+        /// Creates a fully independent copy of <paramref name="src"/>. Track bindings on
+        /// <paramref name="dstDirector"/> are remapped from the source tracks to the cloned tracks
+        /// (preserving the bound object Unity already remapped on duplicate).
         /// </summary>
         public static TimelineAsset DeepCloneTimeline(TimelineAsset src, PlayableDirector srcDirector, PlayableDirector dstDirector)
         {
@@ -123,7 +140,11 @@ namespace StoogeBag.Timeline.Editor
             var trackMap = new Dictionary<TrackAsset, TrackAsset>();
 
             foreach (var rootTrack in src.GetRootTracks())
-                CloneTrack(rootTrack, null, dst, trackMap);
+            {
+                var newTrack = InvokeDuplicate(rootTrack, srcDirector, dstDirector, dst);
+                if (newTrack != null)
+                    MapTracks(rootTrack, newTrack, trackMap);
+            }
 
             // Remap track bindings to the cloned tracks (and drop the stale original-track bindings).
             if (dstDirector != null)
@@ -143,109 +164,32 @@ namespace StoogeBag.Timeline.Editor
             return dst;
         }
 
-        private static TrackAsset CloneTrack(TrackAsset srcTrack, TrackAsset dstParent, TimelineAsset dstAsset, Dictionary<TrackAsset, TrackAsset> trackMap)
+        private static TrackAsset InvokeDuplicate(TrackAsset srcTrack, PlayableDirector srcDirector, PlayableDirector dstDirector, TimelineAsset dstAsset)
         {
-            var dstTrack = dstAsset.CreateTrack(srcTrack.GetType(), dstParent, srcTrack.name);
-
-            // Copy user-serialized fields, but skip the structural fields that CreateTrack already
-            // set up correctly (m_Parent, m_Children, m_Clips) and m_Markers (cloned separately below)
-            // so we don't re-link to the originals.
-            using (var soSrc = new SerializedObject(srcTrack))
-            using (var soDst = new SerializedObject(dstTrack))
+            var method = DuplicateMethod;
+            if (method == null)
             {
-                var prop = soSrc.GetIterator();
-                while (prop.NextVisible(true))
-                {
-                    if (prop.name == "m_Parent" || prop.name == "m_Children" || prop.name == "m_Clips" || prop.name == "m_Markers")
-                        continue;
-                    soDst.CopyFromSerializedProperty(prop);
-                }
-                soDst.ApplyModifiedProperties();
+                Debug.LogError("[SceneTimelineDuplicateHandler] Could not find UnityEditor.Timeline.TrackExtensions.Duplicate.");
+                return null;
             }
 
-            // Deep-copy the track's curves clip (shared by reference otherwise).
-            using (var soSrc = new SerializedObject(srcTrack))
+            return (TrackAsset)method.Invoke(null, new object[]
             {
-                var srcCurves = soSrc.FindProperty("m_Curves")?.objectReferenceValue as AnimationClip;
-                if (srcCurves != null)
-                {
-                    var newCurves = Object.Instantiate(srcCurves);
-                    newCurves.name = srcCurves.name;
-                    using (var soDst = new SerializedObject(dstTrack))
-                    {
-                        soDst.FindProperty("m_Curves").objectReferenceValue = newCurves;
-                        soDst.ApplyModifiedProperties();
-                    }
-                }
-            }
+                srcTrack,
+                srcDirector,
+                dstDirector,
+                dstAsset
+            });
+        }
 
-            trackMap[srcTrack] = dstTrack;
+        private static void MapTracks(TrackAsset src, TrackAsset dst, Dictionary<TrackAsset, TrackAsset> map)
+        {
+            map[src] = dst;
 
-            // Clone clips. TimelineClip is not a UnityEngine.Object, so we create each clip on the
-            // destination track via CreateClip (which wires the parent correctly) and then copy its
-            // serialized fields through the track's m_Clips array, deep-copying the clip asset and
-            // override curves.
-            using (var soSrc = new SerializedObject(srcTrack))
-            using (var soDst = new SerializedObject(dstTrack))
-            {
-                var srcClips = soSrc.FindProperty("m_Clips");
-                var dstClips = soDst.FindProperty("m_Clips");
-
-                for (int i = 0; i < srcClips.arraySize; i++)
-                {
-                    var srcElem = srcClips.GetArrayElementAtIndex(i);
-                    var srcAsset = srcElem.FindPropertyRelative("m_Asset").objectReferenceValue;
-                    if (srcAsset == null)
-                        continue;
-
-                    // TrackAsset.CreateClip(Type) is internal, so invoke it via reflection. It appends
-                    // a properly-wired clip as the last element of m_Clips.
-                    s_createClip.Invoke(dstTrack, new object[] { srcAsset.GetType() });
-                    soDst.Update();
-
-                    var dstElem = dstClips.GetArrayElementAtIndex(dstClips.arraySize - 1);
-
-                    // Copy all serialized clip fields (m_Asset / m_AnimationCurves ride along by
-                    // reference and are deep-copied below).
-                    dstElem.CopyFromSerializedProperty(srcElem);
-
-                    // The clip must belong to the new track, not the source.
-                    dstElem.FindPropertyRelative("m_ParentTrack").objectReferenceValue = dstTrack;
-
-                    // Deep-copy the clip's playable asset.
-                    var newAsset = Object.Instantiate(srcAsset);
-                    newAsset.name = srcAsset.name;
-                    EditorUtility.CopySerialized(srcAsset, newAsset);
-                    dstElem.FindPropertyRelative("m_Asset").objectReferenceValue = newAsset;
-
-                    // Deep-copy the clip's override curves.
-                    var srcCurves = srcElem.FindPropertyRelative("m_AnimationCurves").objectReferenceValue as AnimationClip;
-                    if (srcCurves != null)
-                    {
-                        var newCurves = Object.Instantiate(srcCurves);
-                        newCurves.name = srcCurves.name;
-                        dstElem.FindPropertyRelative("m_AnimationCurves").objectReferenceValue = newCurves;
-                    }
-
-                    soDst.ApplyModifiedProperties();
-                }
-            }
-
-            // Clone markers (deep copy so edits don't bleed into the source).
-            if (s_addMarker != null)
-            {
-                foreach (var marker in srcTrack.GetMarkers())
-                {
-                    var newMarker = Object.Instantiate(marker as ScriptableObject);
-                    s_addMarker.Invoke(dstTrack, new object[] { newMarker });
-                }
-            }
-
-            // Recurse into subtracks.
-            foreach (var child in srcTrack.GetChildTracks())
-                CloneTrack(child, dstTrack, dstAsset, trackMap);
-
-            return dstTrack;
+            var srcChildren = new List<TrackAsset>(src.GetChildTracks());
+            var dstChildren = new List<TrackAsset>(dst.GetChildTracks());
+            for (int i = 0; i < srcChildren.Count && i < dstChildren.Count; i++)
+                MapTracks(srcChildren[i], dstChildren[i], map);
         }
     }
 }
