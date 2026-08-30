@@ -88,7 +88,6 @@ namespace stoogebag.UITools.Windows
             if (currentTween.IsComplete())
             {
                 currentTween.Kill();
-                gameObject.SetActive(false);
                 return true;
             }
 

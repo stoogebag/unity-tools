@@ -35,12 +35,10 @@ namespace stoogebag.UITools.Windows
             if (AnimateOnClose)
             {
                 await transform.DOScale(_closedScale, time).SetEase(ease).AsyncWaitForCompletion();
-                gameObject.SetActive(false);
                 ResetScale();
             }
             else
             {
-                gameObject.SetActive(false);
                 ResetScale();
             }
 

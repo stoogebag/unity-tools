@@ -9,6 +9,7 @@ using System.Threading;
 
 //using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using stoogebag.Extensions;
+using stoogebag.Dialogue;
 #endif
 using Sirenix.OdinInspector;
 using stoogebag;
@@ -81,15 +82,24 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	public int MaxClipLength = 30;
 #if UNITY_EDITOR
-	public static string Device => Microphone.devices.First();
+	[ValueDropdown(nameof(MicDevices))]
+	public string SelectedMic
+	{
+		get => RecordingSettings.SelectedDevice;
+		set => RecordingSettings.SelectedDevice = value;
+	}
+
+	private string[] MicDevices() => RecordingSettings.Devices;
+
 	#if ODIN_INSPECTOR
 	[ButtonGroup , Button(SdfIconType.Record, "")]
-#endif
+	#endif
 	public void Record()
 	{
-		_clipTemp = Microphone.Start(Device, false, MaxClipLength, 44100);
-		Debug.Log("Recording clip with device " + Device);
-		Debug.Log(string.Join('-', Microphone.devices));
+		var device = RecordingSettings.GetActiveDevice();
+		if (device == null) { Debug.LogWarning("No microphone available to record."); return; }
+		_clipTemp = Microphone.Start(device, false, MaxClipLength, 44100);
+		Debug.Log("Recording clip with device " + device);
 		_recording = true;
 	}
     

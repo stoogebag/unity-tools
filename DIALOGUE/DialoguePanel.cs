@@ -18,11 +18,13 @@ public class DialoguePanel : Window, IInitializes
     [SerializeField] TypewriterComponent labelTypewriter;
     [SerializeField] Window nextIndicator;
     [SerializeField] AudioSource audioSource;
+    [SerializeField] private float inactivityTimeout = 4f;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
     BoolReactiveProperty activated = new BoolReactiveProperty(false);
     private float timeSinceActivationChanged = 100;
+    private float _inactivityTimer;
 
 
     private void Awake()
@@ -75,6 +77,20 @@ public class DialoguePanel : Window, IInitializes
         //    if (activated.Value == false) Hide(); 
         }
         timeSinceActivationChanged += Time.deltaTime;
+
+        if (textTypewriter.IsShowingText)
+        {
+            _inactivityTimer = 0f;
+        }
+        else
+        {
+            _inactivityTimer += Time.deltaTime;
+            if (_inactivityTimer >= inactivityTimeout && Active == ActiveState.Active)
+            {
+                Deactivate().Forget();
+                _inactivityTimer = 0f;
+            }
+        }
         
          if(!textTypewriter.IsShowingText && Active == ActiveState.Active)
              nextIndicator?.Activate();
@@ -84,6 +100,7 @@ public class DialoguePanel : Window, IInitializes
     private async UniTask Show(DialogueBehaviour dialogue)
     {
         activated.Value = true;
+        _inactivityTimer = 0f;
         if(nextIndicator != null) nextIndicator.DeactivateImmediate();
 
         Activate().Forget();
@@ -109,6 +126,7 @@ public class DialoguePanel : Window, IInitializes
     public async UniTask Bark(string message, string speakerName = null, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
         {
 
+            _inactivityTimer = 0f;
             Activate().Forget();
             if(labelTypewriter.TextAnimator.textFull != speakerName)
                 labelTypewriter.ShowTextAndAwait(speakerName).Forget();
@@ -123,6 +141,19 @@ public class DialoguePanel : Window, IInitializes
     private async void Hide(float delay = 0.1f)
     {
          await Deactivate();
+    }
+
+    public override async UniTask Deactivate()
+    {
+        textTypewriter?.StopShowingText();
+        textTypewriter?.StopDisappearingText();
+        textTypewriter?.ShowText("");
+
+        labelTypewriter?.StopShowingText();
+        labelTypewriter?.StopDisappearingText();
+        labelTypewriter?.ShowText("");
+
+        await base.Deactivate();
     }
     
 

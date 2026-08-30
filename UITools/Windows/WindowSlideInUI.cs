@@ -58,12 +58,10 @@ namespace stoogebag.UITools.Windows
             {
                 var rect = GetComponent<RectTransform>();
                 await rect.DOAnchorPos3D(_offScreenPos, outTime).SetEase(ease).AsyncWaitForCompletion();
-                gameObject.SetActive(false);
                 ResetPosition();
             }
             else
             {
-                gameObject.SetActive(false);
                 ResetPosition();
             }
 
