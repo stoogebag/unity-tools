@@ -7,7 +7,7 @@ ScriptedImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-  script: {fileID: 12408, guid: 0000000000000000e000000000000000, type: 0}
+  script: {fileID: 11500000, guid: a57477913897c46af95d590f580878bd, type: 3}
   svgType: 0
   texturedSpriteMeshType: 0
   svgPixelsPerUnit: 100
@@ -18,7 +18,6 @@ ScriptedImporter:
   viewportOptions: 0
   preserveViewport: 0
   advancedMode: 0
-  tessellationMode: 0
   predefinedResolutionIndex: 1
   targetResolution: 1080
   resolutionMultiplier: 1
@@ -39,15 +38,17 @@ ScriptedImporter:
   useSVGPixelsPerUnit: 0
   spriteData:
     TessellationDetail: 0
-    SpriteName: flair_circle_red_0Sprite
-    SpritePivot: {x: 0.5, y: 0.5}
-    SpriteAlignment: 0
-    SpriteBorder: {x: 0, y: 0, z: 0, w: 0}
     SpriteRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 47.999996
-      height: 47.999996
-    SpriteID: bbfd3b8545c7cfc4982798ea4ae031de
+      name: 
+      originalName: 
+      pivot: {x: 0, y: 0}
+      alignment: 0
+      border: {x: 0, y: 0, z: 0, w: 0}
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 0
+        height: 0
+      spriteID: 65e0feb1da52f044ea021d1da3f0bbcf
     PhysicsOutlines: []

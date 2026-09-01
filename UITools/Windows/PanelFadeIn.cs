@@ -68,7 +68,6 @@ namespace stoogebag.UITools.Windows
                 await currentTween.AsyncWaitForCompletion();
                 if (currentTween.IsComplete())
                 {
-                    gameObject.SetActive(false);
                     ResetColor();
 
                     return true;
@@ -78,7 +77,6 @@ namespace stoogebag.UITools.Windows
             }
             else
             {
-                gameObject.SetActive(false);
                 ResetColor();
                 return true;
             }

@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Febucci.TextAnimatorCore;
 using Febucci.TextAnimatorCore.Typing;
+using Febucci.TextAnimatorForUnity;
 using stoogebag;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
@@ -13,18 +14,22 @@ using UnityEngine;
 public class DialoguePanel : Window, IInitializes
 {
     public DialogueSpeaker Speaker;
-    [SerializeField] TypewriterCore textTypewriter;
-    [SerializeField] TypewriterCore labelTypewriter;
+    [SerializeField] TypewriterComponent textTypewriter;
+    [SerializeField] TypewriterComponent labelTypewriter;
     [SerializeField] Window nextIndicator;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] private float inactivityTimeout = 4f;
 
     private CompositeDisposable disposables = new CompositeDisposable();
 
     BoolReactiveProperty activated = new BoolReactiveProperty(false);
     private float timeSinceActivationChanged = 100;
+    private float _inactivityTimer;
 
 
     private void Awake()
     {
+        Initialize();
         //textAnimator = textTypewriter.GetComponent<TextAnimator_TMP>();
         //labelAnimator = labelTypewriter.GetComponent<TextAnimator_TMP>();
     }
@@ -37,15 +42,17 @@ public class DialoguePanel : Window, IInitializes
 
         DialogueBehaviour.DialogueTriggeredObservable.Subscribe(async dialogue =>
         {
-            if (Speaker == null) return; //bc: wtf is happening here? stale subs? but i dispose it all TT. could it be because of static
+            if (Speaker == null) return;
             if (dialogue.speakerName != Speaker.Name) return;
             
-            //var skippable = dialogue.director.GetComponent<SkippableTimeline>(); //not sure about this.
-            //skippable.TypingTypewriter = textTypewriter;
-            //await Show(dialogue);
-            //skippable.TypingTypewriter = null;
-
-
+            // var skippable = SkippableTimeline.CurrentlyPlayingTimeline;
+            // if (skippable != null)
+            //     skippable.TypingTypewriter = textTypewriter;
+                
+            await Show(dialogue);
+            
+            // if (skippable != null)
+            //     skippable.TypingTypewriter = null;
         }).AddTo(disposables);
         DialogueBehaviour.DialogueEndedObservable.Subscribe(dialogue =>
         {
@@ -70,6 +77,20 @@ public class DialoguePanel : Window, IInitializes
         //    if (activated.Value == false) Hide(); 
         }
         timeSinceActivationChanged += Time.deltaTime;
+
+        if (textTypewriter.IsShowingText)
+        {
+            _inactivityTimer = 0f;
+        }
+        else
+        {
+            _inactivityTimer += Time.deltaTime;
+            if (_inactivityTimer >= inactivityTimeout && Active == ActiveState.Active)
+            {
+                Deactivate().Forget();
+                _inactivityTimer = 0f;
+            }
+        }
         
          if(!textTypewriter.IsShowingText && Active == ActiveState.Active)
              nextIndicator?.Activate();
@@ -79,18 +100,21 @@ public class DialoguePanel : Window, IInitializes
     private async UniTask Show(DialogueBehaviour dialogue)
     {
         activated.Value = true;
+        _inactivityTimer = 0f;
         if(nextIndicator != null) nextIndicator.DeactivateImmediate();
 
         Activate().Forget();
 
+        if (dialogue.Clip != null && audioSource != null)
+            audioSource.PlayOneShot(dialogue.Clip);
         
-        //todo: make it happen
-        if(labelTypewriter.animator.TextFull != dialogue.speakerName)
-            labelTypewriter.ShowTextAndAwait(dialogue.speakerName).Forget();
+        if (labelTypewriter != null)
+        {
+            if (labelTypewriter.TextAnimator.textFull != dialogue.speakerName)
+                labelTypewriter.ShowTextAndAwait(dialogue.speakerName).Forget();
+        }
 
-        await textTypewriter.ShowTextAndAwait(dialogue.dialogueLine); // assume the longest task is the text writing...
-
-        //await UniTask.WhenAll(textTypewriter.ShowTextAndAwait(dialogue.dialogueLine), Activate());
+        await textTypewriter.ShowTextAndAwait(dialogue.dialogueLine);
     }
 
     public async UniTask Bark(DialogueLine line, string speakerName, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
@@ -102,8 +126,9 @@ public class DialoguePanel : Window, IInitializes
     public async UniTask Bark(string message, string speakerName = null, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)
         {
 
+            _inactivityTimer = 0f;
             Activate().Forget();
-            if(labelTypewriter.animator.TextFull != speakerName)
+            if(labelTypewriter.TextAnimator.textFull != speakerName)
                 labelTypewriter.ShowTextAndAwait(speakerName).Forget();
 
             await textTypewriter.ShowTextAndAwait(message); // assume the longest task is the text writing...
@@ -116,6 +141,19 @@ public class DialoguePanel : Window, IInitializes
     private async void Hide(float delay = 0.1f)
     {
          await Deactivate();
+    }
+
+    public override async UniTask Deactivate()
+    {
+        textTypewriter?.StopShowingText();
+        textTypewriter?.StopDisappearingText();
+        textTypewriter?.ShowText("");
+
+        labelTypewriter?.StopShowingText();
+        labelTypewriter?.StopDisappearingText();
+        labelTypewriter?.ShowText("");
+
+        await base.Deactivate();
     }
     
 
