@@ -3,11 +3,11 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace stoogebag.Dialogue
+namespace stoogebag.Utils
 {
     public static class RecordingSettings
     {
-        private const string Key = "StoogeBag.Recording.MicrophoneDevice";
+        private const string Key = "stoogebag.Utils.Recording.MicrophoneDevice";
 
         public static string SelectedDevice
         {
