@@ -9,10 +9,10 @@ using System.Threading;
 
 //using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using stoogebag.Extensions;
-using stoogebag.Dialogue;
 #endif
 using Sirenix.OdinInspector;
 using stoogebag;
+using stoogebag.Utils;
 using UniRx;
 using UnityEditor;
 using UnityEngine;
