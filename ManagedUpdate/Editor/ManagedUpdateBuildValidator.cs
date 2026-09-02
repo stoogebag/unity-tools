@@ -17,9 +17,9 @@ namespace Stoogebag.ManagedUpdate.Editor
         {
             var invalidTypes = new List<Type>();
 
-            var managedUpdateType = typeof(IManagedUpdate);
-            var managedFixedUpdateType = typeof(IManagedFixedUpdate);
-            var managedLateUpdateType = typeof(IManagedLateUpdate);
+            var managedUpdateType = typeof(IUpdateManaged);
+            var managedFixedUpdateType = typeof(IFixedUpdateManaged);
+            var managedLateUpdateType = typeof(ILateUpdateManaged);
             var lifecycleType = typeof(ManagedUpdateLifecycle);
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())

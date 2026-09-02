@@ -9,6 +9,7 @@
     ".NETStandard,Version=v2.0/": {
       "ManagedUpdate.SourceGenerator/1.0.0": {
         "dependencies": {
+          "ILRepack.Lib.MSBuild.Task": "2.0.44",
           "Microsoft.CodeAnalysis.Analyzers": "3.3.3",
           "Microsoft.CodeAnalysis.CSharp": "4.3.1",
           "NETStandard.Library": "2.0.3"
@@ -17,6 +18,7 @@
           "ManagedUpdate.SourceGenerator.dll": {}
         }
       },
+      "ILRepack.Lib.MSBuild.Task/2.0.44": {},
       "Microsoft.CodeAnalysis.Analyzers/3.3.3": {},
       "Microsoft.CodeAnalysis.Common/4.3.1": {
         "dependencies": {
@@ -224,6 +226,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "ILRepack.Lib.MSBuild.Task/2.0.44": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-y46ADxtklM8ckgvtDS1V7KAxygoaUnC6QWrdrGgNfwAqS5qyqp+jI9uP892s239sDAbIQWVX/h4fP1O8QdwYAg==",
+      "path": "ilrepack.lib.msbuild.task/2.0.44",
+      "hashPath": "ilrepack.lib.msbuild.task.2.0.44.nupkg.sha512"
     },
     "Microsoft.CodeAnalysis.Analyzers/3.3.3": {
       "type": "package",

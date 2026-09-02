@@ -42,9 +42,9 @@ namespace Stoogebag.ManagedUpdate
                 if (component == null) continue;
 
                 var type = component.GetType();
-                if (typeof(IManagedUpdate).IsAssignableFrom(type) ||
-                    typeof(IManagedFixedUpdate).IsAssignableFrom(type) ||
-                    typeof(IManagedLateUpdate).IsAssignableFrom(type))
+                if (typeof(IUpdateManaged).IsAssignableFrom(type) ||
+                    typeof(IFixedUpdateManaged).IsAssignableFrom(type) ||
+                    typeof(ILateUpdateManaged).IsAssignableFrom(type))
                 {
                     _managedComponents.Add(component);
                 }

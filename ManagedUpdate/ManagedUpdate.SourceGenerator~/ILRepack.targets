@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Target Name="MergeDependencies" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <InputAssemblies Include="$(TargetPath)" />
+      <InputAssemblies Include="$(TargetDir)*.dll" Exclude="$(TargetPath)" />
+    </ItemGroup>
+
+    <ILRepack
+      Parallel="true"
+      Internalize="true"
+      InputAssemblies="@(InputAssemblies)"
+      TargetKind="Dll"
+      OutputFile="$(TargetPath)" />
+
+    <ItemGroup>
+      <MergedDependency Include="$(TargetDir)*.dll" Exclude="$(TargetPath)" />
+    </ItemGroup>
+    <Delete Files="@(MergedDependency)" />
+  </Target>
+</Project>

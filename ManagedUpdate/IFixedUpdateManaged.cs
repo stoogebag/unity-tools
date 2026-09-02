@@ -1,6 +1,6 @@
 namespace Stoogebag.ManagedUpdate
 {
-    public interface IManagedFixedUpdate
+    public interface IFixedUpdateManaged
     {
         void ManagedFixedUpdate();
     }

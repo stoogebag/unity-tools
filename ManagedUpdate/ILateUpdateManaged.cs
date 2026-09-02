@@ -1,6 +1,6 @@
 namespace Stoogebag.ManagedUpdate
 {
-    public interface IManagedLateUpdate
+    public interface ILateUpdateManaged
     {
         void ManagedLateUpdate();
     }

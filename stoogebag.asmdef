@@ -9,7 +9,8 @@
         "Unity.RenderPipelines.Core.Runtime",
         "UniTask.DOTween",
         "DOTween.Modules",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "stoogebag.ManagedUpdate.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
