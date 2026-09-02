@@ -69,9 +69,9 @@ namespace Stoogebag.ManagedUpdate.Editor
 
             foreach (RequireComponent require in attributes)
             {
-                if (require.m_Type1 == lifecycleType ||
-                    require.m_Type2 == lifecycleType ||
-                    require.m_Type3 == lifecycleType)
+                if (require.m_Type0 == lifecycleType ||
+                    require.m_Type1 == lifecycleType ||
+                    require.m_Type2 == lifecycleType)
                 {
                     return true;
                 }
