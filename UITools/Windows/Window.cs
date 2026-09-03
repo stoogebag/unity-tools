@@ -75,6 +75,8 @@ namespace stoogebag.UITools.Windows
         {
             if (Active == ActiveState.Activating || Active == ActiveState.Active) return;
 
+            var gen = ++_stateGeneration;
+
             if (isModal)
             {
                 CreateModalBlocker();
@@ -83,30 +85,28 @@ namespace stoogebag.UITools.Windows
             }
             
             _windowOpened?.Invoke(this);
-            
-            if (Active == ActiveState.Deactivating)
-            {
-                //await UniTask.WaitUntil(() => Active != ActiveState.Deactivating); //todo:make an actual cancel!
-            }
 
             Active = ActiveState.Activating;
             gameObject.SetActive(true);
 
             if (Animations?.Any() != true)
             {
-                Active = ActiveState.Active;
+                if (gen == _stateGeneration)
+                {
+                    Active = ActiveState.Active;
 
-                gameObject.SetActive(true);
+                    gameObject.SetActive(true);
+                }
                 return;
             }
 
-            var x = await UniTask.WhenAll(Animations.Select(async t => await t.Activate()));
-            if (x.All(t => t))
+            await UniTask.WhenAll(Animations.Select(async t => await t.Activate()));
+            if (gen == _stateGeneration)
             {
                 Active = ActiveState.Active;
             }
             
-            if (firstSelectedOnActivate != null)
+            if (firstSelectedOnActivate != null && gen == _stateGeneration)
             {
                 await UniTask.Yield();
                 if(_lastSelected != null && rememberSelectedOnReactivate)
@@ -118,8 +118,11 @@ namespace stoogebag.UITools.Windows
 
         public void DeactivateImmediate()
         {
+            if (Active == ActiveState.Inactive) return;
+            _stateGeneration++;
             Active = ActiveState.Inactive;
             if(gameObject != null) gameObject.SetActive(false);
+            _windowClosed?.Invoke(this);
         }
 
         [Button]
@@ -127,44 +130,43 @@ namespace stoogebag.UITools.Windows
         {
             if (Active == ActiveState.Inactive || Active == ActiveState.Deactivating) return;
 
+            var gen = ++_stateGeneration;
+
             if (rememberSelectedOnReactivate) // Just store the global selection directly
-                _lastSelected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
+                _lastSelected = UnityEngine.EventSystems.EventSystem.current?.currentSelectedGameObject?.GetComponent<Selectable>();
             
             if (isModal)
             {
-                _blocker.Deactivate().Forget();
+                _blocker?.Deactivate().Forget();
             }
-            //if (Active == ActiveState.Activating) await UniTask.WaitUntil(() => Active != ActiveState.Activating); //todo:make an actual cancel!
 
             Active = ActiveState.Deactivating;
             
-            //todo: make delay optional.
-            // var delay = .5f;
-            // await UniTask.Delay(TimeSpan.FromSeconds(delay));
-            // if(Active == ActiveState.Activating || Active == ActiveState.Active) return; //this is a cancel?
-            
             if (Animations?.Any() != true)
             {
-                Active = ActiveState.Inactive;
+                if (gen == _stateGeneration)
+                {
+                    Active = ActiveState.Inactive;
 
-                gameObject.SetActive(false);
+                    gameObject.SetActive(false);
+                    _windowClosed?.Invoke(this);
+                }
                 return;
             }
 
-            var x = await UniTask.WhenAll(Animations.Select(async t => await t.Deactivate()));
-            if (x.All(t => t))
+            await UniTask.WhenAll(Animations.Select(async t => await t.Deactivate()));
+            if (gen == _stateGeneration)
             {
                 Active = ActiveState.Inactive;
 
                 gameObject.SetActive(false);
                 _windowClosed?.Invoke(this);
-
             }
-            
 
         }
 
         public ActiveState Active = ActiveState.Inactive;
+        private int _stateGeneration;
         private Window _blocker;
 
         public async UniTask Toggle()
@@ -256,6 +258,14 @@ namespace stoogebag.UITools.Windows
             }).AddTo(_popupDisposable);
 
             CancelObservable.Subscribe(m =>
+            {
+                close.TrySetResult(new WindowResult()
+                {
+                    Result = Result.Cancel,
+                });
+            }).AddTo(_popupDisposable);
+
+            OnDeactivatedObservable.Where(w => w == this).Subscribe(_ =>
             {
                 close.TrySetResult(new WindowResult()
                 {

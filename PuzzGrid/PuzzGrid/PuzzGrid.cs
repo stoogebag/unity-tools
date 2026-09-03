@@ -25,6 +25,8 @@ public partial class PuzzGrid : MonoBehaviour
     
     Guid guid = Guid.NewGuid();
     public string PuzzleName;
+    
+    [SerializeField] bool AnimationsEnabled = true; 
 
     public List<GridEntity> Entities { get; set; }
 
@@ -37,6 +39,7 @@ public partial class PuzzGrid : MonoBehaviour
         // ResetGrid();
         MoveQueue = GetComponent<ActionQueue>();
         Entities = GetComponentsInChildren<GridEntity>().ToList();
+        GlobalSettlementMoveProviders = gameObject.GetComponentsWithInterface<IGlobalSettlementMoveProvider>().ToList();
     }
 
     private void Update()
@@ -67,35 +70,51 @@ public partial class PuzzGrid : MonoBehaviour
 
         var moveSummary = await RunActionSetGroup(actionSetGroup, GridActionSetGroup.GroupType.UserInput);
 
-
+        var cumulativeSummary = new GridActionSummary();
+        cumulativeSummary.Add(moveSummary);
         while (true)
         {
-            //break; //for debug
-            
             CheckLossConditions();
             CheckWinConditions();
-            //
-            var settle = GetSettlementMoves(moveSummary);
 
-            var settleSummary = await RunActionSetGroup(settle, GridActionSetGroup.GroupType.Settlement);
-            //todo: do i need to loop this? what if there are chains of settlement? idk.
+            //settlement to exhaustion
+            while (true)
+            {
+                var settle = GetSettlementMoves(cumulativeSummary);
+                var settleSummary = await RunActionSetGroup(settle, GridActionSetGroup.GroupType.Settlement);
+                if (settleSummary != null) cumulativeSummary.Add(settleSummary);
+
+                if (settleSummary == null || settleSummary.ExecutedMoveSummary.Count == 0)
+                    break;
+            }
+
+            var globalSettlement = GetGlobalSettlementMoves();
+            var globalSettlementSummary = await RunActionSetGroup(globalSettlement, GridActionSetGroup.GroupType.Settlement);
+            if (globalSettlementSummary != null) cumulativeSummary.Add(globalSettlementSummary);
 
             var grav = GetGravityMoves();
             var gravSummary = await RunActionSetGroup(grav, GridActionSetGroup.GroupType.Gravity);
+            if (gravSummary != null) cumulativeSummary.Add(gravSummary);
 
             if ((gravSummary == null || gravSummary.ExecutedMoveSummary.Count == 0) &&
-                (settleSummary == null || settleSummary.ExecutedMoveSummary.Count == 0))
+                (globalSettlementSummary == null || globalSettlementSummary.ExecutedMoveSummary.Count == 0))
                 break;
-
-            //break;
         }
-
+        _moveCompleted.OnNext(default);
+        
         _moving = false;
     }
+    
+    Subject<Unit> _moveCompleted = new Subject<Unit>();
+    public IObservable<Unit> OnMoveCompletedObservable() => _moveCompleted;
+
+    Subject<GridActionSummary> _animationStart = new Subject<GridActionSummary>();
+    public IObservable<GridActionSummary> OnAnimationStartObservable() => _animationStart;
 
     private async UniTask<GridActionSummary> RunActionSetGroup(GridActionSetGroup actionSetGroup,
         GridActionSetGroup.GroupType type)
     {
+        if (actionSetGroup == null) return null;
         EvaluateActionSetGroup(actionSetGroup, type);
 
         var approved = actionSetGroup.GetApprovedActions().ToList();
@@ -172,10 +191,10 @@ public partial class PuzzGrid : MonoBehaviour
     private void CheckLossConditions()
     {
         if (mangEnt == null) mangEnt = FindObjectOfType<MangEnt>();
+        
 
     }
 
-    public int LossY = 11;
     private WinEnt winEnt;
     private MangEnt mangEnt;
 
@@ -212,6 +231,7 @@ public partial class PuzzGrid : MonoBehaviour
 
         
         OnUndoFinished?.Invoke();
+        
         _undoing = false;
     }
 
@@ -296,6 +316,7 @@ public partial class PuzzGrid : MonoBehaviour
     private async UniTask ExecuteAnimations(GridActionSummary summary)
     {
         if(summary == null) return;
+        _animationStart.OnNext(summary);
         var tasks = new List<UniTask>();
 
         //executed moves
@@ -332,8 +353,9 @@ public partial class PuzzGrid : MonoBehaviour
 
     private async UniTask ExecuteUndoAnimations(GridActionSummary summary)
     {
-        var tasks = new List<UniTask>();
         if(summary == null) return;
+        _animationStart.OnNext(summary);
+        var tasks = new List<UniTask>();
 
         foreach (var gridActions in summary.ExecutedMoveSummary.GroupBy(t => t.Ent))
         {
@@ -400,8 +422,11 @@ public partial class PuzzGrid : MonoBehaviour
         return gp;
     }
 
+    [SerializeField] public bool ApplyGravity = true;
+    
     public GridActionSetGroup GetGravityMoves()
     {
+        if (!ApplyGravity) return null;
         var gp = new GridActionSetGroup(this);
 
         foreach (var entity in Entities.Where(t=>t.gameObject.activeSelf))
@@ -413,6 +438,26 @@ public partial class PuzzGrid : MonoBehaviour
 
         return gp;
     }
+    
+    
+    public GridActionSetGroup GetGlobalSettlementMoves()
+    {
+        var gp = new GridActionSetGroup(this);
+
+        foreach (var provider in GlobalSettlementMoveProviders)
+        {
+            var moves = provider.GetSettlementMoves(this);
+            if(moves == null) continue;
+            gp.ActionSets.Add(moves);
+        }
+        
+
+        return gp;
+    }
+
+    private List<IGlobalSettlementMoveProvider> GlobalSettlementMoveProviders;
+    public int totalMovesSinceStart => _executedActions.Count(t=>t.Type == GridActionSetGroup.GroupType.UserInput);
+
 
     public static float GridSpacing()
     {
@@ -429,6 +474,13 @@ public interface ISettlementMoveProvider
 {
     GridActionSet GetSettlementMoves(GridActionSummary actionSummary);
 }
+
+public interface IGlobalSettlementMoveProvider
+{
+    GridActionSet GetSettlementMoves(PuzzGrid grid);
+}
+
+
 
 public interface IConsequenceProvider
 {

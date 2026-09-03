@@ -30,7 +30,6 @@ namespace stoogebag.UITools.Windows
         [SerializeField]
         private bool AnimateOnClose = true;
 
-        private Vector3 _differenceVec;
         private Vector3 _offScreenPos;
 
         private void Awake()
@@ -59,12 +58,10 @@ namespace stoogebag.UITools.Windows
             {
                 var rect = GetComponent<RectTransform>();
                 await rect.DOAnchorPos3D(_offScreenPos, outTime).SetEase(ease).AsyncWaitForCompletion();
-                gameObject.SetActive(false);
                 ResetPosition();
             }
             else
             {
-                gameObject.SetActive(false);
                 ResetPosition();
             }
 

@@ -1,3 +1,8 @@
+#if UNITASK
+using System;
+using Cysharp.Threading.Tasks;
+using UniRx;
+#endif
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -21,6 +26,9 @@ public class SceneTimeline : MonoBehaviour
 
     [SerializeField] float _playbackSpeed = 1f;
     
+    public IObservable<Unit> OnFinished => _onFinished;
+    private Subject<Unit> _onFinished = new Subject<Unit>();
+
     private void OnValidate()
     {
         // Ensure PlayableDirector is present and linked
@@ -40,6 +48,12 @@ public class SceneTimeline : MonoBehaviour
         _director = GetComponent<PlayableDirector>();
         
         _director.played += dir => dir.playableGraph.GetRootPlayable(0).SetSpeed( _playbackSpeed);
+        _director.stopped += OnTimelineStopped;
+    }
+
+    private void OnTimelineStopped(PlayableDirector dir)
+    {
+        _onFinished.OnNext(Unit.Default);
     }
 
     /// <summary>
@@ -105,4 +119,29 @@ public class SceneTimeline : MonoBehaviour
     /// Get the underlying TimelineAsset.
     /// </summary>
     public TimelineAsset TimelineAsset => timelineAsset;
+
+    /// <summary>
+    /// Replace the TimelineAsset backing this SceneTimeline and keep the
+    /// PlayableDirector in sync. Used by the editor deep-copy / duplicate logic
+    /// so each SceneTimeline owns an independent timeline instance.
+    /// </summary>
+    public void AssignTimelineAsset(TimelineAsset asset)
+    {
+        timelineAsset = asset;
+        if (_director != null)
+            _director.playableAsset = asset;
+    }
+
+#if UNITASK
+    public async UniTask PlayAndAwait()
+    {
+        var tcs = new UniTaskCompletionSource();
+        Action<PlayableDirector> handler = null;
+        handler = (d) => { tcs.TrySetResult(); };
+        _director.stopped += handler;
+        Play();
+        await tcs.Task;
+        _director.stopped -= handler;
+    }
+#endif
 }

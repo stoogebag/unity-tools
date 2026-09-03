@@ -33,13 +33,15 @@ public class GridInputManager : Singleton<GridInputManager>
         var moveAction = inputActionAsset.FindAction("Move");
         moveAction.Enable();
 
-        moveAction.RepeatOnHold<Vector2>(rawVec => NearestCardinal(rawVec), 100, new []{500,250})
+        moveAction.RepeatOnHold<Vector2>(rawVec => NearestCardinal(rawVec), 100, new []{200,150})
             .Where(v=> v != Vector2.zero) 
             .Subscribe(v =>
             {
                 var dir = CameraDirectionRelativeToCam(Camera, GetDirection(v));
                 HandleMove(dir);
             }).AddTo(this);
+        
+        
         
         //undo
         var undoAction = inputActionAsset.FindAction("Undo");

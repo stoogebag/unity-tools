@@ -17,6 +17,7 @@ public class FloorEnt : GridEntity
     }
 
 
+    public override bool CanMove => false;
 
     public override IEnumerable<GridActionSet> GetSettlementMoves(GridActionSummary actionSummary)  {
         

@@ -12,6 +12,7 @@ public class ButtonEnt : GridEntity, IActivateable
 {
     public GameObject GameObject => gameObject; //is there a better way?
     
+    public override bool CanMove => false;
     // Start is called before the first frame update
     void Start()
     {

@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Febucci.TextAnimator.Runtime",
-        "UniTask"
+        "UniTask",
+        "Febucci.TextAnimatorForUnity.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

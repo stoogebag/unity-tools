@@ -14,7 +14,9 @@
         "Febucci.TextAnimator.Runtime",
         "Febucci.TextAnimator.TMP.Runtime",
         "stoogebag.textanimator",
-        ""
+        "",
+        "Febucci.TextAnimatorForUnity.Runtime",
+        "Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

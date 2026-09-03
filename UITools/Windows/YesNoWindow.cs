@@ -25,6 +25,7 @@ namespace stoogebag.UITools.Windows
 
         public override async UniTask Activate()
         {
+            _disposable.Clear();
             await base.Activate();
 
             No.OnClickAsObservable().Subscribe(a =>

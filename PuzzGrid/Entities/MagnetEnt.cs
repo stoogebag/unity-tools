@@ -1,7 +1,6 @@
 #if UNITASK
 #if ODIN_INSPECTOR
 #if UNIRX
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,8 @@ public class MagnetEnt : MonoBehaviour, IGridEntityComponent
     {
         GridActionSet result = null;
 
+        
+        //todo. why was this turned off? oh right the new system. shit
         // foreach (var gridAction in set)
         // {
         //     if (gridAction is CompoundMoveAction move)
@@ -37,10 +38,6 @@ public class MagnetEnt : MonoBehaviour, IGridEntityComponent
         return result;
     }
     
-    
-    
-
-
 }
 
 public interface IGridEntityComponent

@@ -80,6 +80,8 @@ public class DisableEntityAction : GridAction
 
     public override bool ConflictsWith(GridAction sideEffectAction) => false;
 }
+
+
 #endif
 #endif
 #endif

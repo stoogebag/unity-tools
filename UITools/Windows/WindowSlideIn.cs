@@ -30,7 +30,6 @@ namespace stoogebag.UITools.Windows
         [SerializeField]
         private bool AnimateOnClose = true;
 
-        private Vector3 _differenceVec;
         private Vector3 _offScreenPos;
 
         [Button]
@@ -68,12 +67,10 @@ namespace stoogebag.UITools.Windows
                     ? transform.DOLocalMove(_offScreenPos, time).SetEase(ease)
                     : transform.DOMove(_offScreenPos, time).SetEase(ease);
                     await tween.AsyncWaitForCompletion();
-                gameObject.SetActive(false);
                 ResetPosition();
             }
             else
             {
-                gameObject.SetActive(false);
                 ResetPosition();
             }
 

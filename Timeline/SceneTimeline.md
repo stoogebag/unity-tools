@@ -88,7 +88,7 @@ Bindings are stored in the `PlayableDirector` component on the same GameObject.
 
 - **Prefab conversion:** If you convert the GameObject to a Prefab, the timeline reference will break (scene-bound objects cannot be referenced by project assets). Keep timelines in scenes or in prefabs that remain in scenes.
 - **Nesting:** Use Control tracks to reference other `SceneTimeline` instances in nested sequences.
-- **Clone/duplicate:** Copying the GameObject to another scene may break the timeline reference. Recreate the timeline in the new scene or use prefab instances.
+- **Clone/duplicate:** Duplicating a `SceneTimeline` GameObject (Ctrl+D) now produces a fully independent **deep copy** of the associated `TimelineAsset` — tracks, clips, clip assets and markers are all cloned, and the `PlayableDirector`'s track bindings are remapped to the duplicate's own objects (matching Unity's normal GameObject-duplicate behaviour). Editing one copy no longer affects the other. You can also force a detach from a shared timeline via the **SceneTimeline ▸ Duplicate Timeline** context-menu item.
 
 ## Best Practices
 

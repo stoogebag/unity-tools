@@ -19,7 +19,9 @@ public abstract class GridEntity : MonoBehaviour
 {
     public List<GridAction> PendingMoves = new List<GridAction>();
 
-    private void Start()
+    public bool Gravity = true;
+    
+    protected virtual void Start()
     {
         _components = GetComponents<IGridEntityComponent>().ToList();
         foreach (var entityComponent in _components)
@@ -28,7 +30,7 @@ public abstract class GridEntity : MonoBehaviour
         }
         PuzzGrid = gameObject.GetComponentInAncestor<PuzzGrid>();
     }
-
+    
     protected List<IGridEntityComponent> _components;
 
     protected bool Equals(GridEntity other)
@@ -53,6 +55,9 @@ public abstract class GridEntity : MonoBehaviour
     public PuzzGrid PuzzGrid { get; set; }
 
     public string ID { get; set; }
+
+   
+    public abstract bool CanMove { get; }
 
     //returns a tuple: (ray origin, buffer distance)
     //numRays MUST be at least 2 or we'll get a divide by zero error.

@@ -1,17 +1,42 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Stoogebag.ManagedUpdate;
 using UnityEngine;
 
-public class ConstantMovement : MonoBehaviour, ISpeedProvider
+[RequireComponent(typeof(ManagedUpdateLifecycle))]
+public class ConstantMovement : MonoBehaviour, ISpeedProvider,IFixedUpdateManaged
 {
     //must have a parent for this to work!
     [SerializeField] private bool relative = false;
 
     public Vector3 speed = new Vector3(10, 10, 10);
+    private Rigidbody2D rb;
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
+        if (rb != null && rb.bodyType != RigidbodyType2D.Dynamic) rb = null;
+        if (rb != null && rb.bodyType == RigidbodyType2D.Dynamic)
+        {
+            dir = relative ? transform.rotation * speed : speed;
+#if UNITY_6000
+            rb.linearVelocity = dir;
+#else
+            rb.velocity = dir;
+#endif
+        }
+    }
+
+    private Vector2 dir;
+    // Update is called once per frame
+    public void ManagedFixedUpdate()
+    {
+        if (rb != null)
+        {
+            return;
+        }
+        
         Vector3 delta;
 
         if (relative)
@@ -33,6 +58,7 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider
     {
         speed = newSpeed;
     }
+
 }
 
 public interface ISpeedProvider

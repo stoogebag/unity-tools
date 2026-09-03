@@ -225,6 +225,13 @@ public class GridActionSummary
         ExecutedMoveSummary.AddRange(other.ExecutedMoveSummary);
         FailedMoveSummary.AddRange(other.FailedMoveSummary);
     }
+
+    public void Merge(GridActionSummary otherSummary)
+    {
+        if(otherSummary == null) return;
+        ExecutedMoveSummary.AddRange(otherSummary.ExecutedMoveSummary);
+        FailedMoveSummary.AddRange(otherSummary.FailedMoveSummary);
+    }
 }
 #endif
 #endif

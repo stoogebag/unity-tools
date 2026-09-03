@@ -79,13 +79,13 @@ namespace stoogebag.Extensions
         {
             action.Enable();
             return action.OnPerformedAsObservable(0)
-                .Select(t=>t.ReadValue<T>())
-                .Select(t=>inputProcessor?.Invoke(t) ?? t)
+                .Select(t => t.ReadValue<T>())
+                .Select(t => inputProcessor?.Invoke(t) ?? t)
                 .Merge(action.OnCanceledAsObservable(0).Select(_ => default(T)))
                 .DistinctUntilChanged()
                 .Select(value =>
                 {
-                    var initialSequence = initialDelays.Select(d => 
+                    var initialSequence = initialDelays.Select(d =>
                         Observable.Timer(System.TimeSpan.FromMilliseconds(d))
                             .Select(_ => value)
                     );
@@ -93,15 +93,15 @@ namespace stoogebag.Extensions
                     var loop = Observable.Interval(System.TimeSpan.FromMilliseconds(periodInMilliseconds))
                         .Select(_ => value);
 
-                    return Observable.Return(value) 
-                            .Concat(Observable.Concat(initialSequence))
-                            .Concat(loop);
+                    return Observable.Return(value)
+                        .Concat(Observable.Concat(initialSequence))
+                        .Concat(loop);
                 })
                 .Switch()
                 .TakeUntil(action.OnCanceledAsObservable(0))
-                .Repeat()
-                .ThrottleFirst(System.TimeSpan.FromMilliseconds(10));
-            
+                .Repeat();
+            //.ThrottleFirst(System.TimeSpan.FromMilliseconds(10));
+
         }
         
         public static IObservable<Unit> RepeatOnHold(this InputAction action, int periodInMilliseconds = 100, params int[] initialDelays)

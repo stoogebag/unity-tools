@@ -12,6 +12,7 @@ using UnityEngine;
 
 public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
 {
+    public override bool CanMove => true;
 
     public bool InvertX;
     [SerializeField] private bool turn180 = false;
@@ -19,7 +20,7 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity, false, default));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 10,PushForce.WeakGravity));
     }
 
 
@@ -40,8 +41,7 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
                         var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
                         if (!nonIce)
                         {
-                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false,
-                                transform.rotation);
+                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force);
                             if (result == null) result = newmove;
                             else result.Actions.AddRange(newmove.Actions);
 
@@ -122,7 +122,7 @@ public class MangEntOriented : GridEntity, IPushesButton, IReceivesInput
             }
         }
 
-        return SimpleMoveAction.GetMove(this, direction, GetWalkForce(), false, default);
+        return SimpleMoveAction.GetMove(this, direction, GetWalkForce());
         
     }
 

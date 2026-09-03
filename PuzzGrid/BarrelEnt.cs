@@ -7,11 +7,12 @@ using UnityEngine;
 public class BarrelEnt : GridEntity, IPushesButton
 {
 
+    public override bool CanMove => true;
     public override GridActionSetGroup GetGravityMoves()
     {
         //return null;
         
-        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity, false, default));
+        return GridActionSetGroup.GetSingle(SimpleMoveAction.GetMove(this,Vector3.down * 100,PushForce.WeakGravity));
     }
     
 
@@ -59,7 +60,7 @@ public class BarrelEnt : GridEntity, IPushesButton
                         var nonIce = down.Any(t => t.HitEnt.gameObject.GetComponent<Ice>() == null);
                         if (!nonIce)
                         {
-                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force, false, transform.rotation);
+                            var newmove = SimpleMoveAction.GetMove(this, move.MovementVec, move.Force);
                             if (result == null) result = newmove;
                             else result.Actions.AddRange(newmove.Actions);
                             yield return result;
@@ -74,8 +75,6 @@ public class BarrelEnt : GridEntity, IPushesButton
 
     public override GridActionSet GetSideEffectMoves(IEnumerable<GridAction> sets)
     {
-        //get all downstairs neighbours.
-
         GridActionSet result = null;
         
         foreach (var gridEntityComponent in _components)
