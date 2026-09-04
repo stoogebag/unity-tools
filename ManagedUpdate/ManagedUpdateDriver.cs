@@ -24,21 +24,24 @@ namespace Stoogebag.ManagedUpdate
             Instance = null;
         }
 
+        public void RegisterManager(Type type, ManagerBase manager)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (manager == null) throw new ArgumentNullException(nameof(manager));
+
+            if (!_managers.ContainsKey(type))
+                _managers[type] = manager;
+        }
+
+        public bool HasManager(Type type) => _managers.ContainsKey(type);
+
         public void Register(MonoBehaviour obj)
         {
             if (obj == null) return;
 
             var type = obj.GetType();
-            if (!_managers.TryGetValue(type, out var manager))
-            {
-                // Lazily manufacture the per-type manager (the old generator's "stub"),
-                // closing the generic over the concrete component type at runtime.
-                var managerType = typeof(ManagedUpdateManager<>).MakeGenericType(type);
-                manager = (ManagerBase)Activator.CreateInstance(managerType);
-                _managers[type] = manager;
-            }
-
-            manager.Add(obj);
+            if (_managers.TryGetValue(type, out var manager))
+                manager.Add(obj);
         }
 
         public void Unregister(MonoBehaviour obj)

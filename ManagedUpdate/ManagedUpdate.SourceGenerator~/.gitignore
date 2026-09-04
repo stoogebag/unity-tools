@@ -1,6 +1,0 @@
-# Ignore generator build intermediates
-obj/
-bin/
-*.user
-*.suo
-.vs/

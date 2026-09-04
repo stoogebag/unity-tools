@@ -53,6 +53,8 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider,IFixedUpdateManage
         }
     }
 
+    public ManagerBase CreateManager() => new ManagedUpdateManager<ConstantMovement>();
+
 
     public void SetSpeed(Vector3 newSpeed)
     {

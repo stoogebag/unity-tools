@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Stoogebag.ManagedUpdate.Examples
 {
+    [RequireComponent(typeof(ManagedUpdateLifecycle))]
     public class SpinnerFixedUpdateManaged : MonoBehaviour, IFixedUpdateManaged
     {
         public float SpinSpeedX = 0; //degrees per second
@@ -12,6 +13,8 @@ namespace Stoogebag.ManagedUpdate.Examples
 
         public Transform axisTransform;
         public float SpinSpeed = 50; //degrees per second
+
+        public ManagerBase CreateManager() => new ManagedUpdateManager<SpinnerFixedUpdateManaged>();
 
         // Update is called once per frame
         public void ManagedFixedUpdate()
