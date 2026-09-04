@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using stoogebag;
 using stoogebag.Editor;
+using stoogebag.Extensions;
 using TMPro;
 using UnityEditor;
 
@@ -34,7 +35,8 @@ public class TMPMeshGetter : MonoBehaviour
         var textMesh = textComponent.textInfo.meshInfo[0]; // in this specific case, there are no sub meshes
         _mesh.vertices = textMesh.vertices;
         _mesh.normals = textMesh.normals;
-        _mesh.uv = textMesh.uvs0;
+        //_mesh.uv = textMesh.uvs0.ToVector();
+        //todo: fix if needed.
         _mesh.uv2 = textMesh.uvs2;
         _mesh.triangles = textMesh.triangles;
         _mesh.tangents = textMesh.tangents;

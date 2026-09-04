@@ -10,7 +10,8 @@
         "UniTask.DOTween",
         "DOTween.Modules",
         "Unity.InputSystem",
-        "stoogebag.ManagedUpdate.Runtime"
+        "stoogebag.ManagedUpdate.Runtime",
+        ""
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

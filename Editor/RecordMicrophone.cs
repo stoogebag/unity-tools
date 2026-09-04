@@ -38,23 +38,23 @@ public class RecordMicrophone : MonoBehaviour
     [Button]
     public void Save()
     {
-        var res = AudioRecording.CreateInstance<AudioRecording>();
-        
-        res.guid = Guid.NewGuid().ToString();
-        var wavPath = $"Resources/audioRecording-clip-{res.guid}";
-     
-        
-        SavWav.Save(wavPath, _clip);
-
-        return;
-        res.clip = _clip;
-        res.CreationTime = DateTime.UtcNow;
-        res.Description = "!";
-
-        
-        AssetDatabase.CreateAsset(res.clip, $"Assets/Resources/audioRecording-clip-{res.guid}.asset");
-        AssetDatabase.CreateAsset(res, $"Assets/Resources/audioRecording-{res.guid}.asset");
-        
+        // //var res = AudioRecording.CreateInstance<AudioRecording>();
+        //
+        // res.guid = Guid.NewGuid().ToString();
+        // var wavPath = $"Resources/audioRecording-clip-{res.guid}";
+        //
+        //
+        // SavWav.Save(wavPath, _clip);
+        //
+        // return;
+        // res.clip = _clip;
+        // res.CreationTime = DateTime.UtcNow;
+        // res.Description = "!";
+        //
+        //
+        // AssetDatabase.CreateAsset(res.clip, $"Assets/Resources/audioRecording-clip-{res.guid}.asset");
+        // AssetDatabase.CreateAsset(res, $"Assets/Resources/audioRecording-{res.guid}.asset");
+        //
         //var clip = SavWav.TrimSilence(_clip, )
 
         

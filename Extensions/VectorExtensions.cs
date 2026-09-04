@@ -10,6 +10,11 @@ namespace stoogebag.Extensions
             return new Vector2(v.x, v.y);
         }
 
+        public static Vector2 ToVector2(this Vector4 v)
+        {
+            return new Vector2(v.x, v.y);
+        }
+
         public static Vector2 ToVector2XZ(this Vector3 v)
         {
             return new Vector2(v.x, v.z);

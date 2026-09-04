@@ -2,17 +2,16 @@ using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-using UnityEngine.Splines;
 
 public class CinemachineCameraShakePlayableMixerBehaviour : PlayableBehaviour
 {
     // NOTE: This function is called at runtime and edit time.  Keep that in mind when setting the values of properties.
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        SplineAnimate trackBinding = playerData as SplineAnimate;
+        //SplineAnimate trackBinding = playerData as SplineAnimate; //BC: not shure what thhis was doing here... lkmao
 
-        if (!trackBinding)
-            return;
+        // if (!trackBinding)
+        //     return;
 
         int inputCount = playable.GetInputCount ();
 

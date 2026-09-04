@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-using UnityEngine.Splines;
 
 [Serializable]
 public class CinemachineCameraShakePlayableClip : PlayableAsset, ITimelineClipAsset

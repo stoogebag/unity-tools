@@ -1,10 +1,9 @@
 {
-    "name": "stoogebag.editor",
+    "name": "stoogebag.ManagedUpdate.editor",
     "rootNamespace": "",
     "references": [
-        "UnityEditor.UI",
-        "stoogebag",
-        "Unity.TextMeshPro"
+        "GUID:f2a1955e12e2998459296851c3f25208",
+        "GUID:62105cd909addf94388b2e0dc1444ebb"
     ],
     "includePlatforms": [
         "Editor"
