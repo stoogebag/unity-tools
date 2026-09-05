@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Editor/Tools.meta
 guid: 6659d1a85e1160d468419a78ca991fee
+========
+guid: 0716f11fcba55244a989d30cbcb77900
+>>>>>>>> origin/main:DIALOGUE/CustomTimelineTracks/TMPTextSwitcher.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

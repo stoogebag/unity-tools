@@ -1,0 +1,20 @@
+{
+    "name": "stoogebag.editor",
+    "rootNamespace": "",
+    "references": [
+        "UnityEditor.UI",
+        "stoogebag",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

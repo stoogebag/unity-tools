@@ -10,21 +10,31 @@ namespace Stoogebag.ManagedUpdate
 
         private void OnEnable()
         {
-            if (UpdateDriver.Instance == null)
+            if (ManagedUpdateDriver.Instance == null)
             {
-                var go = new GameObject("UpdateDriver");
-                go.AddComponent<UpdateDriver>();
+                var go = new GameObject("ManagedUpdateDriver");
+                go.AddComponent<ManagedUpdateDriver>();
             }
 
             FindManagedComponents();
             foreach (var component in _managedComponents)
-                UpdateDriver.Instance?.Register(component);
+            {
+                var type = component.GetType();
+                if (!ManagedUpdateDriver.Instance.HasManager(type))
+                {
+                    var manager = CreateManagerFor(component);
+                    if (manager != null)
+                        ManagedUpdateDriver.Instance.RegisterManager(type, manager);
+                }
+
+                ManagedUpdateDriver.Instance.Register(component);
+            }
         }
 
         private void OnDisable()
         {
             foreach (var component in _managedComponents)
-                UpdateDriver.Instance?.Unregister(component);
+                ManagedUpdateDriver.Instance?.Unregister(component);
         }
 
         private void OnDestroy()
@@ -49,6 +59,14 @@ namespace Stoogebag.ManagedUpdate
                     _managedComponents.Add(component);
                 }
             }
+        }
+
+        private static ManagerBase CreateManagerFor(MonoBehaviour component)
+        {
+            if (component is IUpdateManaged u) return u.CreateManager();
+            if (component is IFixedUpdateManaged f) return f.CreateManager();
+            if (component is ILateUpdateManaged l) return l.CreateManager();
+            return null;
         }
     }
 }

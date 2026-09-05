@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:ManagedUpdate/Analyzers/cs.meta
 guid: 255c9f329367c294b928572ab01af4e6
+========
+guid: 473c346d3f54f3a47b19309f535b0a42
+>>>>>>>> origin/main:DIALOGUE/CustomTimelineTracks/TimeMachine.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

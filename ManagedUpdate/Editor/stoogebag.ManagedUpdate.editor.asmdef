@@ -1,0 +1,19 @@
+{
+    "name": "stoogebag.ManagedUpdate.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f2a1955e12e2998459296851c3f25208",
+        "GUID:62105cd909addf94388b2e0dc1444ebb"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

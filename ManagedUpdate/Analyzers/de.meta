@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:ManagedUpdate/Analyzers/de.meta
 guid: 499aa8453b1136f42a11c1d6983c3143
+========
+guid: 064e838db8f72534084e73db32b307e9
+>>>>>>>> origin/main:Editor/GridLevelEditor.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

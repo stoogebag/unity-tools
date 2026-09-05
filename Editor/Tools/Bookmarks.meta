@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Editor/Tools/Bookmarks.meta
 guid: 1dcf90111459cf74485a3cc49cfab47e
+========
+guid: 7bbcc6d87d70dd54bbcd386d052770b4
+>>>>>>>> origin/main:DIALOGUE/CustomTimelineTracks/Light.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

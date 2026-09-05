@@ -13,6 +13,10 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider,IFixedUpdateManage
     public Vector3 speed = new Vector3(10, 10, 10);
     private Rigidbody2D rb;
 
+    private Transform _tf;
+    private Vector3 _pos;
+    private Vector3 _step;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -26,37 +30,46 @@ public class ConstantMovement : MonoBehaviour, ISpeedProvider,IFixedUpdateManage
             rb.velocity = dir;
 #endif
         }
+
+        _tf = transform;
+        _pos = _tf.position;
+        RefreshStep();
+    }
+
+    private void OnEnable()
+    {
+        if (_tf == null) return;
+        _pos = _tf.position;
+        RefreshStep();
+    }
+
+    private void OnTransformParentChanged()
+    {
+        RefreshStep();
+    }
+
+    public void RefreshStep()
+    {
+        var stepDir = relative ? (Vector3)(_tf.rotation * speed) : speed;
+        _step = stepDir * Time.fixedDeltaTime;
     }
 
     private Vector2 dir;
-    // Update is called once per frame
     public void ManagedFixedUpdate()
     {
-        if (rb != null)
-        {
-            return;
-        }
-        
-        Vector3 delta;
+        if (rb != null) return;
 
-        if (relative)
-        {
-            // Move in this object's local space (respecting its rotation)
-            delta = transform.rotation * speed * Time.fixedDeltaTime; // rotate speed into world space [web:20]
-            transform.position += delta;
-        }
-        else
-        {
-            // Move in world space using the speed as-is
-            delta = speed * Time.fixedDeltaTime;
-            transform.position += delta;
-        }
+        _pos += _step;
+        _tf.position = _pos;
     }
+
+    public ManagerBase CreateManager() => new ManagedUpdateManager<ConstantMovement>();
 
 
     public void SetSpeed(Vector3 newSpeed)
     {
         speed = newSpeed;
+        RefreshStep();
     }
 
 }
