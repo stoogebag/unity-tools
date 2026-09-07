@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+
 using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.Timeline;
@@ -63,4 +63,3 @@ namespace stoogebag.DIALOGUE.CustomTimelineTracks.Dialogue.Editor
         }
     }
 }
-#endif

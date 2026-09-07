@@ -4,7 +4,9 @@
     "references": [
         "stoogebag.dialogue",
         "stoogebag",
-        "stoogebag.interaction"
+        "stoogebag.interaction",
+        "Unity.Timeline",
+        "Unity.Timeline.Editor"
     ],
     "includePlatforms": [
         "Editor"
