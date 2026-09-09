@@ -29,6 +29,21 @@ namespace stoogebag.DebugTools
         {
             _style.normal.textColor = Color.white;
             _style.fontSize = 15;
+            switch (_placement)
+            {
+                case Corner.TopLeft:
+                    _style.alignment = TextAnchor.UpperLeft;
+                    break;
+                case Corner.TopRight:
+                    _style.alignment = TextAnchor.UpperRight;
+                    break;
+                case Corner.BottomLeft:
+                    _style.alignment = TextAnchor.LowerLeft;
+                    break;
+                case Corner.BottomRight:
+                    _style.alignment = TextAnchor.LowerRight;
+                    break;
+            }
             float width = 85f;
             float height = 15f;
             float edge = 10f;

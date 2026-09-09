@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using UnityEngine;
 
 namespace stoogebag.DebugTools
@@ -7,12 +5,12 @@ namespace stoogebag.DebugTools
     public class FPSInCorner : TextInCorner
     {
         public int cacheSize = 5;
-        public bool lockOnLowest = true;
+        public float waitTime = 5;
 
         private int index = 0;
-        public float waitTime = 5;
-        float lowestSeen = float.MaxValue;
         private float[] _cache;
+        private bool _waitElapsed;
+        private float _lowestSinceWait;
 
         private void Awake()
         {
@@ -21,23 +19,26 @@ namespace stoogebag.DebugTools
 
         public override string GetText()
         {
-        
-        
-            if (Time.time < waitTime) return "wait plz";
-            var val = 1/Time.unscaledDeltaTime;
-     
-            _cache[index] = val;   var num = val;
-            index = (index + 1) % cacheSize;
-            if(lockOnLowest){
-                lowestSeen =  Math.Min(lowestSeen, val);
-                num = lowestSeen;
-            }
-            else
+            var val = 1f / Time.unscaledDeltaTime;
+
+            if (! _waitElapsed && Time.time >= waitTime)
             {
-                num = _cache.Sum(t => t) / cacheSize;
+                _waitElapsed = true;
+                _lowestSinceWait = val;
             }
-    
-            return (num).ToString() + " FPS";
+
+            if (_waitElapsed)
+            {
+                _lowestSinceWait = Mathf.Min(_lowestSinceWait, val);
+                var num = _lowestSinceWait;
+                _cache[index] = val;
+                index = (index + 1) % cacheSize;
+                return $"{val:F0} FPS (lowest: {num:F0})";
+            }
+
+            _cache[index] = val;
+            index = (index + 1) % cacheSize;
+            return $"{val:F0} FPS";
         }
     }
 }

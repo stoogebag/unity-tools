@@ -132,7 +132,7 @@ namespace stoogebag.UITools.Windows
 
             var gen = ++_stateGeneration;
 
-            if (rememberSelectedOnReactivate) // Just store the global selection directly
+            if (rememberSelectedOnReactivate && UnityEngine.EventSystems.EventSystem.current?.currentSelectedGameObject != null) // Just store the global selection directly
                 _lastSelected = UnityEngine.EventSystems.EventSystem.current?.currentSelectedGameObject?.GetComponent<Selectable>();
             
             if (isModal)
