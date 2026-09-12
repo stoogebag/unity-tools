@@ -46,9 +46,7 @@ namespace stoogebag.UITools.Windows
             var rect = GetComponent<RectTransform>();
             rect.anchoredPosition = _offScreenPos;
         
-        
             await rect.DOAnchorPos3D(_originalPos, inTime, true).SetEase(ease).AsyncWaitForCompletion();
-
             return true; 
         }
 

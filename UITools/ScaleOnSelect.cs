@@ -18,19 +18,22 @@ public class ScaleOnSelect : MonoBehaviour
         //always uses the original localScale. todo: allow update of this?
         var scale = transform.localScale;
         
-        
         var ssl = GetComponent<SelectableStateListener>();
         ssl.CurrentState.Subscribe(state =>{ _scale.Value = state == SelectableStateListener.SelectionState.Selected || state== SelectableStateListener.SelectionState.Highlighted; }).AddTo(this);
         
         _scale.Subscribe(t =>
         {
-//            print(gameObject.name + " " + t);
             if (t == null) return; //why is this here lool
             
             _tween?.Kill();
             if (t)
             {
-                _tween = transform.DOScale(scale.MultiplyPointwise(ScaleFactor), .2f).SetEase(Ease.OutBack).Play();
+                _tween = transform.DOScale(scale.MultiplyPointwise(ScaleFactor), .2f).SetEase(Ease.OutBack)
+                    // .OnStart(() => Debug.Log($"{name} TWEEN START"))
+                    // .OnUpdate(() => Debug.Log($"{name} TWEEN UPDATE {transform.localScale}"))
+                    // .OnComplete(() => Debug.Log($"{name} TWEEN COMPLETE"))
+                    .Play();
+                // print(_tween.IsPlaying());
             }
             else
             {
@@ -38,5 +41,6 @@ public class ScaleOnSelect : MonoBehaviour
             }
         });
     }
+    
 
 }
