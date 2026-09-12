@@ -100,11 +100,9 @@ namespace stoogebag.UITools.Windows
                 return;
             }
             
-            print("anims starting");
 
             await UniTask.WhenAll(Animations.Select(async t => await t.Activate()));
             
-            print("anims done");
             if (gen == _stateGeneration)
             {
                 Active = ActiveState.Active;
