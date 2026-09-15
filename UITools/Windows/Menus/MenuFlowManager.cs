@@ -6,12 +6,15 @@ using stoogebag.UITools.Windows;
 
 public class MenuFlowManager : MonoBehaviour
 {
+    [SerializeField] private Window bgWindow;
+    [SerializeField] private Window pressStartWindow;
     [SerializeField] private Window mainMenuWindow;
     [SerializeField] private Window optionsWindow;
     [SerializeField] private Window creditsWindow;
     [SerializeField] private Window quitConfirmWindow;
 
-    [SerializeField] private Button startButton;
+    [SerializeField] private Button pressStartButton;
+    [SerializeField] private Button startGameButton;
     [SerializeField] private Button optionsButton;
     [SerializeField] private Button creditsButton;
     [SerializeField] private Button quitButton;
@@ -22,7 +25,13 @@ public class MenuFlowManager : MonoBehaviour
 
     async void Start()
     {
-        startButton.OnClickAsObservable().Subscribe(async _ =>
+        pressStartButton.OnClickAsObservable().Subscribe(async _ =>
+        {
+            await pressStartWindow.Deactivate();
+            await mainMenuWindow.Activate();
+        }).AddTo(this);
+
+        startGameButton.OnClickAsObservable().Subscribe(async _ =>
         {
             await UniTask.WaitForSeconds(3).AwaitWithLoadScreen();
 
@@ -75,6 +84,9 @@ public class MenuFlowManager : MonoBehaviour
         fader.FadeIn(1f);
         await UniTask.Yield();
         await UniTask.Yield();
-        mainMenuWindow.Activate();
+        bgWindow.Activate();
+
+        await UniTask.WaitForSeconds(0.5f);
+        pressStartWindow.Activate();
     }
 }
