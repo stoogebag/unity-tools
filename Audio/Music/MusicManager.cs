@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using FMODUnity;
 using UniRx;
 using UnityEngine;
@@ -12,9 +13,12 @@ namespace stoogebag.Audio.Music
         private FMOD.Studio.EventInstance _currentInstance;
         public FMOD.Studio.EventInstance CurrentInstance => _currentInstance;
 
-        public event Action<FMOD.Studio.EventInstance> InstanceStarted;
+        private readonly Subject<FMOD.Studio.EventInstance> _instanceStarted = new Subject<FMOD.Studio.EventInstance>();
+        public IObservable<FMOD.Studio.EventInstance> InstanceStarted => _instanceStarted.AsObservable();
 
         private FMOD.GUID _currentEventGuid;
+        
+       
 
         private void Awake()
         {
@@ -33,6 +37,7 @@ namespace stoogebag.Audio.Music
             if (Instance != this) return;
 
             StopCurrent();
+            _instanceStarted.Dispose();
             Instance = null;
         }
 
@@ -80,7 +85,7 @@ namespace stoogebag.Audio.Music
             ApplyParams(profile);
             _currentInstance.start();
 
-            InstanceStarted?.Invoke(_currentInstance);
+            _instanceStarted.OnNext(_currentInstance);
 
             if (oldInstance.isValid())
             {
