@@ -421,7 +421,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5588e9f2acacb1a46bdb29d19a11b44e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  beatAnticipate: 0.2
 --- !u!65 &1002054322
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -685,7 +684,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca0f49df1095c4f47b08f7933b41499d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: stoogebag.audio::stoogebag.Audio.Music.MusicProfileTrigger
-  profile: {fileID: 11400000, guid: 9cd77f8d6f048c049a23ef75be6231ce, type: 2}
+  profile: {fileID: 11400000, guid: 12cf23239ec6409d9bfa42be97f3f31a, type: 2}
+  banks:
+  - 
+  gameScene: 
 --- !u!1 &1974441645
 GameObject:
   m_ObjectHideFlags: 0

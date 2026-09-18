@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
 using stoogebag.Utils;
 using UniRx;
@@ -29,6 +31,25 @@ namespace stoogebag.Audio.Music
         public void RegisterBeatProvider(IBeatProvider provider)
         {
             if (ActiveProvider == null) ActiveProvider = provider;
+        }
+
+        public async UniTask WaitFor(CuePoint cue, CancellationToken cancellationToken = default)
+        {
+            if (cue == CuePoint.Immediate) return;
+
+            var provider = ActiveProvider;
+            if (provider == null || !provider.IsRunning) return;
+
+            if (cue == CuePoint.NextBeat)
+            {
+                try { await provider.OnAllBeats.First().ToUniTask(cancellationToken: cancellationToken); }
+                catch (System.OperationCanceledException) { }
+            }
+            else
+            {
+                try { await provider.OnBeat(1f).First().ToUniTask(cancellationToken: cancellationToken); }
+                catch (System.OperationCanceledException) { }
+            }
         }
 
         [SerializeField]

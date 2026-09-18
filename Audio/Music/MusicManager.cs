@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using FMODUnity;
 using UniRx;
 using UnityEngine;
@@ -17,8 +19,8 @@ namespace stoogebag.Audio.Music
         public IObservable<FMOD.Studio.EventInstance> InstanceStarted => _instanceStarted.AsObservable();
 
         private FMOD.GUID _currentEventGuid;
-        
-       
+
+        private CancellationTokenSource _pendingCts;
 
         private void Awake()
         {
@@ -36,6 +38,7 @@ namespace stoogebag.Audio.Music
         {
             if (Instance != this) return;
 
+            CancelPending();
             StopCurrent();
             _instanceStarted.Dispose();
             Instance = null;
@@ -56,6 +59,66 @@ namespace stoogebag.Audio.Music
             }
 
             StartNew(profile);
+        }
+
+        public async UniTask Play(MusicProfile profile, CuePoint when)
+        {
+            if (profile == null || IsNull(profile.MusicEvent.Guid))
+            {
+                StopCurrent();
+                return;
+            }
+
+            if (SameGuid(profile.MusicEvent.Guid, _currentEventGuid))
+            {
+                ApplyParams(profile);
+                return;
+            }
+
+            CancelPending();
+            var cts = _pendingCts = new CancellationTokenSource();
+
+            if (BeatManager.Instance != null)
+            try { await BeatManager.Instance.WaitFor(when, cts.Token); }
+            catch (System.OperationCanceledException) { return; }
+
+            StartNew(profile);
+        }
+
+        public async UniTask PlayFill(FillProfile fill, CuePoint when)
+        {
+            if (fill == null || IsNull(fill.FillEvent.Guid)) return;
+
+            CancelPending();
+            var cts = _pendingCts = new CancellationTokenSource();
+
+            if (BeatManager.Instance != null)
+            try { await BeatManager.Instance.WaitFor(when, cts.Token); }
+            catch (System.OperationCanceledException) { return; }
+
+            var fillInstance = RuntimeManager.CreateInstance(fill.FillEvent);
+            fillInstance.start();
+            fillInstance.release();
+
+            double startTime = Time.unscaledTime;
+            float handoff = fill.SecondsUntilNextTrack;
+            float keep = Mathf.Clamp(fill.KeepExistingSeconds, 0f, handoff);
+
+            if (keep <= 0f)
+            {
+                StopCurrent();
+            }
+            else
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(keep), cancellationToken: cts.Token);
+                if (cts.IsCancellationRequested) return;
+                StopCurrent();
+            }
+
+            float elapsed = (float)(Time.unscaledTime - startTime);
+            float remaining = Mathf.Max(0f, handoff - elapsed);
+            if (remaining > 0f)
+                await UniTask.Delay(TimeSpan.FromSeconds(remaining), cancellationToken: cts.Token);
         }
 
         public void SetPaused(bool paused)
@@ -113,6 +176,13 @@ namespace stoogebag.Audio.Music
 
             _currentInstance.clearHandle();
             _currentEventGuid = default;
+        }
+
+        private void CancelPending()
+        {
+            _pendingCts?.Cancel();
+            _pendingCts?.Dispose();
+            _pendingCts = null;
         }
 
         private static bool IsNull(FMOD.GUID guid)
