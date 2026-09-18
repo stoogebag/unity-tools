@@ -5,7 +5,10 @@
         "FMODUnity",
         "UniRx",
         "UniTask",
-        "Unity.Addressables"
+        "Unity.Addressables",
+        "stoogebag",
+        "UniTask.DOTween",
+        "DOTween.Modules"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
