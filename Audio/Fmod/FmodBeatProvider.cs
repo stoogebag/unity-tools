@@ -16,7 +16,8 @@ namespace stoogebag.Audio.Music
 
         private double _lastBeatAt;
         private double _lastBarAt;
-        private float _beatInterval = 0.5f;
+        private float _authoredInterval = 0.5f;
+        private float _playRate = 1f;
         private int _beatsPerBar = 4;
 
         private FMOD.Studio.EVENT_CALLBACK _callback;
@@ -27,8 +28,17 @@ namespace stoogebag.Audio.Music
         public float CurrentBeat { get; private set; } = -1f;
         public int CurrentBar { get; private set; } = -1;
         public TimeSignature CurrentTimeSignature { get; private set; }
-        public float BeatIntervalSeconds => _beatInterval;
-        float IBeatProvider.BPM => _beatInterval > 0f ? 60f / _beatInterval : 0f;
+        public float BeatIntervalSeconds => _authoredInterval / _playRate;
+        float IBeatProvider.BPM => BeatIntervalSeconds > 0f ? 60f / BeatIntervalSeconds : 0f;
+        public float BaseTempo => _authoredInterval > 0f ? 60f / _authoredInterval : 0f;
+        public float PlayRate => _playRate;
+        public float EffectiveTempo => BaseTempo * _playRate;
+
+        public void SetPlayRate(float rate)
+        {
+            if (rate <= 0f) return;
+            _playRate = rate;
+        }
 
         private struct PendingBeat
         {
@@ -64,7 +74,7 @@ namespace stoogebag.Audio.Music
             {
                 var beat = pending.Data;
 
-                if (pending.Tempo > 0f) _beatInterval = 60f / pending.Tempo;
+                if (pending.Tempo > 0f) _authoredInterval = 60f / pending.Tempo;
 
                 _beatsPerBar = beat.CurrentTimeSignature.BeatsPerBar;
                 _lastBeatAt = pending.TimeSinceStart;
@@ -92,7 +102,7 @@ namespace stoogebag.Audio.Music
         }
 
         public float TimeToNextBeat => IsRunning
-            ? Mathf.Max(0f, (float)(_beatInterval - (_watch.Elapsed.TotalSeconds - _lastBeatAt)))
+            ? Mathf.Max(0f, (float)(BeatIntervalSeconds - (_watch.Elapsed.TotalSeconds - _lastBeatAt)))
             : -1f;
 
         public float TimeSinceLastBeat => IsRunning
@@ -100,7 +110,7 @@ namespace stoogebag.Audio.Music
             : -1f;
 
         public float TimeToNextBar => IsRunning
-            ? Mathf.Max(0f, TimeToNextBeat + (_beatsPerBar - Mathf.RoundToInt(CurrentBeat)) * _beatInterval)
+            ? Mathf.Max(0f, TimeToNextBeat + (_beatsPerBar - Mathf.RoundToInt(CurrentBeat)) * BeatIntervalSeconds)
             : -1f;
 
         public float TimeSinceLastBar => IsRunning
@@ -139,6 +149,8 @@ namespace stoogebag.Audio.Music
             CurrentBar = -1;
             _lastBeatAt = 0;
             _lastBarAt = 0;
+            _authoredInterval = 0.5f;
+            _playRate = 1f;
             while (_pending.TryDequeue(out _)) { }
 
             if (!instance.isValid()) return;
