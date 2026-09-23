@@ -91,6 +91,7 @@ namespace Stoogebag.ManagedUpdate
             {
                 var item = _items[i];
                 if (item == null) { _items.RemoveAt(i); continue; }
+                if (!item.enabled) continue;
                 tick(item);
             }
         }

@@ -20,7 +20,7 @@ namespace stoogebag.Audio.Music
     /// </summary>
     public abstract class OnBeatBehaviour : MonoBehaviour
     {
-        [SerializeField] protected string beats = "1";
+        [SerializeField] protected string beats = "1,2,3,4";
         [FormerlySerializedAs("anticipateSeconds")] [SerializeField] protected float anticipation = 0.2f;
         [SerializeField] protected AnticipationUnit anticipationUnit = AnticipationUnit.Beats;
 
@@ -74,6 +74,11 @@ namespace stoogebag.Audio.Music
             LeadTimeSeconds = anticipationUnit == AnticipationUnit.Beats
                 ? anticipation * provider.BeatIntervalSeconds
                 : anticipation;
+
+            if (LeadTimeSeconds < 0f)
+                throw new ArgumentOutOfRangeException(
+                    nameof(anticipation),
+                    $"[OnBeatBehaviour] Anticipation for '{beats}' produced a negative lead time ({LeadTimeSeconds}s). Lead time must be >= 0.");
 
             _beatSubscription = new CompositeDisposable();
 

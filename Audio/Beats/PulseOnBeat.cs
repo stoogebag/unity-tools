@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -16,6 +17,11 @@ namespace stoogebag.Audio.Music
 
         protected override void OnEnable()
         {
+            if (releaseDuration < 0f)
+                throw new ArgumentOutOfRangeException(
+                    nameof(releaseDuration),
+                    $"[PulseOnBeat] releaseDuration must be >= 0 (got {releaseDuration}s).");
+
             _baseScale = transform.localScale;
             base.OnEnable();
         }
@@ -33,9 +39,9 @@ namespace stoogebag.Audio.Music
             RestartTween(ref _active, () =>
             {
                 var seq = DOTween.Sequence();
-                seq.Append(transform.DOScale(_baseScale * squashScale, Mathf.Max(0.01f, LeadTimeSeconds)).SetEase(squashEase));
+                seq.Append(transform.DOScale(_baseScale * squashScale, LeadTimeSeconds).SetEase(squashEase));
                 seq.AppendCallback(() => transform.localScale = _baseScale * punchScale);
-                seq.Append(transform.DOScale(_baseScale, Mathf.Max(0.01f, releaseDuration)).SetEase(releaseEase));
+                seq.Append(transform.DOScale(_baseScale, releaseDuration).SetEase(releaseEase));
                 return seq;
             });
         }

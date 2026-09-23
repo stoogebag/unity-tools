@@ -13,7 +13,6 @@ namespace stoogebag.Audio.Music
         }
 
         [SerializeField] private Vector3 step = Vector3.right;
-        [SerializeField] private float duration = 0.2f;
         [SerializeField] private Ease ease = Ease.InOutCubic;
         [SerializeField] private bool useLocalSpace = true;
         [SerializeField] private int maxSteps = -1;
@@ -21,13 +20,13 @@ namespace stoogebag.Audio.Music
 
         private Tween _active;
         private Vector3 _startPos;
-        private int _stepsTaken;
+        private int _stepIndex;
         private int _direction = 1;
 
         protected override void OnEnable()
         {
             _startPos = useLocalSpace ? transform.localPosition : transform.position;
-            _stepsTaken = 0;
+            _stepIndex = 0;
             _direction = 1;
             base.OnEnable();
         }
@@ -42,38 +41,36 @@ namespace stoogebag.Audio.Music
 
         protected override void OnBeatTriggered(BeatData beat)
         {
-            Vector3 current = useLocalSpace ? transform.localPosition : transform.position;
-            Vector3 next = current + step * _direction;
+            int next = _stepIndex + _direction;
 
-            bool hasLimit = maxSteps > 0;
-            bool atLimit = hasLimit && _stepsTaken >= maxSteps;
-
-            if (atLimit)
+            if (maxSteps > 0)
             {
-                switch (loopBehaviour)
+                if (loopBehaviour == StepLoop.PingPong)
                 {
-                    case StepLoop.Stop:
-                        return;
-                    case StepLoop.LoopToStart:
-                        next = _startPos;
-                        _stepsTaken = 0;
-                        _direction = 1;
-                        break;
-                    case StepLoop.PingPong:
+                    if (next > maxSteps || next < 0)
+                    {
                         _direction *= -1;
-                        next = current + step * _direction;
-                        _stepsTaken = 0;
-                        break;
+                        next = _stepIndex + _direction;
+                    }
+                }
+                else if (next > maxSteps)
+                {
+                    if (loopBehaviour == StepLoop.Stop)
+                        return;
+
+                    next = 0;
                 }
             }
 
-            _stepsTaken++;
+            _stepIndex = next;
+
+            Vector3 target = _startPos + step * _stepIndex;
 
             RestartTween(ref _active, () =>
             {
                 if (useLocalSpace)
-                    return transform.DOLocalMove(next, Mathf.Max(0.01f, duration)).SetEase(ease);
-                return transform.DOMove(next, Mathf.Max(0.01f, duration)).SetEase(ease);
+                    return transform.DOLocalMove(target, LeadTimeSeconds).SetEase(ease);
+                return transform.DOMove(target, LeadTimeSeconds).SetEase(ease);
             });
         }
     }

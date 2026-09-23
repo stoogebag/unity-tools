@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: stoogebag.audio::stoogebag.Audio.Music.MusicProfile
   musicEvent:
     Guid:
-      Data1: 477796666
-      Data2: 1088398435
-      Data3: 1094408847
-      Data4: 1602905463
-    Path: event:/Menu
+      Data1: -1127569453
+      Data2: 1091649135
+      Data3: -847164234
+      Data4: 873813848
+    Path: event:/tinfReal
   startParams: []
   extras: 
