@@ -1,1 +1,84 @@
-ass
+# Dependencies
+
+Scripting define symbols are set in `ProjectSettings.asset` (`scriptingDefineSymbols`). The core set below is applied to the project; `VIDE` and `SALSA` are **documented only** and are not set in the project.
+
+## All projects (core)
+
+These are the baseline — virtually every stoogebag assembly assumes them.
+
+| Area | Required | Scripting define |
+|---|---|---|
+| Tweening | **DOTween** + **DOTween Modules** (free) / DOTween Pro | `DOTWEEN` |
+| Async | **UniTask** | `UNITASK` |
+| Reactive | **UniRx** | `UNIRX` |
+| Async + tweening | UniTask + DOTween integration | `UNITASK_DOTWEEN_SUPPORT` |
+| UI text | **TextMeshPro** (com.unity.ugui) | — |
+| Input | **Input System** | — |
+| Rendering | **URP** | — |
+| Camera | **Cinemachine** | `CINEMACHINE` (v2) / `NEW_CINEMACHINE` (v3) |
+| Sequencing | **Timeline** | `TIMELINE` |
+| Assets | **Addressables** | — |
+| Dialogue text | **Febucci Text Animator** | `TEXT_ANIMATOR` |
+| Dialogue | **VIDE** (for dialogues) | `VIDE` |
+
+Core define symbols (docs reference):
+
+```
+DOTWEEN
+UNITASK
+UNIRX
+UNITASK_DOTWEEN_SUPPORT
+CINEMACHINE
+NEW_CINEMACHINE
+TIMELINE
+TEXT_ANIMATOR
+VIDE
+```
+
+`CINEMACHINE` gates the `stoogebag.cinemachine` assembly (required); `NEW_CINEMACHINE` additionally selects the Cinemachine 3.x API inside it. This project uses Cinemachine 3.x, so both are set. `DOTWEEN` and `UNITASK_DOTWEEN_SUPPORT` may be auto-provided by their packages; setting them manually is harmless. `VIDE` is documented here but intentionally not set in the project.
+
+## Tier 2
+
+| Area | Required | Scripting define |
+|---|---|---|
+| Audio | **FMOD** | — |
+| Lip sync | **SALSA** (+ RootMotion) | `SALSA` |
+
+`SALSA` is documented here but intentionally not set in the project.
+
+## Per submodule
+
+| Assembly | Define constraint(s) | Packages | Assets |
+|---|---|---|---|
+| `stoogebag` (base) | `UNITASK`, `UNIRX` | UniTask, UniRx, DOTween, `DOTween.Modules`, `UniTask.DOTween`, `UniTask.TextMeshPro`, TextMeshPro, URP Core, Input System, `stoogebag.ManagedUpdate.Runtime` | Odin/Sirenix, SALSA, Behavior Designer, DOTween Pro (precompiled DLL refs) |
+| `stoogebag.ManagedUpdate.Runtime` | — | — | — |
+| `stoogebag.editor` | — (Editor-only) | UnityEditor.UI, TextMeshPro | — |
+| `stoogebag.audio` | — | FMOD, Addressables, UniTask, UniRx, DOTween | — |
+| `stoogebag.audio.editor` | — (Editor-only) | stoogebag | — |
+| `stoogebag.AI` | `BEHAVIOR_DESIGNER` | — | Behavior Designer |
+| `stoogebag.cinemachine` | `CINEMACHINE` | Cinemachine (v2 `Cinemachine` + v3 `Unity.Cinemachine`) | — |
+| `stoogebag.dialogue` | `TIMELINE` | Timeline, UniTask, UniRx, TMP, Cinemachine, Whisper, Text Animator (Runtime + ForUnity), stoogebag.UI, interaction, textanimator | Adventure Creator, VIDE, Whisper, Text Animator, Ultimate Editor Enhancer (code-gated) |
+| `stoogebag.dialogue.editor` | `TIMELINE` (Editor-only) | Timeline + Timeline.Editor | — |
+| `stoogebag.feel` | `FEEL` | — | More Mountains Feel |
+| `stoogebag.interaction` | — | stoogebag, cinemachine, UI, UniTask, UniRx, `UniTask.DOTween` | — |
+| `stoogebag.networking` | `FISHNET` | FishNet (`FishNet.Runtime`, `FishyUnityTransport`), UniRx, Input System, stoogebag.UI | — |
+| `stoogebag.portals` | `PORTALS` | URP Universal Runtime, interaction, stoogebag | — |
+| `stoogebag.puzzgrid` | `PUZZGRID`, `UNITASK`, `UNIRX`, `UNITASK_DOTWEEN_SUPPORT` | UniTask, UniRx, Input System, portals, DOTween, `UniTask.DOTween` | — |
+| `stoogebag.salsa` | `SALSA` | UniRx | SALSA (Crazy Minnow) + RootMotion |
+| `stoogebag.splines` | `SPLINES` | Unity Splines, `Unity.Mathematics` | — |
+| `stoogebag.textanimator` | — | Text Animator (Runtime + ForUnity), UniTask | Febucci Text Animator |
+| `stoogebag.timeflow` | `TIMEFLOW` | — | Timeflow (Axon Genesis) |
+| `stoogebag.Timeline` | `TIMELINE` | Timeline, UniRx, Splines, TMP, UniTask, Text Animator, stoogebag, tweening, dialogue | DOTween Pro (`DOTweenPro.Scripts`) |
+| `stoogebag.timeline.editor` | `TIMELINE` (Editor-only) | Timeline + Timeline.Editor | — |
+| `stoogebag.tweening` | — | UniTask, `UniTask.DOTween` | DOTween Pro |
+| `stoogebag.UI` | — | UniRx, UniTask, TMP, Cinemachine, `UniTask.DOTween`, DOTween, Input System, stoogebag | — |
+
+## Feature-gated extras
+
+Only needed if you enable the matching `#define`.
+
+| Type | Items |
+|---|---|
+| UPM packages | Splines, FishNet (git), Whisper (git) |
+| Asset Store / third-party | Odin Inspector, Behavior Designer, Feel, Timeflow, Adventure Creator, AniMancer, OneJS, Broccoli, Dreamteck Splines, UI Shapes Kit, UI Extensions, Ultimate Editor Enhancer |
+| Global define symbols | `UNITASK`, `UNIRX`, `UNITASK_DOTWEEN_SUPPORT`, `DOTWEEN`, `ODIN_INSPECTOR`, `CINEMACHINE`, `NEW_CINEMACHINE`, `TIMELINE`, `SPLINES`, `PUZZGRID`, `PORTALS`, `FISHNET`, `BEHAVIOR_DESIGNER`, `FEEL`, `SALSA`, `TIMEFLOW`, `TEXT_ANIMATOR`, `WHISPER`, `VIDE`, `ADVENTURE_CREATOR`, `INCONTROL_EXISTS`, `ANIMANCER`, `ONE_JS`, `BROCCOLI`, `DREAMTECK_SPLINES`, `UI_EXTENSIONS`, `UI_SHAPES_KIT`, `ULTIMATE_EDITOR_ENHANCER` |
