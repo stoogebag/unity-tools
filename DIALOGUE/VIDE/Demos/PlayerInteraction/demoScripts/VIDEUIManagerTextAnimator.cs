@@ -1,5 +1,4 @@
 ﻿#if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 #if TEXT_ANIMATOR
 
@@ -512,7 +511,6 @@ public class VIDEUIManagerTextAnimator : MonoBehaviour
     //Utility note: If you're on MonoDevelop. Go to Tools > Options > General and enable code folding.
     //That way you can exapnd and collapse the regions and methods
 }
-#endif
 #endif
 #endif
 #endif

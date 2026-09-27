@@ -10,7 +10,6 @@ using Cysharp.Threading.Tasks;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
 #endif
-using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEditor;
 
@@ -34,7 +33,7 @@ public class DialogueMB : MonoBehaviour
     //public CinemachineVirtualCamera cam;
 
 
-    [SerializeField] [ValueDropdown("Devices")]
+    [SerializeField] 
     public string Device = "Microphone (NVIDIA Broadcast)";
 
     public List<DialogueLine> Lines = new List<DialogueLine>(){ null, null, null,null};
@@ -82,7 +81,7 @@ public class DialogueLine
     }
     
     
-    [ShowInInspector] public AudioClip Clip;
+    public AudioClip Clip;
     public string Text;
 
     private AudioClip _clip;
@@ -92,7 +91,7 @@ public class DialogueLine
     
 #if UNITY_EDITOR
     public string Device => GetParentIfSelected()?.Device;
-    [ButtonGroup , Button(SdfIconType.Record, "")]
+    [ Button(UnityIcon.Record, "")]
     public void Record()
     {
         _clip = Microphone.Start(Device, false, MaxClipLength, 44100);
@@ -111,7 +110,7 @@ public class DialogueLine
     //
     // }
     
-    [ButtonGroup , Button(SdfIconType.Play, "")]
+    [ Button(UnityIcon.Play, "")]
     public void Play()
     {
         if(Clip != null) PlayClip(Clip);
@@ -125,7 +124,7 @@ public class DialogueLine
  #endif
     }
     
-    [ButtonGroup , Button(SdfIconType.Save, "")]
+    [ Button(UnityIcon.Save, "")]
     public void Save()
     {
         var guid = Guid.NewGuid();
@@ -145,7 +144,7 @@ public class DialogueLine
     }
 
     
-    [ButtonGroup, Button(SdfIconType.Pencil, "")]
+    [ Button(UnityIcon.Edit, "")]
     public async void Transcribe()
     {
 #if WHISPER

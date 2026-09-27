@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
 using stoogebag;
 using UniRx;
 using UnityEngine;

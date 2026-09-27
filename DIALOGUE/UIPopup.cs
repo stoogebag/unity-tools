@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using stoogebag.UITools.Windows;
 using TMPro;

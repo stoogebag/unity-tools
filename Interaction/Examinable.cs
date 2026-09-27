@@ -1,5 +1,4 @@
 ﻿#if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 #if CINEMACHINE
 using System;
@@ -66,7 +65,6 @@ public class Examinable : MonoBehaviour
     public string popupName = "name!";
     
 }
-#endif
 #endif
 #endif
 #endif

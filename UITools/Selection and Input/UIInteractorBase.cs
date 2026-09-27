@@ -1,5 +1,4 @@
 ﻿#if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using UnityEngine;
 
@@ -21,6 +20,5 @@ namespace stoogebag.UITools.Selection_and_Input
     }
 }
 
-#endif
 #endif
 #endif

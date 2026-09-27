@@ -1,6 +1,5 @@
 using System;
 using DG.Tweening;
-using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UnityEngine;
 

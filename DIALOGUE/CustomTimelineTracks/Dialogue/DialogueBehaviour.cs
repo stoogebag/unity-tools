@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 
 #if CINEMACHINE
 using System;
@@ -10,7 +9,6 @@ using System.Threading;
 //using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 using stoogebag.Extensions;
 #endif
-using Sirenix.OdinInspector;
 using stoogebag;
 using stoogebag.Utils;
 using UniRx;
@@ -82,7 +80,7 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	public int MaxClipLength = 30;
 #if UNITY_EDITOR
-	[ValueDropdown(nameof(MicDevices))]
+	//[ValueDropdown(nameof(MicDevices))]
 	public string SelectedMic
 	{
 		get => RecordingSettings.SelectedDevice;
@@ -92,7 +90,7 @@ public class DialogueBehaviour : PlayableBehaviour
 	private string[] MicDevices() => RecordingSettings.Devices;
 
 	#if ODIN_INSPECTOR
-	[ButtonGroup , Button(SdfIconType.Record, "")]
+	[ButtonGroup , Button(UnityIcon.Record, "")]
 	#endif
 	public void Record()
 	{
@@ -104,7 +102,7 @@ public class DialogueBehaviour : PlayableBehaviour
 	}
     
 #if ODIN_INSPECTOR
-	[ButtonGroup , Button(SdfIconType.Play, "")]
+	[ButtonGroup , Button(UnityIcon.Play, "")]
 #endif
 	public void Play()
 	{
@@ -118,7 +116,7 @@ public class DialogueBehaviour : PlayableBehaviour
 	}
     
 	#if ODIN_INSPECTOR
-	[ButtonGroup , Button(SdfIconType.Save, "")]
+	[ButtonGroup , Button(UnityIcon.Save, "")]
 #endif
 	public void Save()
 	{
@@ -146,7 +144,7 @@ public class DialogueBehaviour : PlayableBehaviour
 	}
 	
 #if ODIN_INSPECTOR
-	[ButtonGroup, Button(SdfIconType.Pencil, "")]
+	[ButtonGroup, Button(UnityIcon.Edit, "")]
 #endif
 	public async void Transcribe()
 	{
@@ -180,6 +178,5 @@ public class DialogueBehaviour : PlayableBehaviour
 	
 	
 }
-#endif
 #endif
 #endif
