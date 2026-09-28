@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      playstation_dpad_left_0: 780114571240795900
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

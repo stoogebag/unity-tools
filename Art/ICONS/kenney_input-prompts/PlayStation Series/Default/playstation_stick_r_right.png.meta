@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      playstation_stick_r_right_0: -7154618847791861227
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
