@@ -10,7 +10,7 @@ using DG.Tweening;
 using stoogebag.Extensions;
 using UnityEngine;
 
-[RequireComponent(typeof(Interactable))]
+[RequireComponent(typeof(SimpleInteractable))]
 public class Door : MonoBehaviour
 {
     public float OpenTime = 0.5f;

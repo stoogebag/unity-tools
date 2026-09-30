@@ -8,18 +8,18 @@ Live in this folder:
 |---|---|
 | `IInteractor` | The player-side contract. Whatever points at things implements this. |
 | `Examinable` | Something that can be focused and examined. |
-| `Interactable : Examinable` | Something that can additionally be interacted with. |
-| `FirstPersonInteractor` | A ray-based `IInteractor`. Casts forward from an origin, tracks the target. |
-| `Door` | An example interactable (uses `HasKey`). |
+| `Interactable` (abstract) | Something that can be interacted with. Declares `TryInteract`; holds the performed/failed observables. |
+| `SimpleInteractable` | The default concrete interactable — succeeds, does nothing. |
+| `FirstPersonInteractor` | A ray-based `IInteractor`. Casts forward from an origin, tracks the target, sends "try". |
 | `AnimateOnActivate`, `Cable`, `FloorTriggerZone` | Unrelated helpers that happen to live here. |
 
 ## The contract
 
-`Examinable` and `Interactable` are event + observable pairs. The observable form is the contract; the `event` is the backing field.
+`Examinable` is an `event` + observable pair (the observable form is the contract, the `event` is the backing field). `Interactable` uses plain UniRx `Subject`s, the same pattern as `Health.OnDamaged`.
 
 ```
 Examinable   : OnFocus / OnUnfocus / OnExamine / OnUnExamine
-Interactable : OnFocus / OnUnfocus / OnExamine / OnUnExamine / OnInteraction / OnInteractionCancelled
+Interactable : OnInteractPerformed / OnInteractFailed
 ```
 
 ```csharp
@@ -28,26 +28,25 @@ public interface IInteractor
     Transform transform { get; }
     GameObject gameObject { get; }
     bool HasKey(string key);
-    void Interacted(Interactable interactable);
+}
+
+public abstract class Interactable : Examinable
+{
+    public abstract bool TryInteract(in InteractionContext ctx);
+    public Subject<InteractionContext> OnInteractPerformed { get; }
+    public Subject<InteractionContext> OnInteractFailed { get; }
 }
 ```
 
-`Interactable.Interact` raises `OnInteraction` and then calls `interactor.Interacted(this)`. Both directions are notified, deliberately: some interactables are self-contained (a `Door` opens itself), others need the interactor to handle it (a pickup that goes to the player's hands). This split is unresolved and the code says so; treat it as a convention rather than a rule.
+The interactor builds an `InteractionContext` (itself + the target) and calls `TryInteract` on the interactable. **The interactable owns the decision**: it evaluates its own conditions, does its effect on success, and pushes `OnInteractPerformed` — or `OnInteractFailed` if it declined. The `bool` return is for the caller's immediate feedback; the observables are for decoupled observers.
+
+The interactor never subscribes and never does actor-side work itself — it only detects and sends "try". Reach (how far you can interact) is the interactor's property, not the object's.
 
 ## Minimal setup
 
-1. Put `Examinable` (or `Interactable`) on the object. Set `popupName`, and set `FocusDistance` / `ExamineDistance` / `InteractDistance` if the defaults (10/10/5) don't suit.
+1. Put `SimpleInteractable` (or your own `Interactable` subclass) on the object. Set `popupName`.
 2. Put a `FirstPersonInteractor` on the player, in its own child GameObject.
-3. Wire the interactor's `_origin` to the camera transform and its `_interactAction` / `_inspectAction` to `InputActionReference` assets.
-
-Samples for each interactable shape are in `Samples/`:
-
-| Sample | What it shows |
-|---|---|
-| `Examinable.Sample` | Focus and examine only. `Interact` does nothing. |
-| `Interactable.Sample` | Focus, examine, interact. |
-| `Interactable.DistanceLimited.Sample` | `InteractDistance` gating — interact fails from far away. |
-| `Door.Sample` | The `HasKey` path. |
+3. Wire the interactor's `_origin` to the camera transform, its `_interactAction` / `_inspectAction` to `InputActionReference` assets, and its `_range` (reach).
 
 ## FirstPersonInteractor
 
@@ -62,21 +61,36 @@ Serialized fields:
 | `_interactAction` | `InputActionReference` — press to interact. |
 | `_inspectAction` | `InputActionReference` — press to examine. |
 
-Runs every frame: raycast, resolve `Examinable` via `GetComponentInParent`, check `CanFocus`, then raise focus/unfocus when the target changes. `Current` is exposed as `IReadOnlyReactiveProperty<Examinable>` so prompt UI can subscribe instead of polling.
+Runs every frame: raycast, resolve `Examinable` via `GetComponentInParent`, raise focus/unfocus when the target changes, and on interact press call `TryInteract` on the target if it is an `Interactable`. `Current` is exposed as `IReadOnlyReactiveProperty<Examinable>` so prompt UI can subscribe instead of polling.
 
 **The `_ignore` mask matters.** With `_mask` = everything, the ray starts inside the interactor's own capsule and can target itself. Excluding the player's layer is wrong if other players should be valid targets — hence a separate `_ignore` mask you can point at just your own body's layer.
 
 ## Adding an interactable
 
-Implement the behaviour by subscribing to the observable, or by overriding `Interactable`:
+Subclass `Interactable` and override `TryInteract`, or subscribe to another interactable's observable:
 
 ```csharp
-GetComponent<Interactable>().OnInteractionObservable
-    .Subscribe(interactor => DoTheThing())
+public class MyThing : Interactable
+{
+    public override bool TryInteract(in InteractionContext ctx)
+    {
+        if (!Ready) { OnInteractFailed.OnNext(ctx); return false; }
+        DoTheThing();
+        OnInteractPerformed.OnNext(ctx);
+        return true;
+    }
+}
+```
+
+To react to something else being interacted with, hold a reference to it and subscribe:
+
+```csharp
+button.OnInteractPerformed
+    .Subscribe(_ => Open())
     .AddTo(this);
 ```
 
-If the interactable needs the interactor to do something (hand an item over, open a UI), read it off the callback argument rather than reaching for a singleton.
+References stay explicit and serializable (hold the `Interactable`, not an interface).
 
 ## Multiplayer
 
@@ -88,7 +102,7 @@ Policy for FUN-eral: all interactions are single-user. Where two players contend
 
 ## Notes
 
-- `Examinable` and `Interactable` are in the **global namespace** (the asmdef's `rootNamespace` is empty), matching the rest of this assembly.
+- The types are in the **global namespace** (the asmdef's `rootNamespace` is empty), matching the rest of this assembly.
 - `Examinable.InteractText` is a get-only property with no body. Harmless while nothing reads it; give it a body or delete it before using it.
 - `ButtonInteractable` references an `IInteractable` interface that is not defined anywhere. Dead code.
 - Everything is behind `#if UNITASK` / `#if UNIRX` / `#if CINEMACHINE` guards supplied by the assembly's define constraints.

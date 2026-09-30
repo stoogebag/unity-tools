@@ -71,7 +71,7 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
             return;
 
         if (Press(_interactAction) && target is Interactable interactable)
-            interactable.TryInteract(this);
+            interactable.TryInteract(new InteractionContext(this, interactable));
 
         if (Press(_inspectAction))
             target.TryExamine(this);
@@ -91,11 +91,7 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
         if (!Physics.Raycast(_origin.position, _origin.forward, out var hit, _range, mask, QueryTriggerInteraction.Collide))
             return null;
 
-        var examinable = hit.collider.GetComponentInParent<Examinable>();
-        if (examinable == null || !examinable.CanFocus(this))
-            return null;
-
-        return examinable;
+        return hit.collider.GetComponentInParent<Examinable>();
     }
 
     public bool HasKey(string key) => _keys.Contains(key);
@@ -104,12 +100,4 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
 
     public void RemoveKey(string key) => _keys.Remove(key);
 
-    /// <summary>
-    /// Called by the interactable after it raised its own OnInteraction.
-    /// Override or subscribe to <see cref="Current"/> for any follow-up the
-    /// interactor itself needs to do.
-    /// </summary>
-    public void Interacted(Interactable interactable)
-    {
-    }
 }
