@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -5,8 +6,8 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// A first-person ray interactor. Casts forward from an origin, tracks which
-/// <see cref="Examinable"/> is under the cursor, and drives focus/examine/interact
-/// through the <see cref="IInteractor"/> contract.
+/// <see cref="Examinable"/> is under the cursor, resolves what the interact key
+/// would do right now, and sends pressing.
 ///
 /// Local only: focus, examine and prompts are per-player. Only the effect of an
 /// interaction may need networking, and that is the interactable's concern.
@@ -27,10 +28,34 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
     [SerializeField] private InputActionReference _inspectAction;
 
     private readonly HashSet<string> _keys = new();
-    private readonly ReactiveProperty<Examinable> _current = new(null);
+    private readonly List<IInteractionProvider> _providers = new();
+    private readonly List<IInteraction> _buffer = new();
+
+    private readonly ReactiveProperty<Examinable> _target = new(null);
+    private readonly ReactiveProperty<IInteraction> _current = new(null);
 
     /// <summary>What this interactor is currently pointing at, if anything.</summary>
-    public IReadOnlyReactiveProperty<Examinable> Current => _current;
+    public IReadOnlyReactiveProperty<Examinable> Target => _target;
+
+    /// <summary>What pressing interact would do right now, if anything.</summary>
+    public IReadOnlyReactiveProperty<IInteraction> Current => _current;
+
+    /// <summary>
+    /// Fired after an interaction is performed. The interaction itself is
+    /// ephemeral, so watch this (or the target's own observables) rather than
+    /// subscribing to an <see cref="IInteraction"/>.
+    /// </summary>
+    public event Action<IInteraction> OnPerformed;
+    public IObservable<IInteraction> OnPerformedObservable =>
+        Observable.FromEvent<IInteraction>(h => OnPerformed += h, h => OnPerformed -= h);
+
+    /// <summary>
+    /// Fired when the player examines a target. Examine is its own channel,
+    /// separate from interactions — it is not offered and cannot be suppressed.
+    /// </summary>
+    public event Action<Examinable> OnExamined;
+    public IObservable<Examinable> OnExaminedObservable =>
+        Observable.FromEvent<Examinable>(h => OnExamined += h, h => OnExamined -= h);
 
     private void Awake()
     {
@@ -50,31 +75,96 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
         _inspectAction?.action.Disable();
     }
 
-    private void OnDestroy() => _current.Dispose();
+    private void OnDestroy()
+    {
+        _target.Dispose();
+        _current.Dispose();
+    }
+
+    public void RegisterProvider(IInteractionProvider provider)
+    {
+        if (provider != null && !_providers.Contains(provider))
+            _providers.Add(provider);
+    }
+
+    public void UnregisterProvider(IInteractionProvider provider)
+    {
+        _providers.Remove(provider);
+    }
 
     private void Update()
     {
         var target = Probe();
+        UpdateTarget(target);
+        UpdateCurrent(target);
 
-        if (!ReferenceEquals(target, _current.Value))
+        if (Press(_inspectAction) && target != null)
         {
-            if (_current.Value != null)
-                _current.Value.Unfocus(this);
-
-            if (target != null)
-                target.Focus(this);
-
-            _current.Value = target;
+            target.TryExamine(this);
+            OnExamined?.Invoke(target);
         }
 
-        if (target == null)
+        if (Press(_interactAction))
+            PerformCurrent();
+    }
+
+    private void UpdateTarget(Examinable target)
+    {
+        if (ReferenceEquals(target, _target.Value))
             return;
 
-        if (Press(_interactAction) && target is Interactable interactable)
-            interactable.TryInteract(new InteractionContext(this, interactable));
+        if (_target.Value != null)
+            _target.Value.Unfocus(this);
 
-        if (Press(_inspectAction))
-            target.TryExamine(this);
+        if (target != null)
+            target.Focus(this);
+
+        _target.Value = target;
+    }
+
+    private void UpdateCurrent(Examinable target)
+    {
+        _buffer.Clear();
+
+        // Providers first. A suppressing provider means we stop looking: its
+        // offers replace everything else, including the target's own.
+        var suppressed = false;
+        for (var i = 0; i < _providers.Count; i++)
+        {
+            var provider = _providers[i];
+            provider.OfferInteractions(this, target, _buffer);
+
+            if (provider.SuppressOtherInteractions)
+            {
+                suppressed = true;
+                break;
+            }
+        }
+
+        if (!suppressed && target != null)
+            target.OfferInteractions(this, _buffer);
+
+        _current.Value = Resolve();
+    }
+
+    private IInteraction Resolve()
+    {
+        for (var i = 0; i < _buffer.Count; i++)
+            if (_buffer[i].CanPerform(this))
+                return _buffer[i];
+
+        return null;
+    }
+
+    private bool PerformCurrent()
+    {
+        var interaction = _current.Value;
+        if (interaction == null || !interaction.CanPerform(this))
+            return false;
+
+        interaction.Perform(this);
+        OnPerformed?.Invoke(interaction);
+        return true;
     }
 
     private static bool Press(InputActionReference reference)
@@ -99,5 +189,4 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
     public void AddKey(string key) => _keys.Add(key);
 
     public void RemoveKey(string key) => _keys.Remove(key);
-
 }
