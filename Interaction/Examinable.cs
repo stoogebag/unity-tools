@@ -40,21 +40,13 @@ public class Examinable : MonoBehaviour
         OnFocus?.Invoke(interactor);
     }
 
+    /// <summary>
+    /// Called by the interactor when the examine action fires on this object.
+    /// Examine is its own channel: it is not offered, and cannot be suppressed.
+    /// </summary>
     public void TryExamine(IInteractor interactor)
     {
         OnExamine?.Invoke(interactor);
-    }
-
-    /// <summary>
-    /// Offer what the interactor could do to this object, for the prompt and for
-    /// the upcoming press. Called every frame while focused. The default offers
-    /// nothing; override to describe the object's own interactions.
-    ///
-    /// This is hover-time and must be cheap. It does not commit to anything —
-    /// <see cref="IInteraction.CanPerform"/> and the eventual press re-check.
-    /// </summary>
-    public virtual void OfferInteractions(IInteractor interactor, List<IInteraction> into)
-    {
     }
 
     public string popupName = "name!";

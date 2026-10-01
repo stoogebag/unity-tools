@@ -34,15 +34,5 @@ public class Carryable : Interactable
         _body.isKinematic = false;
         _body.linearVelocity = velocity;
     }
-
-    /// <summary>
-    /// A carryable declares no interactions of its own — grabbing is offered by
-    /// the carrier, which owns the carried state.
-    /// </summary>
-    public override bool TryInteract(in InteractionContext ctx)
-    {
-        OnInteractFailed.OnNext(ctx);
-        return false;
-    }
 }
 #endif

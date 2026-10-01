@@ -10,7 +10,6 @@ using UnityEngine;
 using UnityEngine.Playables;
 using VIDE_Data;
 
-[RequireComponent(typeof(SimpleInteractable))]
 public class DialogueTrigger :MonoBehaviour
 {
     // Start is called before the first frame update
