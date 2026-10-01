@@ -28,10 +28,13 @@ public class Door : MonoBehaviour
     private bool _inMotion;
 
     public bool IsOpen => _isOpen;
+    public bool IsLocked { get; private set; }
     public bool IsInMotion => _inMotion;
     public bool BlocksMovement => !_isOpen;
 
-    public bool CanOperate(IInteractor interactor) => !_inMotion;
+    public bool CanOperate(IInteractor interactor) => !_inMotion && !IsLocked;
+
+    public void SetLocked(bool locked) => IsLocked = locked;
 
     private void Awake()
     {
@@ -53,7 +56,7 @@ public class Door : MonoBehaviour
 
     public async void Open()
     {
-        if (_isOpen || _inMotion || _openPose == null)
+        if (_isOpen || _inMotion || _openPose == null || IsLocked)
             return;
 
         _isOpen = true;
