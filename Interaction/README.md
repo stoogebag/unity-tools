@@ -23,7 +23,7 @@ The interactor casts a ray, finds the `Examinable` under the crosshair, and work
 | `IInteraction` | One thing the player could do: `Text`, `CanPerform`, `Perform`. Ephemeral. |
 | `IInteractionProvider` | An extra source of interactions that is not the target (carried item, equipment). |
 | `FirstPersonInteractor` | A ray-based `IInteractor`. Tracks the target, resolves `Current`, performs on press. |
-| `Door` | Pure motion (`Open`/`Close`/`Toggle`). No interaction of its own — something else offers it. |
+| `Door` | Pure motion between two pose markers (`Open`/`Close`/`Toggle`). No interaction of its own — something else offers it. |
 | `Carryable`, `ItemCarrier`, `GrabInteraction`/`DropInteraction` | The worked example: an `IInteractionProvider` offers grab/drop for a `Carryable`. |
 | `AnimateOnActivate`, `Cable`, `FloorTriggerZone` | Unrelated helpers that happen to live here. |
 
@@ -107,7 +107,7 @@ Serialized fields:
 | `_interactAction` | `InputActionReference` — press to interact. |
 | `_inspectAction` | `InputActionReference` — press to examine. |
 
-Exposes `Target` (`IReadOnlyReactiveProperty<Examinable>`), `Current` (`IReadOnlyReactiveProperty<IInteraction>`), `OnPerformed`, `OnExamined`, and `RegisterProvider` / `UnregisterProvider`.
+Exposes `Target` (`IReadOnlyReactiveProperty<Examinable>`), `Current` (`IReadOnlyReactiveProperty<IInteraction>`), `OnPerforming` (just before the effect, with the label the player saw), `OnPerformed`, `OnExamined`, and `RegisterProvider` / `UnregisterProvider`.
 
 **The `_ignore` mask matters.** With `_mask` = everything, the ray starts inside the interactor's own capsule and can target itself. Excluding the player's layer is wrong if other players should be valid targets — hence a separate `_ignore` mask you can point at just your own body's layer.
 
