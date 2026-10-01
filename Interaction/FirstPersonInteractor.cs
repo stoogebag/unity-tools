@@ -141,8 +141,8 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
             }
         }
 
-        if (!suppressed && target != null)
-            target.OfferInteractions(this, _buffer);
+        if (!suppressed && target is Interactable interactable)
+            interactable.OfferInteractions(this, _buffer);
 
         _current.Value = Resolve();
     }
@@ -164,6 +164,12 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
 
         interaction.Perform(this);
         OnPerformed?.Invoke(interaction);
+
+        // tell the focused object too, so observers can watch a specific object
+        // rather than everything the player does
+        if (_target.Value is Interactable interactable)
+            interactable.OnInteractPerformed.OnNext(new InteractionContext(this, interactable));
+
         return true;
     }
 

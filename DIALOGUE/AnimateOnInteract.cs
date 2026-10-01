@@ -11,7 +11,6 @@ using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(SimpleInteractable))]
 public class AnimateOnInteract : PointOfInterest
 {
     private DelayedBool Active;
