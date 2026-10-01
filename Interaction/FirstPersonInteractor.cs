@@ -41,6 +41,15 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
     public IReadOnlyReactiveProperty<IInteraction> Current => _current;
 
     /// <summary>
+    /// Fired just before an interaction is performed. The interaction text is
+    /// still the one the player saw (it can change once the effect lands, e.g. a
+    /// door's "Open" becoming "Close"), so watch this for what the player chose.
+    /// </summary>
+    public event Action<IInteraction> OnPerforming;
+    public IObservable<IInteraction> OnPerformingObservable =>
+        Observable.FromEvent<IInteraction>(h => OnPerforming += h, h => OnPerforming -= h);
+
+    /// <summary>
     /// Fired after an interaction is performed. The interaction itself is
     /// ephemeral, so watch this (or the target's own observables) rather than
     /// subscribing to an <see cref="IInteraction"/>.
@@ -162,6 +171,7 @@ public class FirstPersonInteractor : MonoBehaviour, IInteractor
         if (interaction == null || !interaction.CanPerform(this))
             return false;
 
+        OnPerforming?.Invoke(interaction);
         interaction.Perform(this);
         OnPerformed?.Invoke(interaction);
 
