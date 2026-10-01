@@ -24,6 +24,9 @@ The interactor casts a ray, finds the `Examinable` under the crosshair, and work
 | `IInteractionProvider` | An extra source of interactions that is not the target (carried item, equipment). |
 | `FirstPersonInteractor` | A ray-based `IInteractor`. Tracks the target, resolves `Current`, performs on press. |
 | `Door` | Pure motion between two pose markers (`Open`/`Close`/`Toggle`). No interaction of its own — something else offers it. |
+| `DoorInteractable` (+ `DoorInteraction`) | Offers "Open"/"Close" on a `Door`; optional `requiredKey`. |
+| `InteractableButton` (+ `PressInteraction`) | A button: offers "Press" and toggles a sibling `ActivationSource`. Its visuals are separate — see [`../Activation/README.md`](../Activation/README.md). |
+| `DoorReaction` | Opens / closes a `Door` when the `ActivationSource`(s) it watches go active / inactive. |
 | `Carryable`, `ItemCarrier`, `GrabInteraction`/`DropInteraction` | The worked example: an `IInteractionProvider` offers grab/drop for a `Carryable`. |
 | `AnimateOnActivate`, `Cable`, `FloorTriggerZone` | Unrelated helpers that happen to live here. |
 
@@ -93,6 +96,40 @@ public sealed class LeverInteraction : IInteraction
 ```
 
 The gate lives in `CanPerform`; the effect in `Perform`. If a provider is `SuppressOtherInteractions`, the target's own offers are skipped entirely — used by `ItemCarrier` so that carrying a key means you cannot grab a chair.
+
+## Built-in setups
+
+### A door
+
+```
+Door (root)              [Door]
+  DoorObject             [DoorInteractable] [BoxCollider]
+  ClosedPose (marker)    <- Door._closedPose
+  OpenPose   (marker)    <- Door._openPose
+```
+
+`Door` tweens between the two pose markers (hinge = same position, slide = same rotation). `DoorInteractable` offers "Open"/"Close"; leave `requiredKey` empty for an unlocked door.
+
+### A button
+
+```
+Button (root)   [InteractableButton] [ActivationSource] [BoxCollider]
+  Cap (child)   [ActivationTransition sources=Button/ActivationSource]
+                [ColorEffect / MoveEffect / TimerEffect]
+```
+
+`InteractableButton` requires a sibling `ActivationSource` (`[RequireComponent]` adds it). Pressing toggles it. The cap is a separate child that reacts to it; the visuals live there, not on the button. See [`../Activation/README.md`](../Activation/README.md).
+
+### A button that opens a door
+
+Put a `DoorReaction` on the door and list the source it should watch:
+
+- `sources = Button/ActivationSource` → the door reacts on the press (immediately).
+- `sources = Button/Cap` (the `ActivationTransition`) → the door waits for the cap's effects to finish (`Settled`).
+
+Same component either way; `waitForSettled` picks the signal.
+
+> **To wait, watch a transition; to react immediately, watch the plain `ActivationSource`.**
 
 ## FirstPersonInteractor
 
