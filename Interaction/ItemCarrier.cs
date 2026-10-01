@@ -61,8 +61,7 @@ public class ItemCarrier : MonoBehaviour, IInteractionProvider
             return;
 
         _carried.Value = item;
-        item.transform.SetParent(_holdPoint, false);
-        item.OnPickedUp(this);
+        item.OnPickedUp(this, _holdPoint);
     }
 
     public void Drop() => Release(Vector3.zero);
@@ -80,7 +79,6 @@ public class ItemCarrier : MonoBehaviour, IInteractionProvider
             return;
 
         _carried.Value = null;
-        item.transform.SetParent(null);
         item.OnDropped(this, velocity);
     }
 
