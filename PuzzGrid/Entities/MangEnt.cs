@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using System.Collections;
@@ -286,6 +285,5 @@ public class MangEnt : GridEntity, IPushesButton, IReceivesInput
     }
 }
 
-#endif
 #endif
 #endif

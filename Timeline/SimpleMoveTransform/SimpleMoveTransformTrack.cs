@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using UnityEngine;
 using UnityEngine.Playables;
@@ -26,6 +25,5 @@ public class SimpleMoveTransformTrack : TrackAsset
         return base.CreateTrackMixer(graph, go, inputCount);
     }
 }
-#endif
 #endif
 #endif

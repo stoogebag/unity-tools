@@ -1,5 +1,4 @@
-﻿#if UNITASK
-#if ODIN_INSPECTOR
+#if UNITASK
 #if UNIRX
 using System;
 using System.Collections;
@@ -233,6 +232,5 @@ public class GridActionSummary
         FailedMoveSummary.AddRange(otherSummary.FailedMoveSummary);
     }
 }
-#endif
 #endif
 #endif

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 public class AddComponentAction<T> : GridAction where T: MonoBehaviour 
 {
@@ -82,6 +81,5 @@ public class DisableEntityAction : GridAction
 }
 
 
-#endif
 #endif
 #endif

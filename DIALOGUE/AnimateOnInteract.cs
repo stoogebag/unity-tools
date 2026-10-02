@@ -1,4 +1,4 @@
-#if UNITASK && ODIN_INSPECTOR && UNIRX
+#if UNITASK && UNIRX
 
 #if CINEMACHINE
 
@@ -7,11 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 
-[RequireComponent(typeof(Interactable))]
 public class AnimateOnInteract : PointOfInterest
 {
     private DelayedBool Active;
@@ -31,7 +29,8 @@ public class AnimateOnInteract : PointOfInterest
         inactivePosRot = new PosRot(inactivePose.transform, true);
         activePosRot = new PosRot(activePose.transform, true);
 
-        GetComponent<Interactable>().OnInteractionObservable.Subscribe(OnTryInteract);
+        //BC: commented this line for compilation. breaks the component. but i believe this component is deprecated. keeping it around for the time being
+       // GetComponent<Interactable>().OnInteractionObservable.Subscribe(OnTryInteract);
         
 
         Func<Tween> ATFunc = () =>

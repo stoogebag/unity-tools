@@ -1,10 +1,8 @@
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 using stoogebag.Extensions;
 using UniRx;
 using UnityEngine;
@@ -101,5 +99,4 @@ public class LineRendererBorder : MonoBehaviour
     
 
 }
-#endif
 #endif

@@ -16,9 +16,7 @@ public partial class PuzzGrid
     
     public Vector3 Origin;
     
-#if ODIN_INSPECTOR
     [Button]
-#endif
     public void ResetGrid()
     {
         var origin = Vector3.zero;

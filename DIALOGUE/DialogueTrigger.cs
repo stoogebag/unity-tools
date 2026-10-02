@@ -4,20 +4,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
 using stoogebag;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Playables;
 using VIDE_Data;
 
-[RequireComponent(typeof(Interactable))]
 public class DialogueTrigger :MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Interactable>().OnInteractionObservable.Subscribe(async interactor =>
+        GetComponent<Interactable>().OnInteractPerformed.Subscribe(async _ =>
         {
             //GetComponentInChildren<PlayableDirector>().Play();
             await RunDialogue();

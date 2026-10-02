@@ -1,105 +1,92 @@
 #if UNITASK
 #if CINEMACHINE
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Sirenix.OdinInspector;
-using stoogebag.Extensions;
 using UnityEngine;
 
-[RequireComponent(typeof(Interactable))]
+/// <summary>
+/// A door that moves between two authoring poses. Pure motion — it has no
+/// interaction of its own; something else (an <see cref="Interactable"/> offering
+/// an <see cref="IInteraction"/>, or a trigger) calls <see cref="Open"/>,
+/// <see cref="Close"/> or <see cref="Toggle"/>.
+///
+/// Closed and open are marker transforms. The door snaps to one on Awake, then
+/// tweens position and rotation between them, so where the prefab is authored
+/// does not matter. A hinge is the case where the poses share a position
+/// (rotation only); a sliding door is where they share a rotation.
+/// </summary>
 public class Door : MonoBehaviour
 {
-    public float OpenTime = 0.5f;
-    public float CloseTime = .3f;
-    private bool IsOpen;
+    [SerializeField] private Transform _closedPose;
+    [SerializeField] private Transform _openPose;
+    [SerializeField] private bool _startOpen;
+    [SerializeField] private float _openTime = 0.5f;
+    [SerializeField] private float _closeTime = 0.3f;
+    [SerializeField] private AnimationCurve _ease = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
+    private bool _isOpen;
+    private bool _inMotion;
 
-    private void Start()
+    public bool IsOpen => _isOpen;
+    public bool IsLocked { get; private set; }
+    public bool IsInMotion => _inMotion;
+    public bool BlocksMovement => !_isOpen;
+
+    public bool CanOperate(IInteractor interactor) => !_inMotion && !IsLocked;
+
+    public void SetLocked(bool locked) => IsLocked = locked;
+
+    private void Awake()
     {
-        //SetPopupText();
-    }
+        _isOpen = _startOpen;
 
-    private bool inMotion;
-    public GameObject doorGO;
-
-    private async void Open()
-    {
-        IsOpen = true;
-        inMotion = true;
-        await doorGO.transform.DOLocalRotate(new Vector3(0,95f,0), OpenTime)
-            .ToUniTask();
-        inMotion = false;
-        Opened();
-    }
-
-
-    private async void Close()
-    {
-        IsOpen = false;
-        inMotion = true;
-        await doorGO.transform.DOLocalRotate(new Vector3(0,0,0), CloseTime)
-            .ToUniTask();
-
-        Closed();
-        inMotion = false;
-    }
-
-    private void Closed()
-    {
-    }
-
-    private void Opened()
-    {
-    }
-
-
-    public bool BlocksMovement => !IsOpen;
-    //public UIPopup Popup => GetComponentInChildren<UIPopup>(true);
-
-    public string InteractText => IsOpen ? "Close" : "Open"; 
-
-    public void OnUnfocus(IInteractor interactor)
-    {
-    }
-
-    public void OnFocus(IInteractor interactor)
-    {
-    }
-
-    public void OnTryExamine(IInteractor interactor)
-    {
-        throw new NotImplementedException();
-    }
-
-    public string requiredKey;
-    
-    [Button]
-    public void OnTryInteract(IInteractor interactor)
-    {
-        if (requiredKey != null)
+        var pose = _isOpen ? _openPose : _closedPose;
+        if (pose != null)
         {
-           if( !interactor.HasKey(requiredKey)) return;
+            transform.localPosition = pose.localPosition;
+            transform.localRotation = pose.localRotation;
         }
-        
-        if (inMotion) return;
-        if (IsOpen) Close();
+    }
+
+    public void Toggle()
+    {
+        if (_isOpen) Close();
         else Open();
     }
 
-    public void OnInteractionCancelled(IInteractor interactor)
+    public async void Open()
     {
+        if (_isOpen || _inMotion || _openPose == null || IsLocked)
+            return;
+
+        _isOpen = true;
+        _inMotion = true;
+
+        await TweenTo(_openPose, _openTime);
+
+        _inMotion = false;
     }
 
-    public void OnInteraction(IInteractor interactor)
+    public async void Close()
     {
-        throw new NotImplementedException();
+        if (!_isOpen || _inMotion || _closedPose == null)
+            return;
+
+        _isOpen = false;
+        _inMotion = true;
+
+        await TweenTo(_closedPose, _closeTime);
+
+        _inMotion = false;
+    }
+
+    private async UniTask TweenTo(Transform pose, float time)
+    {
+        var sequence = DOTween.Sequence();
+        sequence.Join(transform.DOLocalMove(pose.localPosition, time).SetEase(_ease));
+        sequence.Join(transform.DOLocalRotateQuaternion(pose.localRotation, time).SetEase(_ease));
+        await sequence.ToUniTask();
     }
 }
-
 #endif
 #endif

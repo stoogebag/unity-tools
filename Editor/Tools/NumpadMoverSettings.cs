@@ -17,6 +17,9 @@ public class NumpadMoverSettings : ScriptableObject
         XZ,
     }
     
+    internal const string Folder = "Assets/Settings/Resources";
+    internal const string AssetPath = Folder + "/NumpadMoverSettings.asset";
+
     public static NumpadMoverSettings Instance => Load();
     static NumpadMoverSettings Load()
     {
@@ -24,9 +27,11 @@ public class NumpadMoverSettings : ScriptableObject
         if (settings == null)
         {
             settings = CreateInstance<NumpadMoverSettings>();
-            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-                AssetDatabase.CreateFolder("Assets", "Resources");
-            AssetDatabase.CreateAsset(settings, "Assets/Resources/NumpadMoverSettings.asset");
+            if (!AssetDatabase.IsValidFolder("Assets/Settings"))
+                AssetDatabase.CreateFolder("Assets", "Settings");
+            if (!AssetDatabase.IsValidFolder(Folder))
+                AssetDatabase.CreateFolder("Assets/Settings", "Resources");
+            AssetDatabase.CreateAsset(settings, AssetPath);
             AssetDatabase.Refresh();
         }
         return settings;
@@ -35,15 +40,13 @@ public class NumpadMoverSettings : ScriptableObject
 
 static class NumpadMoverSettingsProvider
 {
-    const string PATH = "Assets/Resources/NumpadMoverSettings.asset";
-
     [SettingsProvider]
     public static SettingsProvider CreateProvider()
     {
         var provider = new SettingsProvider("Project/stooge/Numpad Mover", SettingsScope.Project);
         provider.guiHandler = search =>
         {
-            var settings = AssetDatabase.LoadAssetAtPath<NumpadMoverSettings>(PATH);
+            var settings = AssetDatabase.LoadAssetAtPath<NumpadMoverSettings>(NumpadMoverSettings.AssetPath);
             if (settings == null) return;
 
             var so = new SerializedObject(settings);

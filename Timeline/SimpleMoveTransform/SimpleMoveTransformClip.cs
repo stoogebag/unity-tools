@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using UnityEngine;
@@ -32,6 +31,5 @@ public class SimpleMoveTransformClip : PlayableAsset, ITimelineClipAsset
     
     
 }
-#endif
 #endif
 #endif

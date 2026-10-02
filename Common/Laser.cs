@@ -1,13 +1,8 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if DOTWEEN
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using Sirenix.OdinInspector;
-// using DG.Tweening;
-// using Sirenix.OdinInspector;
-// using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
 public class Laser : MonoBehaviour, ICollides
@@ -87,6 +82,5 @@ public interface ICollides
 {
     
 }
-#endif
 #endif
 #endif

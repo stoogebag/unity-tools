@@ -1,11 +1,9 @@
 
-#if ODIN_INSPECTOR
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEditor;
 
@@ -85,7 +83,6 @@ public class RecordMicrophone : MonoBehaviour
     public List<DialogueLineClip> Lines;
 
 
-    [ValueDropdown("Devices")]
     public string Device;
 
     private AudioClip _clip;
@@ -111,4 +108,3 @@ public class DialogueLineClip
 }
 
 
-#endif

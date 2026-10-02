@@ -1,5 +1,4 @@
-﻿#if UNITASK
-#if ODIN_INSPECTOR
+#if UNITASK
 #if UNIRX
 #if UI_EXTENSIONS
 using System;
@@ -99,7 +98,6 @@ public class LineRendererBorderUI : MonoBehaviour
     
 
 }
-#endif
 #endif
 #endif
 #endif

@@ -71,7 +71,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7410453274733355558}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c799b03e1bfb3d448067fbd323aeb43, type: 3}
+  m_Script: {fileID: 11500000, guid: 32531f17556d5844db4c2f71a6cec2fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: stoogebag.audio::stoogebag.Audio.Music.FmodBeatProvider
 --- !u!114 &2914557821053194075

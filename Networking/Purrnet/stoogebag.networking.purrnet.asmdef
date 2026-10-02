@@ -1,0 +1,24 @@
+{
+    "name": "stoogebag.networking.purrnet",
+    "rootNamespace": "",
+    "references": [
+        "PurrNet.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "PURRNET"
+    ],
+    "versionDefines": [
+        {
+            "name": "dev.purrnet.purrnet",
+            "expression": "",
+            "define": "PURRNET"
+        }
+    ],
+    "noEngineReferences": false
+}

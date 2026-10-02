@@ -1,4 +1,4 @@
-#if UNITASK && ODIN_INSPECTOR && UNIRX
+#if UNITASK && UNIRX
 using System.Collections.Generic;
 using System.Linq;
 using stoogebag.Extensions;

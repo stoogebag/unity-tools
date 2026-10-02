@@ -1,8 +1,6 @@
-#if ODIN_INSPECTOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
@@ -12,7 +10,7 @@ public class TMPUGUIOutline : MonoBehaviour
     [SerializeField]
     private Color32 outlineColor;
 
-    [SerializeField, PropertyRange(0,1)] private float outlineWidth;
+    [SerializeField] private float outlineWidth = 1;
 
 
     private void OnValidate()
@@ -27,4 +25,3 @@ public class TMPUGUIOutline : MonoBehaviour
         text.ForceMeshUpdate();
     }
 }
-#endif

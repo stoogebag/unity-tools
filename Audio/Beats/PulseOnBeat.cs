@@ -1,27 +1,49 @@
+using System;
 using DG.Tweening;
-using UniRx;
 using UnityEngine;
 
 namespace stoogebag.Audio.Music
 {
-    public class PulseOnBeat : MonoBehaviour
+    public class PulseOnBeat : OnBeatBehaviour
     {
+        [SerializeField] private float squashScale = 0.95f;
+        [SerializeField] private float punchScale = 1.2f;
+        [SerializeField] private float releaseDuration = 0.3f;
+        [SerializeField] private Ease squashEase = Ease.InQuad;
+        [SerializeField] private Ease releaseEase = Ease.OutCubic;
 
-        [SerializeField] private float beatAnticipate = 0.2f;
+        private Tween _active;
+        private Vector3 _baseScale;
 
-        [SerializeField] private float beatNumber;
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        protected override void OnEnable()
         {
-            BeatManager.Instance.ActiveProvider.OnBeatAnticipated(beatNumber,beatAnticipate).Subscribe(async b =>
-            {
-                await gameObject.transform.DOScale(Vector3.one*1.1f, beatAnticipate).SetEase(Ease.InOutCubic).AsyncWaitForCompletion();
-                gameObject.transform.localScale = Vector3.one * 1.2f;
-                await gameObject.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.InOutCubic).AsyncWaitForCompletion();
+            if (releaseDuration < 0f)
+                throw new ArgumentOutOfRangeException(
+                    nameof(releaseDuration),
+                    $"[PulseOnBeat] releaseDuration must be >= 0 (got {releaseDuration}s).");
 
-            }).AddTo(this);
+            _baseScale = transform.localScale;
+            base.OnEnable();
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            if (_active != null && _active.IsActive())
+                _active.Kill();
+            _active = null;
+        }
+
+        protected override void OnBeatTriggered(BeatData beat)
+        {
+            RestartTween(ref _active, () =>
+            {
+                var seq = DOTween.Sequence();
+                seq.Append(transform.DOScale(_baseScale * squashScale, LeadTimeSeconds).SetEase(squashEase));
+                seq.AppendCallback(() => transform.localScale = _baseScale * punchScale);
+                seq.Append(transform.DOScale(_baseScale, releaseDuration).SetEase(releaseEase));
+                return seq;
+            });
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿#if UNITASK
-#if ODIN_INSPECTOR
+#if UNITASK
 #if UNIRX
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +86,5 @@ public class GridActionSetGroup
     }
 }
 
-#endif
 #endif
 #endif

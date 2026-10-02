@@ -2,7 +2,8 @@
     "name": "stoogebag.AI",
     "rootNamespace": "",
     "references": [
-        "BehaviourDesigner.Runtime"
+        "stoogebag",
+        "BehaviorDesigner.RuntimeASMDEF"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

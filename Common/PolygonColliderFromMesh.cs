@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 
 [RequireComponent(typeof(MeshFilter), typeof(PolygonCollider2D))]
 public class PolygonColliderFromMesh : MonoBehaviour

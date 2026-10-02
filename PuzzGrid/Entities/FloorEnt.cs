@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using System.Collections;
@@ -79,6 +78,5 @@ public class FloorEnt : GridEntity
         
     }
 }
-#endif
 #endif
 #endif
