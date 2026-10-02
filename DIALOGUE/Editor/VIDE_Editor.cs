@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using InfinityCode.UltimateEditorEnhancer.UnityTypes;
 #endif
 using stoogebag.Extensions;
+using EditorTools.Recordable.Editor;
 
 #if WHISPER
 using Whisper;
@@ -4004,7 +4005,7 @@ public class VIDE_Editor : EditorWindow
     Texture2D gridTex;
     private AudioClip _clip;
 
-    public static string Device => Microphone.devices.First(t => t.Contains("NVID"));
+    public static string Device => RecordableAudio.GetActiveDevice();
         
     void DrawGrid()
     {
@@ -4290,28 +4291,12 @@ public class VIDE_Editor : EditorWindow
                     if (recording)
                     {
                         //start
-                        
-                        _clip = Microphone.Start(Device, false, 60, 44100);
-                        //_recording = true;
-                        
-                        
+                        _clip = RecordableAudio.Start(Device, 60);
                     }
                     else
                     {
                         //done.
-                        
-                        var guid = Guid.NewGuid();
-                        var wavPath = $"Resources\\audioRecordings\\clip-{guid}";
-        
-        
-        
-                        var clipTrimmed = SavWav.TrimSilence(_clip, 0.001f);
-                        SavWav.Save(wavPath, clipTrimmed);
-                        Thread.Sleep(10); // Wait for 100 milliseconds
-                        AssetDatabase.ImportAsset("Assets/" + wavPath + ".wav",  ImportAssetOptions.ForceSynchronousImport);
-                        Thread.Sleep(10); // Wait for 100 milliseconds
-                        var myclip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/" + wavPath + ".wav");
-                        db.playerDiags[id].comment[i].audios = myclip;
+                        db.playerDiags[id].comment[i].audios = RecordableAudio.Save(_clip, "Resources/audioRecordings/clip");
                         transcribe = true;
                     }
                     Repaint();
@@ -4702,20 +4687,9 @@ public class VIDE_Editor : EditorWindow
 
     private async Task Transcribe(AudioClip clip, int id, int index)
     {
-#if WHISPER
-
-        var manager = GameObjectExtensions.FindObjectOfTypeInActiveScene<WhisperManager>();
-        if (manager == null) return;
-
-        await manager.InitModel();
-            
-        var res = await manager.GetTextAsync(clip);
-        
-        if (res == null) 
-            Debug.Log("no output text!");
-
-        db.playerDiags[id].comment[index].text = res.Result.Trim(' ');
-#endif
+        var text = await RecordableAudio.Transcribe(clip);
+        if (!string.IsNullOrEmpty(text))
+            db.playerDiags[id].comment[index].text = text;
     }
 
     void DragOtherNodes(Vector2 mPos)

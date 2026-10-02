@@ -4,7 +4,9 @@
     "references": [
         "UnityEditor.UI",
         "stoogebag",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UniTask",
+        "com.whisper.unity"
     ],
     "includePlatforms": [
         "Editor"
@@ -15,6 +17,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.whisper.unity",
+            "expression": "",
+            "define": "WHISPER"
+        }
+    ],
     "noEngineReferences": false
 }

@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Threading;
-using stoogebag.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -14,6 +13,8 @@ namespace EditorTools.Recordable.Editor
     [CustomPropertyDrawer(typeof(RecordableAttribute))]
     public class RecordablePropertyDrawer : PropertyDrawer
     {
+        private const float Gap = 4f;
+
         private static readonly Dictionary<string, AudioClip> _tempClips = new();
         private static readonly Dictionary<string, bool> _recording = new();
 
@@ -30,119 +31,103 @@ namespace EditorTools.Recordable.Editor
 
             var attr = (RecordableAttribute)attribute;
             var path = property.propertyPath;
+            var line = EditorGUIUtility.singleLineHeight;
+            var spacing = EditorGUIUtility.standardVerticalSpacing;
+            var half = position.width / 2f - Gap / 2f;
 
             var clipRect = new Rect(position.x, position.y, position.width, EditorGUI.GetPropertyHeight(property, label, false));
             EditorGUI.PropertyField(clipRect, property, label);
 
-            var controlsY = clipRect.yMax + EditorGUIUtility.standardVerticalSpacing;
-            var controlsRect = new Rect(position.x, controlsY, position.width, position.yMax - controlsY);
-            DrawRecordingControls(controlsRect, property, path, attr);
+            var y = clipRect.yMax + spacing;
+            bool recording = _recording.TryGetValue(path, out var r) && r;
+
+            // Record / Stop
+            using (new EditorGUI.DisabledGroupScope(recording))
+            {
+                if (GUI.Button(new Rect(position.x, y, half, line), recording ? "Recording..." : "Record"))
+                {
+                    var clip = RecordableAudio.Start(RecordableAudio.GetActiveDevice(), attr.MaxLengthSeconds);
+                    if (clip != null) { _tempClips[path] = clip; _recording[path] = true; }
+                }
+            }
+            using (new EditorGUI.DisabledGroupScope(!recording))
+            {
+                if (GUI.Button(new Rect(position.x + half + Gap, y, half, line), "Stop"))
+                {
+                    RecordableAudio.Stop(RecordableAudio.GetActiveDevice());
+                    _recording[path] = false;
+                }
+            }
+            y += line + spacing;
+
+            // Play / Save
+            using (new EditorGUI.DisabledGroupScope(recording))
+            {
+                if (GUI.Button(new Rect(position.x, y, half, line), "Play"))
+                {
+                    var clip = property.objectReferenceValue as AudioClip;
+                    if (clip == null) _tempClips.TryGetValue(path, out clip);
+                    RecordableAudio.Play(clip);
+                }
+
+                if (GUI.Button(new Rect(position.x + half + Gap, y, half, line), "Save"))
+                {
+                    if (_tempClips.TryGetValue(path, out var temp) && temp != null)
+                    {
+                        RecordableAudio.Stop(RecordableAudio.GetActiveDevice());
+                        property.objectReferenceValue = RecordableAudio.Save(temp, GetSaveBasePath(property, attr));
+                        property.serializedObject.ApplyModifiedProperties();
+                        _tempClips.Remove(path);
+                        _recording[path] = false;
+                    }
+                }
+            }
+            y += line + spacing;
+
+            if (!string.IsNullOrEmpty(attr.TranscribeIntoField))
+            {
+                using (new EditorGUI.DisabledGroupScope(recording))
+                {
+                    if (GUI.Button(new Rect(position.x, y, position.width, line), "Transcribe"))
+                    {
+                        var clip = property.objectReferenceValue as AudioClip;
+                        if (clip == null) _tempClips.TryGetValue(path, out clip);
+                        TranscribeInto(property, clip, attr.TranscribeIntoField);
+                    }
+                }
+            }
 
             EditorGUI.EndProperty();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            var baseHeight = EditorGUI.GetPropertyHeight(property, label, false);
-            return baseHeight
-                + EditorGUIUtility.singleLineHeight * 2f
-                + EditorGUIUtility.standardVerticalSpacing * 2f;
+            var attr = (RecordableAttribute)attribute;
+            var rows = string.IsNullOrEmpty(attr.TranscribeIntoField) ? 2 : 3;
+            return EditorGUI.GetPropertyHeight(property, label, false)
+                + rows * EditorGUIUtility.singleLineHeight
+                + (rows + 1) * EditorGUIUtility.standardVerticalSpacing;
         }
 
-        private void DrawRecordingControls(Rect rect, SerializedProperty audioProp, string path, RecordableAttribute attr)
+        private static async void TranscribeInto(SerializedProperty audioProp, AudioClip clip, string textField)
         {
-            bool recording = _recording.TryGetValue(path, out var rec) && rec;
-            var halfWidth = rect.width / 2f - 2f;
-            var lineHeight = EditorGUIUtility.singleLineHeight;
-            var spacing = EditorGUIUtility.standardVerticalSpacing;
+            var text = await RecordableAudio.Transcribe(clip);
+            if (string.IsNullOrEmpty(text)) return;
 
-            // Record / Stop row
-            var recordRect = new Rect(rect.x, rect.y, halfWidth, lineHeight);
-            var stopRect = new Rect(rect.x + halfWidth + 4f, rect.y, halfWidth, lineHeight);
-
-            using (new EditorGUI.DisabledGroupScope(recording))
+            var target = FindSiblingProperty(audioProp, textField);
+            if (target != null)
             {
-                if (GUI.Button(recordRect, recording ? "Recording..." : "Record"))
-                {
-                    var device = RecordingSettings.GetActiveDevice();
-                    if (!string.IsNullOrEmpty(device))
-                    {
-                        _tempClips[path] = Microphone.Start(device, false, attr.MaxLengthSeconds, 44100);
-                        _recording[path] = true;
-                    }
-                }
+                target.stringValue = text;
+                target.serializedObject.ApplyModifiedProperties();
             }
-
-            using (new EditorGUI.DisabledGroupScope(!recording))
+            else
             {
-                if (GUI.Button(stopRect, "Stop"))
-                {
-                    var device = RecordingSettings.GetActiveDevice();
-                    if (!string.IsNullOrEmpty(device))
-                        Microphone.End(device);
-                    _recording[path] = false;
-                }
+                Debug.LogWarning($"[Recordable] Transcribe target field '{textField}' not found.");
             }
-
-            rect.y += lineHeight + spacing;
-
-            // Play / Save row
-            var playRect = new Rect(rect.x, rect.y, halfWidth, lineHeight);
-            var saveRect = new Rect(rect.x + halfWidth + 4f, rect.y, halfWidth, lineHeight);
-
-            using (new EditorGUI.DisabledGroupScope(recording))
-            {
-                if (GUI.Button(playRect, "Play"))
-                {
-                    var clip = audioProp.objectReferenceValue as AudioClip;
-                    if (clip != null)
-                    {
-                        AudioUtils.PlayPreviewClip(clip);
-                    }
-                    else if (_tempClips.TryGetValue(path, out var tempClip) && tempClip != null)
-                    {
-                        AudioUtils.PlayPreviewClip(tempClip);
-                    }
-                }
-
-                if (GUI.Button(saveRect, "Save"))
-                {
-                    if (_tempClips.TryGetValue(path, out var tempClip) && tempClip != null)
-                    {
-                        SaveClip(audioProp, tempClip, path, attr);
-                        _recording[path] = false;
-                    }
-                }
-            }
-        }
-
-        private void SaveClip(SerializedProperty audioProp, AudioClip tempClip, string path, RecordableAttribute attr)
-        {
-            var device = RecordingSettings.GetActiveDevice();
-            if (!string.IsNullOrEmpty(device))
-                Microphone.End(device);
-
-            var basePath = GetSaveBasePath(audioProp, attr);
-            var guid = Guid.NewGuid();
-            var wavPath = $"{basePath}-{guid}";
-
-            var trimmed = SavWav.TrimSilence(tempClip, 0.001f);
-            SavWav.Save(wavPath, trimmed);
-
-            Thread.Sleep(10);
-            AssetDatabase.ImportAsset("Assets/" + wavPath + ".wav", ImportAssetOptions.ForceSynchronousImport);
-            Thread.Sleep(10);
-
-            var savedClip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/" + wavPath + ".wav");
-            audioProp.objectReferenceValue = savedClip;
-            audioProp.serializedObject.ApplyModifiedProperties();
-
-            _tempClips.Remove(path);
         }
 
         private string GetSaveBasePath(SerializedProperty audioProp, RecordableAttribute attr)
         {
-            // 1. Programmatic path provider on the host object
             var host = GetPropertyHost(audioProp);
             if (host is IRecordablePathProvider provider)
             {
@@ -151,7 +136,6 @@ namespace EditorTools.Recordable.Editor
                     return SanitizePath(customPath);
             }
 
-            // 2. Sibling field references
             var folder = attr.SaveFolder;
             var subFolder = GetSiblingStringValue(audioProp, attr.SaveFolderField);
             if (!string.IsNullOrWhiteSpace(subFolder))
@@ -162,8 +146,30 @@ namespace EditorTools.Recordable.Editor
             if (!string.IsNullOrWhiteSpace(fileFromField))
                 fileBase = fileFromField;
 
-            // 3. Static attribute fallback
             return SanitizePath($"{folder}/{fileBase}");
+        }
+
+        private static SerializedProperty FindSiblingProperty(SerializedProperty property, string siblingFieldName)
+        {
+            if (string.IsNullOrEmpty(siblingFieldName)) return null;
+
+            var path = property.propertyPath;
+            var lastDot = path.LastIndexOf('.');
+            var parentPath = lastDot < 0 ? "" : path.Substring(0, lastDot);
+            var siblingPath = string.IsNullOrEmpty(parentPath)
+                ? siblingFieldName
+                : $"{parentPath}.{siblingFieldName}";
+
+            return property.serializedObject.FindProperty(siblingPath);
+        }
+
+        private static string GetSiblingStringValue(SerializedProperty property, string siblingFieldName)
+        {
+            var sibling = FindSiblingProperty(property, siblingFieldName);
+            if (sibling != null && sibling.propertyType == SerializedPropertyType.String)
+                return sibling.stringValue;
+
+            return null;
         }
 
         private static object GetPropertyHost(SerializedProperty property)
@@ -213,24 +219,6 @@ namespace EditorTools.Recordable.Editor
                 if (field != null) return field;
                 type = type.BaseType;
             }
-            return null;
-        }
-
-        private static string GetSiblingStringValue(SerializedProperty property, string siblingFieldName)
-        {
-            if (string.IsNullOrEmpty(siblingFieldName)) return null;
-
-            var path = property.propertyPath;
-            var lastDot = path.LastIndexOf('.');
-            var parentPath = lastDot < 0 ? "" : path.Substring(0, lastDot);
-            var siblingPath = string.IsNullOrEmpty(parentPath)
-                ? siblingFieldName
-                : $"{parentPath}.{siblingFieldName}";
-
-            var sibling = property.serializedObject.FindProperty(siblingPath);
-            if (sibling != null && sibling.propertyType == SerializedPropertyType.String)
-                return sibling.stringValue;
-
             return null;
         }
 

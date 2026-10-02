@@ -4,9 +4,12 @@
     "references": [
         "stoogebag.dialogue",
         "stoogebag",
+        "stoogebag.editor",
         "stoogebag.interaction",
         "Unity.Timeline",
-        "Unity.Timeline.Editor"
+        "Unity.Timeline.Editor",
+        "UniTask",
+        "com.whisper.unity"
     ],
     "includePlatforms": [
         "Editor"
@@ -19,6 +22,12 @@
     "defineConstraints": [
         "TIMELINE"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.whisper.unity",
+            "expression": "",
+            "define": "WHISPER"
+        }
+    ],
     "noEngineReferences": false
 }

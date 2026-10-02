@@ -14,7 +14,6 @@
         "Febucci.TextAnimator.Runtime",
         "Febucci.TextAnimator.TMP.Runtime",
         "stoogebag.textanimator",
-        "",
         "Febucci.TextAnimatorForUnity.Runtime",
         "Cinemachine"
     ],
@@ -27,6 +26,12 @@
     "defineConstraints": [
         "TIMELINE"
     ],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.whisper.unity",
+            "expression": "",
+            "define": "WHISPER"
+        }
+    ],
     "noEngineReferences": false
 }
