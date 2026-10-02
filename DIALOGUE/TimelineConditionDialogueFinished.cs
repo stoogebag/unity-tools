@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 #if CINEMACHINE
 #if TEXT_ANIMATOR
@@ -22,7 +21,6 @@ public class TimelineConditionDialogueFinished : TimelineConditionProvider
 }
 //         block = false;
 
-#endif
 #endif
 #endif
 #endif

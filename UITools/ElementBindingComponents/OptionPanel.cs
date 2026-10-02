@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using System.Collections.Generic;
@@ -124,6 +123,5 @@ namespace stoogebag.UITools.ElementBindingComponents
     }
 }
 
-#endif
 #endif
 #endif

@@ -1,5 +1,4 @@
-﻿#if UNITASK
-#if ODIN_INSPECTOR
+#if UNITASK
 #if UNIRX
 using stoogebag.Extensions;
 using TMPro;
@@ -42,6 +41,5 @@ namespace stoogebag.UITools.Windows
     }
 }
 
-#endif
 #endif
 #endif

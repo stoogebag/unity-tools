@@ -1,8 +1,6 @@
-﻿#if ODIN_INSPECTOR
 using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
 using stoogebag.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +14,7 @@ namespace stoogebag.Common
 
 		public bool FadeOnStart = true;
 	
-		[DisableIf("@!FadeOnStart"),SerializeField, Indent] private float startFadeTime = 1;
+		[SerializeField] private float startFadeTime = 1;
 
 		private Color startColour;
 		
@@ -75,4 +73,3 @@ namespace stoogebag.Common
 
 	}
 }
-#endif

@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 
 using System.Collections;
@@ -34,6 +33,5 @@ public class WinEnt : GridEntity
     }
 }
 
-#endif
 #endif
 #endif

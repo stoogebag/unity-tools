@@ -1,7 +1,5 @@
-#if ODIN_INSPECTOR
 using System.Collections;
 using System.Linq;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class ControllerDetect : MonoBehaviour
@@ -30,4 +28,3 @@ public class ControllerDetect : MonoBehaviour
         StartCoroutine(CheckForControllers());
     }
 }
-#endif

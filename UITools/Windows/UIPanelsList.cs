@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -107,5 +106,4 @@ public class UIPanelsList : Window
     [SerializeField] private string NextText = "next";
     [SerializeField] private string LastNextText = "Finish";
 }
-#endif
 #endif

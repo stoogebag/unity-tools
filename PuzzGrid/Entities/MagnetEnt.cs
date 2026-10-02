@@ -1,5 +1,4 @@
 #if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using System.Collections;
 using System.Collections.Generic;
@@ -55,6 +54,5 @@ public interface IGridEntityComponent
 }
 
 
-#endif
 #endif
 #endif

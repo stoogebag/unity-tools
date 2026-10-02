@@ -1,5 +1,4 @@
 ﻿#if UNITASK
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using System.Collections;
@@ -35,7 +34,7 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
         if (LoadOnStart) LoadScenes();
     }
 
-    [Sirenix.OdinInspector.Button]
+    [Button]
     async UniTask LoadScenes()
     {
         loading.Value = true;
@@ -115,7 +114,7 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
     }
         
 
-    [Sirenix.OdinInspector.Button]
+    [Button]
     void TestChangeScene()
     {
         ChangeSceneWithFade("level2", 1f, Color.black).Forget();
@@ -128,6 +127,5 @@ public class SceneLoadManager : Singleton<SceneLoadManager>
        // SceneManager.activeSceneChanged += (s,t) => FadeToTransparent(1, Color.white).Forget();
     }
 }
-#endif
 #endif
 #endif

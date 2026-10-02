@@ -89,9 +89,7 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	private string[] MicDevices() => RecordingSettings.Devices;
 
-	#if ODIN_INSPECTOR
 	[ButtonGroup , Button(UnityIcon.Record, "")]
-	#endif
 	public void Record()
 	{
 		var device = RecordingSettings.GetActiveDevice();
@@ -101,9 +99,7 @@ public class DialogueBehaviour : PlayableBehaviour
 		_recording = true;
 	}
     
-#if ODIN_INSPECTOR
 	[ButtonGroup , Button(UnityIcon.Play, "")]
-#endif
 	public void Play()
 	{
 		if(Clip != null) PlayClip(Clip); 
@@ -115,9 +111,7 @@ public class DialogueBehaviour : PlayableBehaviour
 		//AudioUtilsRef.PlayClip(clip);
 	}
     
-	#if ODIN_INSPECTOR
 	[ButtonGroup , Button(UnityIcon.Save, "")]
-#endif
 	public void Save()
 	{
 		var guid = Guid.NewGuid();
@@ -143,9 +137,7 @@ public class DialogueBehaviour : PlayableBehaviour
 
 	}
 	
-#if ODIN_INSPECTOR
 	[ButtonGroup, Button(UnityIcon.Edit, "")]
-#endif
 	public async void Transcribe()
 	{
 #if WHISPER

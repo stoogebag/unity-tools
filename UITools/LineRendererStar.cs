@@ -1,9 +1,7 @@
-#if ODIN_INSPECTOR
 #if UNIRX
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 using stoogebag.Extensions;
@@ -14,10 +12,10 @@ public class LineRendererStar : MonoBehaviour
     private CompositeDisposable _disposable = new CompositeDisposable();
 
     public float Radius = 1f;
-    [MinValue(3)] public int NumVertices = 6;
+    public int NumVertices = 6;
 
     public float CornerRadius = 0f;
-    [MinValue(1)] public int NumCornerPoints = 3;
+    public int NumCornerPoints = 3;
 
     public float ZOffset;
 
@@ -102,5 +100,4 @@ public class LineRendererStar : MonoBehaviour
     lr.SetPositions(points.ToArray());
     }
 }
-#endif
 #endif

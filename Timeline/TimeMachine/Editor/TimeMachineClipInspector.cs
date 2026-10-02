@@ -1,5 +1,4 @@
-﻿#if UNITASK
-#if ODIN_INSPECTOR
+#if UNITASK
 #if UNIRX
 #if CINEMACHINE
 #if TEXT_ANIMATOR
@@ -86,7 +85,6 @@ public class TimeMachineClipInspector : Editor
 	}
 }
 
-#endif
 #endif
 #endif
 #endif
