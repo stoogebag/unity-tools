@@ -46,7 +46,8 @@ public class TMPMeshGetter : MonoBehaviour
         
         
         var savePath = $"Assets/savedMeshes/{textComponent.text}.asset";
-        EditorTools.CreateFolder("Assets/savedMeshes");
+        
+        stoogebag.Editor.EditorTools.CreateFolder("Assets/savedMeshes");
         Debug.Log("Saved Mesh to:" + savePath);
         AssetDatabase.CreateAsset(_mesh, savePath);
     }

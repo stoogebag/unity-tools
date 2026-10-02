@@ -76,7 +76,7 @@ public class CreateMaterials : ScriptableWizard
 
                 if (RandomiseColours) mat.SetColor("_BaseColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
 
-                EditorTools.CreateFolder(folderPath);
+                stoogebag.Editor.EditorTools.CreateFolder(folderPath);
                 AssetDatabase.CreateAsset(mat, path);
 
                 renderer.material = (Material)AssetDatabase.LoadAssetAtPath(path, typeof(Material));
@@ -93,7 +93,7 @@ public class CreateMaterials : ScriptableWizard
 
                 if (RandomiseColours) mat.SetColor("_BaseColor", Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f));
 
-                EditorTools.CreateFolder(folderPath);
+                stoogebag.Editor.EditorTools.CreateFolder(folderPath);
                 AssetDatabase.CreateAsset(mat, path);
 
                 skinnedRenderer.material = (Material)AssetDatabase.LoadAssetAtPath(path, typeof(Material));
