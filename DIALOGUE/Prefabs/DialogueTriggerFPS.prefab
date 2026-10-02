@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 6947456044027448443}
   - component: {fileID: 4967090388552949010}
   m_Layer: 0
-  m_Name: DialogueFPS
+  m_Name: DialogueTriggerFPS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
