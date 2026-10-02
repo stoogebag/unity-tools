@@ -29,6 +29,9 @@ public class ItemCarrier : MonoBehaviour, IInteractionProvider
 
     public bool IsCarrying => _carried.Value != null;
 
+    /// <summary>Where a carried item is pulled to. Remote peers read this to run the carry spring.</summary>
+    public Transform HoldPoint => _holdPoint;
+
     private void Awake()
     {
         _interactor = GetComponentInParent<FirstPersonInteractor>();

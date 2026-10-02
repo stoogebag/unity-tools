@@ -2,7 +2,10 @@
     "name": "stoogebag.networking.purrnet",
     "rootNamespace": "",
     "references": [
-        "PurrNet.Runtime"
+        "PurrNet.Runtime",
+        "stoogebag",
+        "stoogebag.interaction",
+        "UniRx"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
