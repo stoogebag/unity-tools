@@ -10,6 +10,7 @@ How one thing switches on/off and other things react — buttons, levers, powere
 - **`ActivationTransition : ActivationSource`** — a visual step. Watches its upstream sources, plays its effects, and re-emits `Settled` when they finish. Because it *is* an `ActivationSource`, things can wait on it and it can chain.
 - **Effects** — cosmetics with a duration, driven by a 0..1 progress (see below).
 - **`ActivationReaction`** — a terminal consequence: watches one or more sources (all-active) and fires `OnActivated` / `OnDeactivated`.
+- **`TriggerVolume : ActivationSource`** — drives its source from a trigger collider. `IsActive` mirrors presence; `TriggerCount` / `Occupants` and `HasBeenTriggered` / `Inside` expose history and occupancy.
 
 A consumer chooses whether it watches a source's `IsActive` (react now) or `IsSettled` (react after the visual). That is a property of the *consequence*, not of the source.
 
@@ -24,6 +25,7 @@ A consumer chooses whether it watches a source's `IsActive` (react now) or `IsSe
 | `ColorEffect.cs` | Lerps a renderer colour via a `MaterialPropertyBlock` (no material instancing). |
 | `TimerEffect.cs` | A beat with no visual — its duration alone delays `Settled`. |
 | `ActivationReaction.cs` | Consequence base: `sources` list, `waitForSettled`, all-active (AND), `OnActivated` / `OnDeactivated`. |
+| `TriggerVolume.cs` | An `ActivationSource` driven by a trigger collider: `IsActive` mirrors presence; `TriggerCount` / `Occupants` / `HasBeenTriggered` / `Inside`. |
 
 `DoorReaction` (a concrete `ActivationReaction`) lives in [`../Interaction/`](../Interaction/README.md) because it needs `Door`.
 

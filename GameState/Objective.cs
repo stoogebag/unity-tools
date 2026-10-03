@@ -3,74 +3,82 @@ using UnityEngine;
 
 namespace stoogebag.GameState
 {
+    public enum ObjectiveState
+    {
+        Unstarted,
+        Running,
+        Complete
+    }
+
+    /// <summary>
+    /// A goal with a single state machine: Unstarted, Running, Complete.
+    /// Completion is live — an objective can revert to Running unless it is
+    /// <see cref="oneShot"/>.
+    /// </summary>
     public abstract class Objective : MonoBehaviour, ISaveable
     {
-        private readonly ReactiveProperty<bool> _active = new(false);
-        private readonly ReactiveProperty<bool> _complete = new(false);
+        [SerializeField] private string _label;
+        [SerializeField] private bool _oneShot;
+
+        private readonly ReactiveProperty<ObjectiveState> _state = new(ObjectiveState.Unstarted);
         private bool _destroyed;
 
-        public IReadOnlyReactiveProperty<bool> IsActive => _active;
-        public IReadOnlyReactiveProperty<bool> IsComplete => _complete;
+        public string Label => _label;
+        public IReadOnlyReactiveProperty<ObjectiveState> State => _state;
 
-        public Subject<Unit> OnStarted { get; } = new Subject<Unit>();
-        public Subject<Unit> OnCompleted { get; } = new Subject<Unit>();
+        public bool IsUnstarted => _state.Value == ObjectiveState.Unstarted;
+        public bool IsRunning => _state.Value == ObjectiveState.Running;
+        public bool IsComplete => _state.Value == ObjectiveState.Complete;
+
+        protected bool oneShot => _oneShot;
 
         public virtual float Progress => 0f;
         public virtual string ProgressText => string.Empty;
 
-        protected void Begin()
+        public void Begin()
         {
-            if (_active.Value || _complete.Value || _destroyed)
-            {
+            if (_destroyed || _state.Value != ObjectiveState.Unstarted)
                 return;
-            }
 
-            _active.Value = true;
-            OnStarted.OnNext(Unit.Default);
+            _state.Value = ObjectiveState.Running;
         }
 
-        protected void Complete()
+        public void Satisfy()
         {
-            if (_complete.Value)
-            {
+            if (_destroyed || _state.Value != ObjectiveState.Running)
                 return;
-            }
 
-            _complete.Value = true;
-            _active.Value = false;
-            OnCompleted.OnNext(Unit.Default);
+            _state.Value = ObjectiveState.Complete;
+        }
+
+        public void Unsatisfy()
+        {
+            if (_destroyed || _oneShot || _state.Value != ObjectiveState.Complete)
+                return;
+
+            _state.Value = ObjectiveState.Running;
         }
 
         public virtual object CaptureState()
         {
-            return new ObjectiveState { Active = _active.Value, Complete = _complete.Value };
+            return new ObjectiveStateData { State = _state.Value };
         }
 
         public virtual void RestoreState(object state)
         {
-            if (state is not ObjectiveState saved)
-            {
-                return;
-            }
-
-            _complete.Value = saved.Complete;
-            _active.Value = saved.Active && !saved.Complete;
+            if (state is ObjectiveStateData data)
+                _state.Value = data.State;
         }
 
         protected virtual void OnDestroy()
         {
             _destroyed = true;
-            _active.Dispose();
-            _complete.Dispose();
-            OnStarted.Dispose();
-            OnCompleted.Dispose();
+            _state.Dispose();
         }
     }
 
-    public class ObjectiveState
+    public class ObjectiveStateData
     {
-        public bool Active;
-        public bool Complete;
-        public int Count;
+        public ObjectiveState State;
     }
 }

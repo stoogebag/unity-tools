@@ -3,51 +3,39 @@ using UnityEngine;
 
 namespace stoogebag.GameState
 {
+    /// <summary>
+    /// An objective satisfied by an <see cref="ActivationSource"/>. While the
+    /// finish source is active it is Complete; when it goes inactive it reverts
+    /// to Running, unless <see cref="Objective.oneShot"/> is set.
+    /// </summary>
     public class SourceObjective : Objective
     {
         [SerializeField] private ActivationSource start;
         [SerializeField] private ActivationSource finish;
 
-        private readonly CompositeDisposable _subscriptions = new CompositeDisposable();
+        private readonly CompositeDisposable _subscriptions = new();
 
         private void OnEnable()
         {
+            _subscriptions.Clear();
+
             if (start != null)
-            {
-                start.IsActive
-                    .Where(active => active)
-                    .First()
-                    .Subscribe(_ =>
-                    {
-                        Begin();
-                        WatchFinish();
-                    })
-                    .AddTo(_subscriptions);
-            }
+                start.IsActive.Where(active => active).First().Subscribe(_ => Begin()).AddTo(_subscriptions);
             else
-            {
                 Begin();
-                WatchFinish();
-            }
+
+            if (finish == null)
+                return;
+
+            if (oneShot)
+                finish.IsActive.Where(active => active).First().Subscribe(_ => Satisfy()).AddTo(_subscriptions);
+            else
+                finish.IsActive.Subscribe(active => { if (active) Satisfy(); else Unsatisfy(); }).AddTo(_subscriptions);
         }
 
         private void OnDisable()
         {
             _subscriptions.Clear();
-        }
-
-        private void WatchFinish()
-        {
-            if (finish == null)
-            {
-                return;
-            }
-
-            finish.IsActive
-                .Where(active => active)
-                .First()
-                .Subscribe(_ => Complete())
-                .AddTo(_subscriptions);
         }
 
         protected override void OnDestroy()
