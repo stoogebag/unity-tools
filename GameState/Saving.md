@@ -8,9 +8,10 @@ Generic game-state infrastructure that is equally useful in any Unity game: the 
 |---|---|
 | `ISaveable.cs` | Pure contract: `object CaptureState()` / `void RestoreState(object)`. Implemented on a `MonoBehaviour` (keys derive from the transform's hierarchy path). |
 | `SaveManager.cs` | Static snapshot machinery: `FindSaveables()`, `Key()`, `Path()`, `CaptureAll()`, `RestoreAll()`. No lifecycle of its own — a persistent driver (Boomer's `LevelFlow`) owns the snapshot and calls it. |
-| `Objective.cs` | Abstract base — the minimal terminal state machine (`IsActive` / `IsComplete`, `OnStarted` / `OnCompleted`, `Progress` / `ProgressText`, `Begin()` / `Complete()`), implementing `ISaveable`. |
-| `SourceObjective.cs` | Names a **start** and a **finish** `ActivationSource`; completes when the finish goes active. |
-| `SurviveObjective.cs` | Completes after a duration. |
+| `Objective.cs` | Base — the `ObjectiveState { Unstarted, Running, Complete }` state machine (`State`, `IsRunning` / `IsComplete`, `Progress` / `ProgressText`, `Begin()` / `Satisfy()` / `Unsatisfy()`, `oneShot`), implementing `ISaveable`. |
+| `SourceObjective.cs` | Satisfied while a `finish` `ActivationSource` is active; reverts unless `oneShot`. |
+| `ObjectiveGroup.cs` | An objective made of children (All / Any / Count, `ordered`). |
+| `SurviveObjective.cs` | Satisfied after a duration. |
 
 ## What stays in Boomer
 
@@ -32,4 +33,4 @@ Until those break, `LevelFlow` is Boomer-bound. Nothing blocks the current arran
 
 - **Keying** — hierarchy path (current, zero authoring) vs an explicit ID component (rename-proof, manual wiring).
 - **Persistence** — in-memory boxed `object` today. A durable store requires the captures to be serializable, which the boxed design deliberately does not address.
-- **`Objective` activation source** — the base is deliberately *not* an `ActivationSource` (a goal has no Active/Settled duality, and completion is terminal). Promote it only when a real consumer appears.
+- **`Objective` activation source** — the base is deliberately *not* an `ActivationSource` (an objective has no Active/Settled duality). Completion is live and reverts unless `oneShot`. Promote it only when a real consumer appears.

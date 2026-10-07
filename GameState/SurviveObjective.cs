@@ -37,7 +37,7 @@ namespace stoogebag.GameState
                 _elapsed = Time.time - started;
                 if (_elapsed >= duration)
                 {
-                    Complete();
+                    Satisfy();
                     return;
                 }
 

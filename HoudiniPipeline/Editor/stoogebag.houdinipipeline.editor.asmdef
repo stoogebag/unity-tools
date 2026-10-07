@@ -1,0 +1,33 @@
+{
+    "name": "stoogebag.houdinipipeline.editor",
+    "rootNamespace": "",
+    "references": [
+        "stoogebag",
+        "stoogebag.houdinipipeline",
+        "UniTask",
+        "Unity.Formats.USD.Runtime",
+        "Unity.Formats.USD.Editor",
+        "Unity.Formats.USD.Common",
+        "USD.NET",
+        "USD.NET.Unity"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "USDPIPELINE"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.formats.usd",
+            "expression": "",
+            "define": "USDPIPELINE"
+        }
+    ],
+    "noEngineReferences": false
+}
