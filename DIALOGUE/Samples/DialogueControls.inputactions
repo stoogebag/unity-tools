@@ -1,0 +1,68 @@
+{
+    "version": 1,
+    "name": "DialogueControls",
+    "maps": [
+        {
+            "name": "Dialogue",
+            "id": "ef5e1f72-49b0-4b66-a0fd-7b2c2189374f",
+            "actions": [
+                {
+                    "name": "Advance",
+                    "type": "Button",
+                    "id": "ecac678c-8dd9-476a-aed0-afe7de8d5658",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "SkipAll",
+                    "type": "Button",
+                    "id": "ff586098-4c28-4729-a2f6-91d46ce53747",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5d6876ec-11a0-48db-89ad-1fa612306c95",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Advance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "81ce5270-b617-44d4-8061-4b52cbce090f",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Advance",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5565a062-1444-41d2-a479-455deaebd7c6",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SkipAll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

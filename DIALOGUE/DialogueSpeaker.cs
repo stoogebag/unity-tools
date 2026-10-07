@@ -7,8 +7,9 @@ using UnityEngine;
 public class DialogueSpeaker : MonoBehaviour
 {
     public string Name;
-    
-    //todo sprite, or something
+
+    public Sprite Portrait;
+
     public async UniTask Play(DialogueLine dialogueLine)
     {
         await AudioSource.PlayOneShotAsync(dialogueLine.Clip);
