@@ -1,0 +1,19 @@
+{
+    "name": "stoogebag.ik",
+    "rootNamespace": "",
+    "references": [
+        "stoogebag",
+        "RootMotion"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "FINALIK"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
