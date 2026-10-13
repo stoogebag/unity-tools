@@ -2,43 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using stoogebag.Extensions;
 using UnityEngine;
 using USD.NET.Unity;
 using Debug = UnityEngine.Debug;
-
-#if UNITY_EDITOR
 using pxr;
 using Unity.Formats.USD;
 using UnityEditor;
 using USD.NET;
-#endif
 
-public class USDModelImporter : MonoBehaviour
+public static class USDModelImporterPipeline
 {
-#if UNITY_EDITOR
-
-    public const string DefaultPipelineRootFolder = "Assets/HoudiniPipeline/Pipeline";
-    public const string DefaultUsdOutputFolder = "Assets/HoudiniPipeline/USD";
-    public const string DefaultUsdExportFolder = "Assets/HoudiniPipeline/USD/Export";
-
-    [Header("Houdini")]
-    [SerializeField] string houdiniProject = "";
-    [SerializeField] string houdiniNodePath = "/obj/geo1";
-    [SerializeField] string hythonPath = "";
-    [SerializeField] string processScriptPath = "";
-
-    [Header("Pipeline Folders")]
-    [SerializeField] string pipelineRootFolder = DefaultPipelineRootFolder;
-    [SerializeField] string usdOutputFolder = DefaultUsdOutputFolder;
-    [SerializeField] string usdExportFolder = DefaultUsdExportFolder;
-
-    [Header("Behaviour")]
-    [SerializeField] bool disableSourceOnImport;
-
     static string ProjectRoot => Path.GetDirectoryName(Application.dataPath);
 
     static string ToAbsolute(string path)
@@ -88,21 +64,21 @@ public class USDModelImporter : MonoBehaviour
         return sceneName + "_" + objectPath;
     }
 
-    public string DefaultOutputPath()
+    public static string DefaultOutputPath(this USDModelImporter importer)
     {
-        return $"{usdOutputFolder.TrimEnd('/')}/{PipelineStamp(gameObject)}.usd";
+        return $"{importer.usdOutputFolder.TrimEnd('/')}/{PipelineStamp(importer.gameObject)}.usd";
     }
 
-    public async UniTask ExportAndProcess(GameObject go, string assetName, CancellationToken ct = default)
+    public static async UniTask ExportAndProcess(this USDModelImporter importer, GameObject go, string assetName, CancellationToken ct = default)
     {
         string stamp = PipelineStamp(go);
-        string pipelineFolderRel = $"{pipelineRootFolder.TrimEnd('/')}/{stamp}";
+        string pipelineFolderRel = $"{importer.pipelineRootFolder.TrimEnd('/')}/{stamp}";
         string pipelineFolder = pipelineFolderRel + "/";
         Directory.CreateDirectory(pipelineFolder);
 
         string inputPath = Path.Combine(pipelineFolder, "input.usd");
         string controlFilePath = Path.Combine(pipelineFolder, "control.json");
-        string houdiniOutputPath = $"{usdOutputFolder.TrimEnd('/')}/{stamp}.usd";
+        string houdiniOutputPath = $"{importer.usdOutputFolder.TrimEnd('/')}/{stamp}.usd";
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(houdiniOutputPath)));
 
         go.SetActive(true);
@@ -117,20 +93,20 @@ public class USDModelImporter : MonoBehaviour
         };
         File.WriteAllText(controlFilePath, JsonUtility.ToJson(controlData, true));
 
-        if (string.IsNullOrEmpty(houdiniProject))
-            throw new Exception($"Houdini project (hip) is not set on '{name}'.");
+        if (string.IsNullOrEmpty(importer.houdiniProject))
+            throw new Exception($"Houdini project (hip) is not set on '{importer.name}'.");
 
         string absPipelineFolder = ToAbsolute(pipelineFolderRel);
-        string absHipFile = ToAbsolute(houdiniProject);
+        string absHipFile = ToAbsolute(importer.houdiniProject);
 
-        string scriptPath = ResolveProcessScript(processScriptPath);
+        string scriptPath = ResolveProcessScript(importer.processScriptPath);
         if (string.IsNullOrEmpty(scriptPath))
             throw new Exception("process_pipeline.py not found. Set 'processScriptPath' or ship it with the package.");
 
-        var hython = ResolveHython(hythonPath);
+        var hython = ResolveHython(importer.hythonPath);
         var psi = new ProcessStartInfo(hython)
         {
-            Arguments = $"\"{scriptPath}\" \"{absPipelineFolder}\" \"{absHipFile}\" \"{houdiniNodePath}\"",
+            Arguments = $"\"{scriptPath}\" \"{absPipelineFolder}\" \"{absHipFile}\" \"{importer.houdiniNodePath}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
@@ -160,15 +136,18 @@ public class USDModelImporter : MonoBehaviour
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(100), cancellationToken: ct);
 
-        Import(houdiniOutputPath);
+        Import(importer, houdiniOutputPath);
 
         Debug.Log($"Pipeline complete: {houdiniOutputPath}");
     }
 
-    public void Import(string path)
+    public static void Import(this USDModelImporter importer, string path)
     {
+        var transform = importer.transform;
+        var gameObject = importer.gameObject;
+
         if (string.IsNullOrEmpty(path))
-            path = DefaultOutputPath();
+            path = DefaultOutputPath(importer);
 
         if (!File.Exists(path) && !File.Exists(ToAbsolute(path)))
         {
@@ -191,7 +170,7 @@ public class USDModelImporter : MonoBehaviour
             }
         }
         if (previous != null)
-            DestroyImmediate(previous.gameObject);
+            UnityEngine.Object.DestroyImmediate(previous.gameObject);
 
         var tagMap = new Dictionary<string, string>();
         {
@@ -225,7 +204,7 @@ public class USDModelImporter : MonoBehaviour
         }
         Debug.Log($"[Import] tagToPrefab has {tagToPrefab.Count} entries");
 
-        var usdAsset = GetComponentInChildren<UsdAsset>();
+        var usdAsset = gameObject.GetComponentInChildren<UsdAsset>();
         var opts = new SceneImportOptions();
         if (usdAsset != null)
             usdAsset.StateToOptions(ref opts);
@@ -301,16 +280,16 @@ public class USDModelImporter : MonoBehaviour
         {
             prefabInstance.transform.SetParent(importTransform.parent, worldPositionStays: false);
             prefabInstance.transform.SetSiblingIndex(importTransform.GetSiblingIndex());
-            DestroyImmediate(importTransform.gameObject);
+            UnityEngine.Object.DestroyImmediate(importTransform.gameObject);
         }
 
         foreach (var ups in newRoot.GetComponentsInChildren<UsdPrimSource>(true))
-            DestroyImmediate(ups);
+            UnityEngine.Object.DestroyImmediate(ups);
 
         var resultTag = newRoot.AddComponent<ProcessedAsset>();
         resultTag.source = gameObject;
 
-        if (disableSourceOnImport)
+        if (importer.disableSourceOnImport)
             gameObject.SetActive(false);
 
         Debug.Log($"Imported: {newRoot.name}");
@@ -402,19 +381,19 @@ public class USDModelImporter : MonoBehaviour
         return current == root ? path : null;
     }
 
-    public void ExportToDefaultFolder()
+    public static void ExportToDefaultFolder(this USDModelImporter importer)
     {
-        ExportGameObject(gameObject);
+        ExportGameObject(importer.gameObject);
     }
 
-    public void ImportDefault()
+    public static void ImportDefault(this USDModelImporter importer)
     {
-        Import(DefaultOutputPath());
+        Import(importer, DefaultOutputPath(importer));
     }
 
-    public async void RunPipeline()
+    public static async void RunPipeline(this USDModelImporter importer)
     {
-        await ExportAndProcess(gameObject, gameObject.name);
+        await ExportAndProcess(importer, importer.gameObject, importer.gameObject.name);
     }
 
     [MenuItem("Tools/stoogebag/Houdini Pipeline/Export Selected USD")]
@@ -433,7 +412,7 @@ public class USDModelImporter : MonoBehaviour
 
         string objName = CleanFileName(go.name);
         var importer = go.GetComponentInParent<USDModelImporter>();
-        string dir = importer != null ? importer.usdExportFolder : DefaultUsdExportFolder;
+        string dir = importer != null ? importer.usdExportFolder : USDModelImporter.DefaultUsdExportFolder;
         Directory.CreateDirectory(dir);
         string path = Path.Combine(dir, objName + ".usda");
 
@@ -457,12 +436,23 @@ public class USDModelImporter : MonoBehaviour
                 if (prim?.IsValid() != true) continue;
 
                 var resolvedTags = new List<string>();
+                var resolvedParams = new Dictionary<string, HoudiniParam>();
+                string resolvedGuid = null;
                 var current = t;
                 while (current != null)
                 {
                     var tag = current.GetComponent<HoudiniTag>();
-                    if (tag != null && tag.tags != null)
-                        resolvedTags.AddRange(tag.tags);
+                    if (tag != null)
+                    {
+                        if (tag.tags != null)
+                            resolvedTags.AddRange(tag.tags);
+                        if (tag.parameters != null)
+                            foreach (var p in tag.parameters)
+                                if (!string.IsNullOrEmpty(p.name) && !resolvedParams.ContainsKey(p.name))
+                                    resolvedParams[p.name] = p;
+                        if (resolvedGuid == null && !string.IsNullOrEmpty(tag.guid))
+                            resolvedGuid = tag.guid;
+                    }
                     current = current.parent;
                 }
 
@@ -473,6 +463,15 @@ public class USDModelImporter : MonoBehaviour
                     var attr = prim.CreateAttribute(attrName, SdfValueTypeNames.String);
                     attr.Set(joined);
                 }
+
+                if (!string.IsNullOrEmpty(resolvedGuid))
+                {
+                    var guidAttr = prim.CreateAttribute(new TfToken("primvars:unity_guid"), SdfValueTypeNames.String);
+                    guidAttr.Set(resolvedGuid);
+                }
+
+                foreach (var p in resolvedParams.Values)
+                    WriteParam(prim, p);
             }
         });
 
@@ -505,12 +504,43 @@ public class USDModelImporter : MonoBehaviour
         scene.Close();
     }
 
+    static void WriteParam(pxr.UsdPrim prim, HoudiniParam p)
+    {
+        var attrName = new TfToken("primvars:unity_" + p.name);
+        switch (p.type)
+        {
+            case HoudiniParamType.Int:
+            {
+                var attr = prim.CreateAttribute(attrName, SdfValueTypeNames.Int);
+                attr.Set(int.TryParse(p.value, out var i) ? i : 0);
+                break;
+            }
+            case HoudiniParamType.Float:
+            {
+                var attr = prim.CreateAttribute(attrName, SdfValueTypeNames.Float);
+                attr.Set(float.TryParse(p.value, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out var f) ? f : 0f);
+                break;
+            }
+            case HoudiniParamType.Bool:
+            {
+                var attr = prim.CreateAttribute(attrName, SdfValueTypeNames.Bool);
+                attr.Set(bool.TryParse(p.value, out var b) && b);
+                break;
+            }
+            default:
+            {
+                var attr = prim.CreateAttribute(attrName, SdfValueTypeNames.String);
+                attr.Set(p.value ?? "");
+                break;
+            }
+        }
+    }
+
     static string CleanFileName(string name)
     {
         return string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
     }
-
-#endif
 }
 
 [Serializable]

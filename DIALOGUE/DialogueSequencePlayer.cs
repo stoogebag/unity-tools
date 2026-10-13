@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 
 public class DialogueSequencePlayer : MonoBehaviour, IAdvanceable
@@ -10,14 +11,16 @@ public class DialogueSequencePlayer : MonoBehaviour, IAdvanceable
     private bool _running;
     private bool _advanceRequested;
     private bool _skipRequested;
+    private readonly ReactiveProperty<DialogueLine> _currentLine = new ReactiveProperty<DialogueLine>();
 
     public bool IsPlaying => _running;
     public DialogueSequence Sequence => sequence;
     public SimpleDialogueWindow Presenter => presenter;
+    public IReadOnlyReactiveProperty<DialogueLine> CurrentLine => _currentLine;
 
     public async UniTask Play()
     {
-        if (_running || presenter == null || sequence == null)
+        if (_running || sequence == null)
         {
             return;
         }
@@ -46,7 +49,12 @@ public class DialogueSequencePlayer : MonoBehaviour, IAdvanceable
                     continue;
                 }
 
-                await presenter.Show(line);
+                _currentLine.Value = line;
+
+                if (presenter != null)
+                {
+                    await presenter.Show(line);
+                }
 
                 var waited = 0f;
                 while (!_advanceRequested && !_skipRequested && waited < line.LingerSeconds)
@@ -60,7 +68,12 @@ public class DialogueSequencePlayer : MonoBehaviour, IAdvanceable
         }
         finally
         {
-            await presenter.Hide();
+            if (presenter != null)
+            {
+                await presenter.Hide();
+            }
+
+            _currentLine.Value = null;
             _running = false;
 
             if (grabFocus)
@@ -87,5 +100,7 @@ public class DialogueSequencePlayer : MonoBehaviour, IAdvanceable
         {
             PlaybackControls.Instance?.Pop(this);
         }
+
+        _currentLine.Dispose();
     }
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 namespace stoogebag.GameState
 {
     /// <summary>
-    /// An objective made of other objectives. Begins its children when it begins,
-    /// and is Complete while they satisfy its rule. Reverts when they stop.
+    /// An objective made of other objectives. It begins itself on enable; each
+    /// child starts on its own, so a child's own start gate is respected. It is
+    /// Complete while the children satisfy its rule, and reverts when they stop.
     /// </summary>
     public class ObjectiveGroup : Objective
     {

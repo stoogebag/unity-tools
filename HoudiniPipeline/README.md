@@ -3,8 +3,11 @@
 Greybox a piece of level in Unity, send it to Houdini, cook it, and bring the
 result back as a sibling GameObject tree with production prefabs swapped in.
 
-This is an editor-only module inside the `stoogebag` package. It is portable:
-nothing here is specific to the host project except the `.hip` you point it at.
+This is an editor module inside the `stoogebag` package: the pipeline logic is
+editor-only and stripped from builds, but the config and tagging components are
+runtime (a MonoBehaviour must live outside an `Editor` assembly to be attachable
+to a GameObject). It is portable: nothing here is specific to the host project
+except the `.hip` you point it at.
 
 ## Requirements
 
@@ -19,13 +22,16 @@ nothing here is specific to the host project except the `.hip` you point it at.
 
 | Path | What it is |
 |---|---|
-| `HoudiniTag.cs` | Component marks a greybox object/type: `tags` + the `productionPrefab` to swap in. |
+| `USDModelImporter.cs` | Runtime component: the per-object pipeline config (hip, node path, folders). |
+| `HoudiniTag.cs` | Component marks a greybox object/type: `tags`, `parameters` + the `productionPrefab` to swap in. |
 | `ProcessedAsset.cs` | Marker added to the imported tree; points back at the source object. |
-| `Editor/USDModelImporter.cs` | The pipeline: export, run Houdini, import, prefab swap. |
+| `Editor/USDModelImporterPipeline.cs` | The pipeline logic — export, run Houdini, import, prefab swap. Editor-only. |
 | `Editor/HoudiniPipelineEditor.cs` | Inspector with path pickers and action buttons. |
 | `Python~/process_pipeline.py` | Runs inside `hython`; loads the hip and cooks the export node. |
+| `Samples/TestHoudiniPipeline.unity` | Sample greybox: tagged enemies and an inherited forest zone. |
 | `Documentation~/how-to-use.md` | Short how-to plus the gotcha list. |
 | `Documentation~/houdini-pipeline.md` | Detailed reference: contract, internals, failure modes. |
+| `Documentation~/houdini-authoring-conventions.md` | General Houdini authoring rules (`merge_with_path`, `path`, FBX export). |
 
 ## Quick start
 

@@ -1,5 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum HoudiniParamType { Int, Float, Bool, String }
+
+[Serializable]
+public struct HoudiniParam
+{
+    public string name;
+    public HoudiniParamType type;
+    public string value;
+}
 
 public class HoudiniTag : MonoBehaviour
 {
@@ -7,6 +18,9 @@ public class HoudiniTag : MonoBehaviour
     public List<string> tags;
     public string guid;
     public GameObject productionPrefab;
+
+    [Header("Houdini Params")]
+    public List<HoudiniParam> parameters;
 
 #if UNITY_EDITOR
     void OnValidate()

@@ -25,8 +25,13 @@ previous `_PRODUCTION` tree is deleted first.
 
 | Assembly | Platforms | Contents |
 |---|---|---|
-| `stoogebag.houdinipipeline` | all | `HoudiniTag`, `ProcessedAsset` |
-| `stoogebag.houdinipipeline.editor` | Editor | `USDModelImporter`, `HoudiniPipelineEditor` |
+| `stoogebag.houdinipipeline` | all | `HoudiniTag`, `HoudiniParam`, `ProcessedAsset`, `USDModelImporter` |
+| `stoogebag.houdinipipeline.editor` | Editor | `USDModelImporterPipeline`, `HoudiniPipelineEditor` |
+
+The config component `USDModelImporter` is deliberately **runtime**: Unity refuses
+to attach a MonoBehaviour that lives in an `Editor` assembly to a GameObject
+("Can't add script behaviour ... because it is an editor script"). Only the
+pipeline *logic* is editor-only.
 
 The editor assembly references the runtime one, `stoogebag`, `UniTask`, and the
 USD assemblies. It is gated on the `USDPIPELINE` define, which is contributed by
@@ -37,7 +42,8 @@ USD therefore skips the module entirely instead of failing to compile.
 
 ```
 Unity greybox
-   │  Export()   ── deep-copies the tree, writes primvars:HoudiniTags
+   │  Export()   ── deep-copies the tree, writes primvars:HoudiniTags,
+   │                primvars:unity_guid, primvars:unity_<param>
    ▼
 input.usd  +  control.json
    │  hython process_pipeline.py <folder> <hip> <nodePath>
@@ -51,7 +57,8 @@ output.usd   (written wherever control.json said)
 <Object>_PRODUCTION tree, prefabs swapped in, ProcessedAsset on the root
 ```
 
-Export and import both live in `Editor/USDModelImporter.cs`.
+Export and import both live in `Editor/USDModelImporterPipeline.cs`, exposed as
+extension methods on the runtime `USDModelImporter` component.
 
 ## Folder layout (defaults)
 
@@ -109,6 +116,38 @@ At or under the configured **Houdini Node Path**:
 | `tags` | logical type names for this node, e.g. `GRASS` |
 | `guid` | stable id (auto-generated in the editor) |
 | `productionPrefab` | prefab to instantiate when this tag matches on import |
+| `parameters` | authored `name`/`type`/`value` entries passed to the hip (see below) |
+
+### Params
+
+`parameters` lets a greybox object drive the hip's generator — a seed, a style,
+a height. Each entry has a `name`, a `type` (`Int`, `Float`, `Bool` or `String`)
+and a `value`.
+
+On export every prim receives each resolved param as a typed attribute
+`primvars:unity_<name>` (e.g. `parameters` entry `seed` → `primvars:unity_seed`,
+a Float `height` → `primvars:unity_height`). Params resolve like tags: an object
+inherits its ancestors' params and its own win by name. They are **export-only** —
+the importer never reads them, so they never affect prefab matching.
+
+### How the hip reads params
+
+A `usdimport`/File SOP brings the attributes in as primitive attributes, readable
+directly in VEX or a For-Each:
+
+```
+i@unity_seed    f@unity_height    s@unity_style    // bools arrive as 0/1
+```
+
+Session-wide values (input/output paths) still ride the `unity_control` node's
+parms; per-object params never do.
+
+### Object identity
+
+Every prim also carries the nearest tagged ancestor's `guid` as
+`primvars:unity_guid`. Tags say *what kind* of thing a prim belongs to; the guid
+says *which object* — so a generator that expands one model per placed object
+groups / For-Eaches by `unity_guid`, not by tag.
 
 ### How tags travel
 
@@ -214,10 +253,31 @@ folder.
 - **Duplicate/`root` originals** — cleanup searches the original's parent only;
   scene-root objects can accumulate `_PRODUCTION` copies across runs.
 
+## Sample scene
+
+`Samples/TestHoudiniPipeline.unity` is a worked greybox demonstrating the two
+tagging shapes:
+
+```
+HoudiniPipelineSample        (USDModelImporter)
+  Enemy_A                    (HoudiniTag: ENEMY; seed=1 Int, style=biped String)
+    Body                     (second prim of the same object)
+  Enemy_B                    (HoudiniTag: ENEMY; seed=2 Int, style=biped String)
+    Body
+  Forest_Zone                (HoudiniTag: FOREST; density=12 Int, seed=7 Int)
+    Tile_A
+    Tile_B                   (children inherit the zone's tag and params)
+```
+
+It has no `.hip`, so `Export + Process` throws until you point the component at
+one; **Export USD** works as-is and is the quickest way to inspect the exported
+`primvars`.
+
 ## Portability notes
 
-- Only three source files, one Python driver, and this documentation are needed;
-  the hip/hda/USD content belongs to the consuming project.
+- Three runtime scripts, two editor scripts, one Python driver, and this
+  documentation are needed; the hip/hda/USD content belongs to the consuming
+  project.
 - No Odin; the inspector is hand-written.
 - The editor assembly's `versionDefines` gate means vendoring this into a project
   without USD is a no-op.

@@ -1,5 +1,7 @@
 # How to use
 
+See `Samples/TestHoudiniPipeline.unity` for a worked greybox you can point at a hip.
+
 ## Setup
 
 1. Add the `.hip`/`.hiplc` to the project anywhere.
@@ -17,7 +19,9 @@
    - **Pipeline Root / USD Output / USD Export** — where artifacts go
      (default `Assets/HoudiniPipeline/...`).
 5. Tag the greybox: add `HoudiniTag` to objects and/or reusable types, set
-   `tags` (e.g. `GRASS`) and `productionPrefab`.
+   `tags` (e.g. `GRASS`) and `productionPrefab`. Optionally add `parameters`
+   (name/type/value) to drive the hip from the object — they arrive per prim as
+   `primvars:unity_<name>` / primitive attributes.
 6. Press **Export + Process**.
 
 Result: a new `<Object>_PRODUCTION` tree appears next to the original, with
@@ -41,7 +45,7 @@ selected object to its importer's export folder (or the default).
   so unsaved hip edits are lost. Save the hip first.
 - **The cook is capped at 30 seconds.** A longer/hung cook is reported as
   failure (or worse, as nothing). Keep the hip fast, or raise the timeout in
-  `USDModelImporter.cs`.
+  `Editor/USDModelImporterPipeline.cs`.
 - **A chatty cook can wedge the process.** Output streams are drained
   sequentially, so a huge amount of logged output can deadlock the read. Keep
   hip output modest.
@@ -49,6 +53,12 @@ selected object to its importer's export folder (or the default).
   completion in the editor.
 - **Tags are inherited and comma-joined.** Every prim gets its own tags plus all
   ancestors' tags, joined with `,`. Don't put commas in a tag.
+- **Params become `primvars:unity_<name>` primitive attributes.** The token
+  `unity_` is reserved; name a param `seed`, not `unity_seed`. Own values
+  override ancestors' by name. Params are export-only — they never affect import.
+- **`primvars:unity_guid` identifies the object.** Every prim under a tagged
+  object carries that object's `guid`; group or For-Each by it to expand one model
+  per placed object (tags only give the type).
 - **Direct-tag trick.** On import the importer subtracts the nearest tagged
   ancestor's tags to find a prim's "direct" tags. If an object has no tags of its
   own, nothing is swapped in.

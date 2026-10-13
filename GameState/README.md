@@ -10,7 +10,7 @@ Sits below the interaction/activation families — it is the "what has happened 
 - **`SaveManager`** — static snapshot machinery: discovers every `ISaveable` in the loaded scenes, keys each by `(type full name, hierarchy path)`, captures the lot into a dictionary, and restores a snapshot back onto the fresh scene. No lifecycle of its own — a **persistent driver** owns the snapshot and calls it.
 - **`Objective`** (abstract) — a single state machine: `ObjectiveState { Unstarted, Running, Complete }` exposed as a read-only `State` reactive property, plus `IsUnstarted` / `IsRunning` / `IsComplete`. `Begin()` / `Satisfy()` / `Unsatisfy()` are the transitions; `oneShot` prevents leaving Complete. Virtual `Progress` / `ProgressText` for the HUD. Implements `ISaveable`.
 - **`SourceObjective`** — satisfied by an `ActivationSource`: Complete while the `finish` source is active, reverts to Running when it goes inactive, unless `oneShot`. Optional `start` source begins it.
-- **`ObjectiveGroup`** — an objective made of children. Begins its children when it begins, and is Complete while they satisfy a rule (All / Any / Count), with an `ordered` flag. Reverts when they stop.
+- **`ObjectiveGroup`** — an objective made of children. It begins *itself* on enable; each child starts on its own, so a child's own `start` gate is respected. It is Complete while the children satisfy a rule (All / Any / Count), with an `ordered` flag, and reverts when they stop.
 - **`SurviveObjective`** — satisfied after a duration; `Progress` = elapsed/duration.
 
 ## Files
@@ -54,7 +54,7 @@ The key is derived from the component's hierarchy path, so a restored `ISaveable
 Drop an objective component in the scene and wire it:
 
 - `SourceObjective` — drag a `TriggerVolume` (or any `ActivationSource`) into `finish`. It is Complete while the source is active, and reverts to Running when it goes inactive unless `oneShot` is ticked. A parent group (or a `start` source) begins it.
-- `ObjectiveGroup` — list the children, pick All/Any/Count, tick `ordered` if they must complete in order. It begins its children when it begins.
+- `ObjectiveGroup` — list the children, pick All/Any/Count, tick `ordered` if they must complete in order. It begins *itself*; children start themselves, so a child's own `start` gate still works.
 - `SurviveObjective` — set `duration`.
 
 Watch objectives via `State` (or the `IsRunning` / `IsComplete` helpers) and `Progress` / `ProgressText`.
