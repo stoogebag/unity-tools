@@ -73,6 +73,7 @@ The custom node library (`brian::dev::*`, `brian::*`) is authored in the Syncthi
 - One node = one clear operation, named for its purpose (the name becomes the Unity mesh name).
 - Terminate each branch with a `null` named for the part; combine branches **only** with `merge_with_path`.
 - Keep everything procedural and idempotent — re-running a build must not duplicate nodes.
+- **Lay networks out readably — never stack nodes on top of each other.** A network is a diagram a human has to read, and the general rule here is that data flows **top to bottom**: inputs at the top, outputs below, each stage one row further down. Keep each branch in its own vertical lane and place parallel branches side by side rather than overlapping. End every build by laying out the network — `parent.layoutChildren()` at minimum, or deliberate positions where it produces a tangle. Nodes piled on one spot, or a graph you can't follow at a glance, is a bug, not a cosmetic issue.
 - Units are **meters**, **Y up** — keep props at game scale.
 - Give each generator a single **control node** (a `null`/subnet with spare parms) that drives the whole network, so variations come from dialling parameters, not rewiring.
 
