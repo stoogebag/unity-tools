@@ -40,24 +40,17 @@ public class DialoguePanel : Window, IInitializes
         Speaker = GetComponentInParent<DialogueSpeaker>(); //should i just have the user assign this?
 
 
-        DialogueBehaviour.DialogueTriggeredObservable.Subscribe(async dialogue =>
+        DialogueTimelineBehaviour.DialogueTriggeredObservable.Subscribe(async dialogue =>
         {
             if (Speaker == null) return;
-            if (dialogue.speakerName != Speaker.Name) return;
-            
-            // var skippable = SkippableTimeline.CurrentlyPlayingTimeline;
-            // if (skippable != null)
-            //     skippable.TypingTypewriter = textTypewriter;
-                
+            if (dialogue.Speaker != Speaker) return;
+
             await Show(dialogue);
-            
-            // if (skippable != null)
-            //     skippable.TypingTypewriter = null;
         }).AddTo(disposables);
-        DialogueBehaviour.DialogueEndedObservable.Subscribe(dialogue =>
+        DialogueTimelineBehaviour.DialogueEndedObservable.Subscribe(dialogue =>
         {
-            if (Speaker == null) return; //bc: wtf is happening here? stale subs? but i dispose it all TT. could it be because of static
-            if (dialogue.speakerName != Speaker.Name) return;
+            if (Speaker == null) return;
+            if (dialogue.Speaker != Speaker) return;
             activated.Value = false;
         }).AddTo(disposables);
 
@@ -97,7 +90,7 @@ public class DialoguePanel : Window, IInitializes
         
     }
 
-    private async UniTask Show(DialogueBehaviour dialogue)
+    private async UniTask Show(DialogueTimelineBehaviour dialogue)
     {
         activated.Value = true;
         _inactivityTimer = 0f;
@@ -105,16 +98,19 @@ public class DialoguePanel : Window, IInitializes
 
         Activate().Forget();
 
-        if (dialogue.Clip != null && audioSource != null)
-            audioSource.PlayOneShot(dialogue.Clip);
-        
+        var line = dialogue.Line;
+
+        if (line.Clip != null && audioSource != null)
+            audioSource.PlayOneShot(line.Clip);
+
         if (labelTypewriter != null)
         {
-            if (labelTypewriter.TextAnimator.textFull != dialogue.speakerName)
-                labelTypewriter.ShowTextAndAwait(dialogue.speakerName).Forget();
+            var speakerName = line.Speaker != null ? line.Speaker.Name : string.Empty;
+            if (labelTypewriter.TextAnimator.textFull != speakerName)
+                labelTypewriter.ShowTextAndAwait(speakerName).Forget();
         }
 
-        await textTypewriter.ShowTextAndAwait(dialogue.dialogueLine);
+        await textTypewriter.ShowTextAndAwait(line.Text ?? string.Empty);
     }
 
     public async UniTask Bark(DialogueLine line, string speakerName, float lingerTime = 1f, float fadeInTime = 0.1f, float fadeOutTime = 1f)

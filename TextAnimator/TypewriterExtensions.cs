@@ -12,7 +12,6 @@ namespace stoogebag.Extensions
         public static async UniTask ShowTextAndAwait(this TypewriterComponent typewriter, string text)
         {
             typewriter.ShowText(text);
-            await UniTask.WaitForSeconds(1);
             await UniTask.WaitWhile(() => typewriter.IsShowingText);
         }
         

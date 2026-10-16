@@ -4,7 +4,7 @@ using UnityEngine.Playables;
 /// Marks a timeline clip as a hold point: the timeline stops there and routes advance input
 /// to OnAdvance. Timeline-internal in spirit — a timeline is a bag of clips and must find the
 /// one currently holding; linear drivers (sequences, conversations) implement IAdvanceable
-/// directly instead. Lives in root stoogebag because DialogueClip (stoogebag.dialogue) must
+/// directly instead. Lives in root stoogebag because DialogueTimelineClip (stoogebag.dialogue) must
 /// implement it, and stoogebag.dialogue cannot reference stoogebag.Timeline.
 /// </summary>
 public interface IHoldPoint

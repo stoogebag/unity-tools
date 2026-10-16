@@ -25,6 +25,17 @@ public class PlaybackControls : Singleton<PlaybackControls>
     public IObservable<Unit> OnStarted => _onStarted;
     public IObservable<Unit> OnEnded => _onEnded;
 
+    private ITypewriterProgress _typewriter;
+
+    /// <summary>Registers the currently-revealing text, so advance finishes it before moving on.</summary>
+    public void SetTypewriter(ITypewriterProgress typewriter) => _typewriter = typewriter;
+
+    /// <summary>Clears the registered text only if it is still the given one.</summary>
+    public void ClearTypewriter(ITypewriterProgress typewriter)
+    {
+        if (ReferenceEquals(_typewriter, typewriter)) _typewriter = null;
+    }
+
     private void OnEnable()
     {
         advanceAction?.action?.Enable();
@@ -61,12 +72,27 @@ public class PlaybackControls : Singleton<PlaybackControls>
         if (_stack.Count == 0) _onEnded.OnNext(Unit.Default);
     }
 
-    public void Advance() => Current?.Advance();
+    public void Advance()
+    {
+        if (_typewriter != null)
+        {
+            if (_typewriter.IsTyping)
+            {
+                _typewriter.FinishTyping();
+                return;
+            }
+
+            if (_typewriter.IsInAdvanceGrace) return;
+        }
+
+        Current?.Advance();
+    }
 
     public void SkipAll() => Current?.SkipAll();
 
     private void OnDestroy()
     {
+        _typewriter = null;
         _onStarted.Dispose();
         _onEnded.Dispose();
     }

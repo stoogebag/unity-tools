@@ -17,6 +17,7 @@ Shader "stoogebag/Mirror"
 
         HLSLINCLUDE
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DBuffer.hlsl"
         ENDHLSL
 
         Pass
@@ -26,6 +27,7 @@ Shader "stoogebag/Mirror"
             HLSLPROGRAM
                 #pragma vertex vert
                 #pragma fragment frag
+                #pragma multi_compile_fragment _ _DBUFFER_MRT1 _DBUFFER_MRT2 _DBUFFER_MRT3
 
                 struct appdata
                 {
@@ -54,7 +56,13 @@ Shader "stoogebag/Mirror"
                     float2 uv = i.screenPos.xy / i.screenPos.w;
                     uv.x = 1.0 - uv.x;
                     float4 col = tex2D(_MainTex, uv);
-                    return col * _Tint;
+                    half3 color = col.rgb * _Tint.rgb;
+
+                    #ifdef _DBUFFER
+                    ApplyDecalToBaseColor(i.vertex, color);
+                    #endif
+
+                    return half4(color, col.a * _Tint.a);
                 }
             ENDHLSL
         }

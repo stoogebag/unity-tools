@@ -5,8 +5,8 @@ using UnityEngine.Timeline;
 
 namespace stoogebag.DIALOGUE.CustomTimelineTracks.Dialogue.Editor
 {
-    [CustomTimelineEditor(typeof(DialogueClip))]
-    public class DialogueClipEditor : ClipEditor
+    [CustomTimelineEditor(typeof(DialogueTimelineClip))]
+    public class DialogueTimelineClipEditor : ClipEditor
     {
         private static readonly Color SpeakerColor = new Color(1f, 0.85f, 0.4f);
         private static readonly Color LineColor = Color.white;
@@ -17,11 +17,15 @@ namespace stoogebag.DIALOGUE.CustomTimelineTracks.Dialogue.Editor
         {
             base.DrawBackground(clip, region);
 
-            if (clip.asset is not DialogueClip dialogueClip || dialogueClip.template == null)
+            if (clip.asset is not DialogueTimelineClip dialogueClip || dialogueClip.template == null)
                 return;
 
             var behaviour = dialogueClip.template;
-            var speaker = string.IsNullOrWhiteSpace(behaviour.speakerName) ? "" : behaviour.speakerName.Trim();
+
+            var resolved = TimelineEditor.inspectedDirector != null
+                ? behaviour.speaker.Resolve(TimelineEditor.inspectedDirector)
+                : null;
+            var speaker = resolved != null && !string.IsNullOrWhiteSpace(resolved.Name) ? resolved.Name.Trim() : "";
             var line = string.IsNullOrWhiteSpace(behaviour.dialogueLine) ? "(no text)" : behaviour.dialogueLine.Trim();
 
             var rect = region.position;

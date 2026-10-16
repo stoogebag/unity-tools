@@ -11,7 +11,7 @@ One implementation of "record from the mic, trim, save as a WAV asset, assign it
 | `Assets/stoogebag/Editor/Recordable/RecordableAudio.cs` | `stoogebag.editor` (editor) | The actual `Microphone`/`SavWav`/`AudioUtils`/Whisper calls. |
 | `Assets/stoogebag/Editor/Recordable/Editor/RecordablePropertyDrawer.cs` | `stoogebag.editor` (editor) | Draws the Record / Stop / Play / Save (and optional Transcribe) buttons. |
 
-The attribute and interface live in a **runtime** assembly because runtime fields (`DialogueLine.Clip`, `DialogueBehaviour.Clip`) decorate themselves with it, and a runtime assembly cannot reference an editor-only one. The drawer and the mic core stay editor-only.
+The attribute and interface live in a **runtime** assembly because runtime fields (`DialogueLine.Clip`, `DialogueTimelineBehaviour.Clip`) decorate themselves with it, and a runtime assembly cannot reference an editor-only one. The drawer and the mic core stay editor-only.
 
 ## Usage
 
@@ -82,4 +82,4 @@ Kept and used: `SavWav` (WAV trim/save), `RecordingSettings` (selected mic devic
 
 ## Removed
 
-`Editor/RecordMicrophone.cs`, `DIALOGUE/Editor/RecordMicrophone.cs`, `Editor/RecordableAudioClipDrawer.cs` (unused stub), `DIALOGUE/AudioRecording.cs`, and the bespoke record methods on `DialogueLine`, `DialogueBehaviour` and `ExaminableWizard`.
+`Editor/RecordMicrophone.cs`, `DIALOGUE/Editor/RecordMicrophone.cs`, `Editor/RecordableAudioClipDrawer.cs` (unused stub), `DIALOGUE/AudioRecording.cs`, and the bespoke record methods on `DialogueLine`, `DialogueTimelineBehaviour` and `ExaminableWizard`.

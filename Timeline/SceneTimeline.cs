@@ -22,6 +22,7 @@ public class SceneTimeline : MonoBehaviour, IAdvanceable
     private readonly Subject<Unit> _onFinished = new Subject<Unit>();
     private bool _fastForward;
     private bool _holding;
+    private TimelineClip _heldClip;
 
     public IObservable<Unit> OnStarted => _onStarted;
     public IObservable<Unit> OnFinished => _onFinished;
@@ -42,6 +43,7 @@ public class SceneTimeline : MonoBehaviour, IAdvanceable
         if (_director == null) return;
         _director.playableAsset = timelineAsset;
         _holding = false;
+        _heldClip = null;
         _director.Play();
         ApplySpeed();
         if (grabFocus) PlaybackControls.Instance?.Push(this);
@@ -93,9 +95,10 @@ public class SceneTimeline : MonoBehaviour, IAdvanceable
         {
             var root = _director.playableGraph.GetRootPlayable(0);
             if (root.IsValid())
-                root.SetTime(clip.start + clip.duration * 0.95);
+                root.SetTime(clip.end);
         }
 
+        _heldClip = null;
         Resume();
     }
 
@@ -109,9 +112,10 @@ public class SceneTimeline : MonoBehaviour, IAdvanceable
         if (_director == null || !IsPlaying || _holding) return;
 
         var clip = CurrentHoldClip();
-        if (clip != null && NormalisedTime(clip) >= 0.9f)
+        if (clip != null && clip != _heldClip && NormalisedTime(clip) >= 0.9f)
         {
             _holding = true;
+            _heldClip = clip;
             ApplySpeed();
         }
     }
@@ -133,6 +137,7 @@ public class SceneTimeline : MonoBehaviour, IAdvanceable
     private void OnStopped(PlayableDirector director)
     {
         _holding = false;
+        _heldClip = null;
         if (grabFocus) PlaybackControls.Instance?.Pop(this);
         _onFinished.OnNext(Unit.Default);
     }

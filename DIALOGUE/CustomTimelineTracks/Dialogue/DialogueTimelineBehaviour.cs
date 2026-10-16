@@ -8,14 +8,14 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 [Serializable]
-public class DialogueBehaviour : PlayableBehaviour
+public class DialogueTimelineBehaviour : PlayableBehaviour
 {
-    public static event Action<DialogueBehaviour> DialogueTriggered;
-    public static IObservable<DialogueBehaviour> DialogueTriggeredObservable => Observable.FromEvent<DialogueBehaviour>(h => DialogueTriggered += h, h => DialogueTriggered -= h);
-    public static event Action<DialogueBehaviour> DialogueEnded;
-    public static IObservable<DialogueBehaviour> DialogueEndedObservable => Observable.FromEvent<DialogueBehaviour>(h => DialogueEnded += h, h => DialogueEnded -= h);
+    public static event Action<DialogueTimelineBehaviour> DialogueTriggered;
+    public static IObservable<DialogueTimelineBehaviour> DialogueTriggeredObservable => Observable.FromEvent<DialogueTimelineBehaviour>(h => DialogueTriggered += h, h => DialogueTriggered -= h);
+    public static event Action<DialogueTimelineBehaviour> DialogueEnded;
+    public static IObservable<DialogueTimelineBehaviour> DialogueEndedObservable => Observable.FromEvent<DialogueTimelineBehaviour>(h => DialogueEnded += h, h => DialogueEnded -= h);
 
-    public string speakerName;
+    public ExposedReference<DialogueSpeaker> speaker;
     public string dialogueLine;
 
     public bool PauseTimeline = true;
@@ -24,8 +24,17 @@ public class DialogueBehaviour : PlayableBehaviour
     [Recordable(maxLengthSeconds: 30, transcribeIntoField: nameof(dialogueLine))]
     public AudioClip Clip;
 
+    [NonSerialized] public DialogueSpeaker Speaker;
+    [NonSerialized] public PlayableDirector director;
+
     private bool clipPlayed = false;
-    public PlayableDirector director;
+
+    public DialogueLine Line => new DialogueLine
+    {
+        Speaker = Speaker,
+        Text = dialogueLine,
+        Clip = Clip,
+    };
 
     public override void OnPlayableCreate(Playable playable)
     {

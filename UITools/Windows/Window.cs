@@ -118,7 +118,6 @@ namespace stoogebag.UITools.Windows
 
         public void DeactivateImmediate()
         {
-            if (Active == ActiveState.Inactive) return;
             _stateGeneration++;
             Active = ActiveState.Inactive;
             if(gameObject != null) gameObject.SetActive(false);

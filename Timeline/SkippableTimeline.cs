@@ -114,11 +114,11 @@ namespace stoogebag
         {
             if (CurrentlyPlayingTimeline != null)
             {
-                var dialogueClip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
+                var dialogueClip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTimelineTrack>();
                 if(dialogueClip != null ){
                     var time = dialogueClip.GetNormalisedTime( CurrentlyPlayingTimeline.Director);
 
-                    if ((dialogueClip.asset as DialogueClip).template.PauseTimeline)
+                    if ((dialogueClip.asset as DialogueTimelineClip).template.PauseTimeline)
                     {
                         if (!pausedClips.Contains(dialogueClip))
                         {
@@ -145,13 +145,13 @@ namespace stoogebag
         public void SkipToEnd()
         {
             if (CurrentlyPlayingTimeline == null) return;
-            var clip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
+            var clip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTimelineTrack>();
             Unpause();
         }
         public void SkipToPause()
         {
             if (CurrentlyPlayingTimeline == null) return;
-            var clip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTrack>();
+            var clip = CurrentlyPlayingTimeline.Director.GetCurrentClip<DialogueTimelineTrack>();
             CurrentlyPlayingTimeline.Director.playableGraph.GetRootPlayable(0)
                 .SetTime(clip.start + (clip.end - clip.start) * 0.95f);
             
