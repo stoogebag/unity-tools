@@ -1,0 +1,19 @@
+{
+    "name": "stoogebag.houdinipipeline.tasks.editor",
+    "rootNamespace": "",
+    "references": [
+        "stoogebag.houdinipipeline",
+        "UniTask"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
